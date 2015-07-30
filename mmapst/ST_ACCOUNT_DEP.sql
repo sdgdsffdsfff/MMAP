@@ -119,3 +119,6 @@ select
     da.Eff_TM
 from
     MMAPST.DMMKT_ACLIABI da
+inner join MMAPST.DMMKT_CSMast db
+on da.CIF_ORG = db.CIF_ORG
+and trim(db.CIFTYP_ID) = 'I'
