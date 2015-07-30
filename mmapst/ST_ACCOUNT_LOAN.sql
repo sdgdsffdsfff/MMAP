@@ -1,5 +1,5 @@
 /*
-      客户存款类账户表 ST_ACCOUNT_LOAN
+      客户贷款账户信息表 ST_ACCOUNT_LOAN
       author:lee5hx
       date:2015-07-30
 */
