@@ -1,4 +1,9 @@
-insert into ST_ACCOUNT_DEP (
+/*
+      客户存款类账户表 ST_ACCOUNT_DEP
+      author:lee5hx
+      date:2015-07-30
+*/
+INSERT INTO ST_ACCOUNT_DEP (
     ETL_DATE,
     TX_DATE,
     period_ID,
@@ -59,7 +64,7 @@ select
     to_number(to_char(SYSdate,'YYYYMMDD')),
     da.TX_DT,
     to_number(to_char(TX_DT,'YYYYMMDD')),
-    da.CIF_Org,
+    trim(da.CIF_Org),
     da.Acc_Org,
     da.Curr_ID,
     da.AccSts_ID ,
