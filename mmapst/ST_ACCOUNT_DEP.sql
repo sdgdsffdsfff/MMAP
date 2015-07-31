@@ -63,7 +63,7 @@ INSERT INTO ST_ACCOUNT_DEP (
     thirdPart_Org,          --第三方账号
     Eff_DT,                 --生效日期
     Eff_Tm                  --生效时间
-    )
+)
 select
     to_number(to_char(SYSdate,'YYYYMMDD')),
     da.TX_DT,
