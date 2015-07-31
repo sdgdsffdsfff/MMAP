@@ -6,7 +6,7 @@
         SELECT COUNT(*) FROM MMAPST.ST_ACCOUNT_DEP
         DELETE FROM MMAPST.ST_ACCOUNT_DEP
 */
-INSERT INTO ST_ACCOUNT_DEP (
+INSERT INTO MMAPST.ST_ACCOUNT_DEP (
     ETL_DATE,               --跑批日期
     TX_DATE,                --数据日期
     period_ID,              --日期
