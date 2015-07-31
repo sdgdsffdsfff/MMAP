@@ -6,7 +6,6 @@
         SELECT COUNT(*) FROM MMAPST.ST_ACCOUNT_LOAN
         DELETE FROM MMAPST.ST_ACCOUNT_LOAN
 */
-
 INSERT INTO MMAPST.ST_ACCOUNT_LOAN(
     ETL_DATE,                   --跑批日期
     TX_DATE,                    --数据日期
