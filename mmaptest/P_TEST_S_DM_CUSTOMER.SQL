@@ -602,6 +602,60 @@ GROUP BY TX_DATE
 ON T1.TX_DT=T2.TX_DATE 
 ;
 
+--12.字符型字段
+--如果表中的字符型数据没有特殊处理，则仅测试表记录数即可;如果有特殊处理，则再做个别字段逻辑测试。
+--表记录数
+V_COL := 'AGE';
+V_COL_NAME := '客户年龄';
+V_COL_DES := '随机验证';
+V_TEST_DES := '随机验证年龄';
+
+INSERT INTO MMAPTEST.MMAP_TEST
+  (
+    TEST_DATE          --  测试时间
+    ,TEST_STAGE        --  测试阶段
+    ,TABLE_NAME      --  目标表名
+    ,TX_DATE      --  数据日期
+    ,COL      -- 字段英文名
+    ,COL_NAME    --  字段中文名
+    ,COL_DES    --  字段描述
+    ,TEST_DES    --  测试描述
+    ,VALUE_SOURCE    -- 字段值（源）
+    ,VALUE_TARGET    --  字段值（目标）
+    ,COMPARE_RESULT    --  对比结果
+    ,REMARK    --  备注
+
+  )
+select
+V_TEST_TIMESTAMP
+,V_TEST_STAGE
+,V_TABLE_NAME
+,COALESCE(T1.TX_DT,T2.TX_DATE)
+,V_COL
+,V_COL_NAME
+,V_COL_DES
+,V_TEST_DES
+,T1.S_NUM
+,T2.DM_NUM
+,NVL(T1.S_NUM,0)-nvl(T2.DM_NUM,0)
+,NULL
+FROM
+(
+SELECT Tx_DT,SUM(N_AGE) AS S_NUM
+from  MMAPST.DMMKT_CSMAST 
+WHERE CIF_ORG IN (8000059309,8900045250,8600052623,3100019910)
+GROUP BY Tx_DT
+) T1
+FULL JOIN
+(
+SELECT TX_DATE,SUM(AGE) AS DM_NUM
+from  MMAPDM.DM_CUSTOMER 
+WHERE CUSTOMER_ID IN (8000059309,8900045250,8600052623,3100019910)
+GROUP BY TX_DATE
+)T2
+ON T1.TX_DT=T2.TX_DATE 
+;
+
 
 IO_ROW := SQL%ROWCOUNT ; --记录存储过程记录数
 COMMIT;

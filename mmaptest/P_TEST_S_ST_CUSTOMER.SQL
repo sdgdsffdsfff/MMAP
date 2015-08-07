@@ -79,66 +79,6 @@ ON T1.Tx_DT=T2.TX_DATE;
 V_COL := 'AGE';
 V_COL_NAME := '客户年龄';
 V_COL_DES := '';
-V_TEST_DES := '年龄验证';
-
-INSERT INTO MMAPTEST.MMAP_TEST
-  (
-    TEST_DATE          --  测试时间
-    ,TEST_STAGE        --  测试阶段
-    ,TABLE_NAME      --  目标表名
-    ,TX_DATE      --  数据日期
-    ,COL      -- 字段英文名
-    ,COL_NAME    --  字段中文名
-    ,COL_DES    --  字段描述
-    ,TEST_DES    --  测试描述
-    ,VALUE_SOURCE    -- 字段值（源）
-    ,VALUE_TARGET    --  字段值（目标）
-    ,COMPARE_RESULT    --  对比结果
-    ,REMARK    --  备注
-  )
-select
-V_TEST_TIMESTAMP
-,V_TEST_STAGE
-,V_TABLE_NAME
-,COALESCE(T1.tx_dt,T2.TX_DATE)
-,V_COL
-,V_COL_NAME
-,V_COL_DES
-,V_TEST_DES
-,T1.S_NUM
-,T2.ST_NUM
-,NVL(T1.S_NUM,0)-nvl(T2.ST_NUM,0)
-,NULL
-FROM
-(
-SELECT TX_DT,SUM(AGE) AS S_NUM
-FROM (
-SELECT 
- TX_DT   
- ,CASE WHEN TO_CHAR(BIRTH_DT,'MMDD')<TO_CHAR(SYSDATE,'MMDD') 
-      THEN FLOOR(MONTHS_BETWEEN(TX_DT,BIRTH_DT)/12)+1 
-      ELSE FLOOR(MONTHS_BETWEEN(TX_DT,BIRTH_DT)/12)
-  END AS AGE                                                                                  
-FROM 
-MMAPST.DMMKT_CSMAST 
-WHERE TRIM(CIFTYP_ID)='I'
-)
-GROUP BY TX_DT
-) T1
-FULL JOIN
-(
-SELECT A.TX_DATE,SUM(AGE) AS ST_NUM  
-FROM   MMAPST.ST_CUSTOMER A
-GROUP BY TX_DATE
-)T2
-ON T1.Tx_DT=T2.TX_DATE;
-
---2.数值型字段
---对经过特殊处理的每个数值型字段做测试；如果表中该类字段均未做特殊处理，则随机取出一个数值型字段做测试；如果表中没有该类字段，则跳过。
---AGE
-V_COL := 'AGE';
-V_COL_NAME := '客户年龄';
-V_COL_DES := '';
 V_TEST_DES := '随机验证年龄';
 
 INSERT INTO MMAPTEST.MMAP_TEST
@@ -181,6 +121,56 @@ FULL JOIN
 SELECT TX_DATE,SUM(AGE) AS ST_NUM
 from  MMAPST.ST_CUSTOMER 
 WHERE CUSTOMER_ID IN (8000059309,8900045250,8600052623,3100019910)
+GROUP BY TX_DATE
+)T2
+ON T1.Tx_DT=T2.TX_DATE;
+
+
+--2.数值型字段
+--对经过特殊处理的每个数值型字段做测试；如果表中该类字段均未做特殊处理，则随机取出一个数值型字段做测试；如果表中没有该类字段，则跳过。
+--AGE
+V_COL := 'EMP_IND';
+V_COL_NAME := '是否行员';
+V_COL_DES := '是否行员人数统计';
+V_TEST_DES := '计数';
+
+
+INSERT INTO MMAPTEST.MMAP_TEST
+  (
+    TEST_DATE          --  测试时间
+    ,TEST_STAGE        --  测试阶段
+    ,TABLE_NAME      --  目标表名
+    ,TX_DATE      --  数据日期
+    ,COL      -- 字段英文名
+    ,COL_NAME    --  字段中文名
+    ,COL_DES    --  字段描述
+    ,TEST_DES    --  测试描述
+    ,VALUE_SOURCE    -- 字段值（源）
+    ,VALUE_TARGET    --  字段值（目标）
+    ,COMPARE_RESULT    --  对比结果
+    ,REMARK    --  备注
+  )
+select
+V_TEST_TIMESTAMP
+,V_TEST_STAGE
+,V_TABLE_NAME
+,COALESCE(T1.tx_dt,T2.TX_DATE)
+,V_COL
+,V_COL_NAME
+,V_COL_DES
+,V_TEST_DES
+,T1.S_NUM
+,T2.ST_NUM
+,NVL(T1.S_NUM,0)-nvl(T2.ST_NUM,0)
+,NULL
+FROM
+(
+SELECT TX_DT,COUNT(*) AS S_NUM FROM MMAPST.DMMKT_CSMAST WHERE STAFF_FG='Y'
+GROUP BY TX_DT
+) T1
+FULL JOIN
+(
+SELECT TX_DATE,COUNT(*) AS ST_NUM FROM MMAPDM.DM_CUSTOMER WHERE EMP_IND='1'
 GROUP BY TX_DATE
 )T2
 ON T1.Tx_DT=T2.TX_DATE;
