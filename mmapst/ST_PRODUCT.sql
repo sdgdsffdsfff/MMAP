@@ -42,7 +42,7 @@ SELECT
 	,R_Nav
 	,IncmBeg_Dt
 	,IncmEnd_Dt
-	,'PDInvFs' AS	SourceGrp
+	,'PDINVFS' AS	SourceGrp
 FROM        MMAPST.DMMKT_PDInvFs
 UNION ALL
 SELECT
@@ -60,7 +60,7 @@ SELECT
 	,NULL
 	,NULL
 	,NULL
-	,'PDAsset'
+	,'PDASSET'
 FROM MMAPST.DMMKT_PDAsset
 UNION ALL
 SELECT
@@ -78,6 +78,6 @@ SELECT
 	,NULL
 	,NULL
 	,NULL
-	,'PDLiabi'
+	,'PDLIABI'
 FROM MMAPST.DMMKT_PDLiabi
 
