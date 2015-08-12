@@ -28,7 +28,7 @@ INSERT INTO MMAPST.ST_PRODUCT
 	,IncmEnd_Dt	--计息结束日期
 	,SourceGrp	--数据源组
 )
-SELECT
+SELECT	DISTINCT
 	to_number(to_char(SYSDATE,'YYYYMMDD')) AS ETL_DATE
 	,UPPER(TRIM(ProdTyp_ID)) AS PROD_CODE
 	,REPLACE(REPLACE(TRIM(ProdTyp_NM),'“',''),'”','') AS PROD_DESC
@@ -47,7 +47,7 @@ SELECT
 FROM        MMAPST.DMMKT_PDInvFs
 WHERE TRIM(ProdTyp_NM)<>'(null)'
 UNION ALL
-SELECT
+SELECT	DISTINCT
 	to_number(to_char(SYSDATE,'YYYYMMDD'))
 	,UPPER(TRIM(ProdTyp_ID))
 	,REPLACE(REPLACE(TRIM(ProdTyp_NM),'“',''),'”','')
@@ -66,7 +66,7 @@ SELECT
 FROM MMAPST.DMMKT_PDAsset
 WHERE TRIM(ProdTyp_NM)<>'(null)'
 UNION ALL
-SELECT
+SELECT	DISTINCT
 	to_number(to_char(SYSDATE,'YYYYMMDD'))
 	,UPPER(TRIM(ProdTyp_ID))
 	,REPLACE(REPLACE(TRIM(ProdTyp_NM),'“',''),'”','')
