@@ -1,13 +1,13 @@
 truncate table mmapst.ST_ITEM;
 INSERT INTO MMAPST.ST_ITEM
 
---å®¢æˆ·é£Žé™©ç­‰çº§_ä»£ç 
-select distinct a.item_id
-       ,a.item_nm
-       ,a.item_typ
-       ,a.item_des
+--¿Í»§·çÏÕµÈ¼¶_´úÂë
+select distinct TRIM(a.item_id)
+       ,TRIM(a.item_nm)
+       ,TRIM(a.item_typ)
+       ,TRIM(a.item_des)
        ,TRIM(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥' ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª' ELSE TRIM(a.item_nm) END
        ,'RISK_LVL'
        ,TRIM(a.item_des)
        ,NULL
@@ -15,11 +15,11 @@ select distinct a.item_id
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='Risk_Lvl'
 UNION ALL
---å®¢æˆ·çº§åˆ«
-select distinct a.item_id
-       ,a.item_nm
-       ,a.item_typ
-       ,a.item_des
+--¿Í»§¼¶±ð
+select distinct TRIM(a.item_id)
+       ,TRIM(a.item_nm)
+       ,TRIM(a.item_typ)
+       ,TRIM(a.item_des)
        ,CASE trim(a.item_id)
              WHEN '00' THEN 'PK'
              WHEN '01' THEN 'JK'
@@ -31,14 +31,14 @@ select distinct a.item_id
          ELSE '-'
          END
        ,CASE trim(a.item_id)
-             WHEN '00' THEN 'æ™®å¡'
-             WHEN '01' THEN 'é‡‘å¡'
-             WHEN '50' THEN 'é‡‘å¡'
-             WHEN '55' THEN 'ç™½é‡‘å¡'
-             WHEN '60' THEN 'é’»çŸ³å¡'
-             WHEN '70' THEN 'è´¢å¯Œå¡'
-             WHEN '80' THEN 'ç§äººé“¶è¡Œ'
-         ELSE 'æœªçŸ¥'
+             WHEN '00' THEN 'ÆÕ¿¨'
+             WHEN '01' THEN '½ð¿¨'
+             WHEN '50' THEN '½ð¿¨'
+             WHEN '55' THEN '°×½ð¿¨'
+             WHEN '60' THEN '×êÊ¯¿¨'
+             WHEN '70' THEN '²Æ¸»¿¨'
+             WHEN '80' THEN 'Ë½ÈËÒøÐÐ'
+         ELSE 'Î´Öª'
          END
        ,'CIF_LVL'
        ,TRIM(a.item_des)
@@ -56,13 +56,13 @@ select distinct a.item_id
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='CIF_Lvl'
 UNION ALL
---æ°‘æ—
-select distinct a.item_id
-       ,a.item_nm
-       ,a.item_typ
-       ,a.item_des
+--Ãñ×å
+select distinct TRIM(a.item_id)
+       ,TRIM(a.item_nm)
+       ,TRIM(a.item_typ)
+       ,TRIM(a.item_des)
        ,TRIM(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥' ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª' ELSE TRIM(a.item_nm) END
        ,'RACE'
        ,TRIM(a.item_des)
        ,NULL
@@ -70,13 +70,13 @@ select distinct a.item_id
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='RaceTyp_ID'
 UNION ALL
---å›½ç±
-select distinct a.item_id
-       ,a.item_nm
-       ,a.item_typ
-       ,a.item_des
+--¹ú¼®
+select distinct TRIM(a.item_id)
+       ,TRIM(a.item_nm)
+       ,TRIM(a.item_typ)
+       ,TRIM(a.item_des)
        ,trim(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥' ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª' ELSE TRIM(a.item_nm) END
        ,'COUNTRY'
        ,TRIM(a.item_des)
        ,NULL
@@ -84,13 +84,13 @@ select distinct a.item_id
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='Citizen_ID'
 UNION ALL
---èŒç§°
-select distinct a.item_id
-       ,a.item_nm
-       ,a.item_typ
-       ,a.item_des
+--Ö°³Æ
+select distinct TRIM(a.item_id)
+       ,TRIM(a.item_nm)
+       ,TRIM(a.item_typ)
+       ,TRIM(a.item_des)
        ,trim(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥' ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª' ELSE TRIM(a.item_nm) END
        ,'POSITION_TITLE'
        ,TRIM(a.item_des)
        ,NULL
@@ -98,13 +98,13 @@ select distinct a.item_id
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='ProfTitl_ID'
 UNION ALL
---èŒä¸š
-select distinct a.item_id
-       ,a.item_nm
-       ,a.item_typ
-       ,a.item_des
+--Ö°Òµ
+select distinct TRIM(a.item_id)
+       ,TRIM(a.item_nm)
+       ,TRIM(a.item_typ)
+       ,TRIM(a.item_des)
        ,trim(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥' ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª' ELSE TRIM(a.item_nm) END
        ,'OCCP'
        ,TRIM(a.item_des)
        ,NULL
@@ -112,13 +112,13 @@ select distinct a.item_id
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='Occp_ID'
 UNION ALL
---èŒä½
-select distinct a.item_id
-       ,a.item_nm
-       ,a.item_typ
-       ,a.item_des
+--Ö°Î»
+select distinct TRIM(a.item_id)
+       ,TRIM(a.item_nm)
+       ,TRIM(a.item_typ)
+       ,TRIM(a.item_des)
        ,trim(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥' ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª' ELSE TRIM(a.item_nm) END
        ,'POSITION'
        ,TRIM(a.item_des)
        ,NULL
@@ -126,13 +126,13 @@ select distinct a.item_id
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='JobDes_ID'
 UNION ALL
---å©šå§»çŠ¶æ€
-select distinct a.item_id
-       ,a.item_nm
-       ,a.item_typ
-       ,a.item_des
-       ,a.item_id
-       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥' ELSE TRIM(a.item_nm) END
+--»éÒö×´Ì¬
+select distinct TRIM(a.item_id)
+       ,TRIM(a.item_nm)
+       ,TRIM(a.item_typ)
+       ,TRIM(a.item_des)
+       ,TRIM(a.item_id)
+       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª' ELSE TRIM(a.item_nm) END
        ,'MARITALSTS'
        ,TRIM(a.item_des)
        ,NULL
@@ -140,13 +140,13 @@ select distinct a.item_id
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='MaritalSts_ID'
 UNION ALL
---æ•™è‚²ç¨‹åº¦
-select distinct a.item_id
-       ,a.item_nm
-       ,a.item_typ
-       ,a.item_des
+--½ÌÓý³Ì¶È
+select distinct TRIM(a.item_id)
+       ,TRIM(a.item_nm)
+       ,TRIM(a.item_typ)
+       ,TRIM(a.item_des)
        ,trim(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥' ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª' ELSE TRIM(a.item_nm) END
        ,'EDU'
        ,TRIM(a.item_des)
        ,NULL
@@ -154,43 +154,60 @@ select distinct a.item_id
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='Edu_ID'
 UNION ALL
---æ€§åˆ«
-select distinct a.item_id
-       ,a.item_nm
-       ,a.item_typ
-       ,a.item_des
-       ,trim(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥' ELSE TRIM(a.item_nm) END
+--ÐÔ±ð
+select distinct TRIM(a.item_id)
+       ,TRIM(a.item_nm)
+       ,TRIM(a.item_typ)
+       ,TRIM(a.item_des)
+       ,TRIM(a.item_id)
+       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª' ELSE TRIM(a.item_nm) END
        ,'GENDER'
        ,TRIM(a.item_des)
        ,NULL
        ,NULL
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='Gender_ID'
-;
-INSERT INTO MMAPST.ST_ITEM VALUES('EBON','ç†è´¢å¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
-INSERT INTO MMAPST.ST_ITEM VALUES('LTMC','æµ·èžè”é€šå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
-INSERT INTO MMAPST.ST_ITEM VALUES('NORI','æ–°æ™®é€šå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
-INSERT INTO MMAPST.ST_ITEM VALUES('NORM','æ™®é€šå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
-INSERT INTO MMAPST.ST_ITEM VALUES('LQNC','åˆ©ç¾¤æ™®é€šå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
-INSERT INTO MMAPST.ST_ITEM VALUES('QQCC','æµ·èžé’æ˜¥å¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
-INSERT INTO MMAPST.ST_ITEM VALUES('QQDC','æµ·èžé’å¤§å¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
-INSERT INTO MMAPST.ST_ITEM VALUES('SIXE','6+Eå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
-INSERT INTO MMAPST.ST_ITEM VALUES('SOCS','ç¤¾ä¿é‡‘èžå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
-INSERT INTO MMAPST.ST_ITEM VALUES('SSYC','ä¸–å›­å¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
-INSERT INTO MMAPST.ST_ITEM VALUES('TSMC','TSMç”µå­çŽ°é‡‘å¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
-INSERT INTO MMAPST.ST_ITEM VALUES('VCRD','è”åå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
-INSERT INTO MMAPST.ST_ITEM VALUES('WCRD','å¾®å°˜å¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
-INSERT INTO MMAPST.ST_ITEM VALUES('YKTC','æµ·èžæ™®é€šå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
-INSERT INTO MMAPST.ST_ITEM VALUES('NOGC','é‡‘å¡','CrdTyp_ID','å¡ç±»åž‹','JK','é‡‘å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','20');
-INSERT INTO MMAPST.ST_ITEM VALUES('YKTG','æµ·èžé‡‘å¡','CrdTyp_ID','å¡ç±»åž‹','JK','é‡‘å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','20');
-INSERT INTO MMAPST.ST_ITEM VALUES('LQGC','åˆ©ç¾¤é‡‘å¡','CrdTyp_ID','å¡ç±»åž‹','JK','é‡‘å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','20');
-INSERT INTO MMAPST.ST_ITEM VALUES('YKTP','æµ·èžç™½é‡‘å¡','CrdTyp_ID','å¡ç±»åž‹','BJK','ç™½é‡‘å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','30');
-INSERT INTO MMAPST.ST_ITEM VALUES('LQPC','åˆ©ç¾¤ç™½é‡‘å¡','CrdTyp_ID','å¡ç±»åž‹','BJK','ç™½é‡‘å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','30');
-INSERT INTO MMAPST.ST_ITEM VALUES('NOPC','ç™½é‡‘å¡','CrdTyp_ID','å¡ç±»åž‹','BJK','ç™½é‡‘å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','30');
-INSERT INTO MMAPST.ST_ITEM VALUES('DCRD','æµ·èžé’»çŸ³å¡','CrdTyp_ID','å¡ç±»åž‹','ZSK','é’»çŸ³å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','40');
-INSERT INTO MMAPST.ST_ITEM VALUES('CCRD','æµ·èžè´¢å¯Œå¡','CrdTyp_ID','å¡ç±»åž‹','CFK','è´¢å¯Œå¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','50');
-INSERT INTO MMAPST.ST_ITEM VALUES('PVBC','æµ·èžç§äººé“¶è¡Œå¡','CrdTyp_ID','å¡ç±»åž‹','SRYH','ç§äººé“¶è¡Œ','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','60');
 
+--×ÜÕË´úÂë
+UNION ALL
+select distinct TRIM(a.item_id)
+       ,TRIM(a.item_nm)
+       ,TRIM(a.item_typ)
+       ,TRIM(a.item_des)
+       ,trim(a.item_id)
+       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª' ELSE TRIM(a.item_nm) END
+       ,'GLGRP_ID'
+       ,TRIM(a.item_des)
+       ,NULL
+       ,NULL
+from  MMAPST.Dmmkt_Pcodemast A
+where item_typ='GLGrp_ID'
+and bak3='PDAsset'
+;
+
+--½è¼Ç¿¨¼¶±ð
+INSERT INTO MMAPST.ST_ITEM VALUES('EBON','Àí²Æ¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
+INSERT INTO MMAPST.ST_ITEM VALUES('LTMC','º£ÈÚÁªÍ¨¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
+INSERT INTO MMAPST.ST_ITEM VALUES('NORI','ÐÂÆÕÍ¨¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
+INSERT INTO MMAPST.ST_ITEM VALUES('NORM','ÆÕÍ¨¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
+INSERT INTO MMAPST.ST_ITEM VALUES('LQNC','ÀûÈºÆÕÍ¨¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
+INSERT INTO MMAPST.ST_ITEM VALUES('QQCC','º£ÈÚÇà´º¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
+INSERT INTO MMAPST.ST_ITEM VALUES('QQDC','º£ÈÚÇà´ó¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
+INSERT INTO MMAPST.ST_ITEM VALUES('SIXE','6+E¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
+INSERT INTO MMAPST.ST_ITEM VALUES('SOCS','Éç±£½ðÈÚ¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
+INSERT INTO MMAPST.ST_ITEM VALUES('SSYC','ÊÀÔ°¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
+INSERT INTO MMAPST.ST_ITEM VALUES('TSMC','TSMµç×ÓÏÖ½ð¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
+INSERT INTO MMAPST.ST_ITEM VALUES('VCRD','ÁªÃû¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
+INSERT INTO MMAPST.ST_ITEM VALUES('WCRD','Î¢³¾¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
+INSERT INTO MMAPST.ST_ITEM VALUES('YKTC','º£ÈÚÆÕÍ¨¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
+INSERT INTO MMAPST.ST_ITEM VALUES('NOGC','½ð¿¨','CrdTyp_ID','¿¨ÀàÐÍ','JK','½ð¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','20');
+INSERT INTO MMAPST.ST_ITEM VALUES('YKTG','º£ÈÚ½ð¿¨','CrdTyp_ID','¿¨ÀàÐÍ','JK','½ð¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','20');
+INSERT INTO MMAPST.ST_ITEM VALUES('LQGC','ÀûÈº½ð¿¨','CrdTyp_ID','¿¨ÀàÐÍ','JK','½ð¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','20');
+INSERT INTO MMAPST.ST_ITEM VALUES('YKTP','º£ÈÚ°×½ð¿¨','CrdTyp_ID','¿¨ÀàÐÍ','BJK','°×½ð¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','30');
+INSERT INTO MMAPST.ST_ITEM VALUES('LQPC','ÀûÈº°×½ð¿¨','CrdTyp_ID','¿¨ÀàÐÍ','BJK','°×½ð¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','30');
+INSERT INTO MMAPST.ST_ITEM VALUES('NOPC','°×½ð¿¨','CrdTyp_ID','¿¨ÀàÐÍ','BJK','°×½ð¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','30');
+INSERT INTO MMAPST.ST_ITEM VALUES('DCRD','º£ÈÚ×êÊ¯¿¨','CrdTyp_ID','¿¨ÀàÐÍ','ZSK','×êÊ¯¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','40');
+INSERT INTO MMAPST.ST_ITEM VALUES('CCRD','º£ÈÚ²Æ¸»¿¨','CrdTyp_ID','¿¨ÀàÐÍ','CFK','²Æ¸»¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','50');
+INSERT INTO MMAPST.ST_ITEM VALUES('PVBC','º£ÈÚË½ÈËÒøÐÐ¿¨','CrdTyp_ID','¿¨ÀàÐÍ','SRYH','Ë½ÈËÒøÐÐ','CARD_LVL','½è¼Ç¿¨¼¶±ð','','60');
 commit;
 select * from   mmapst.ST_ITEM;
