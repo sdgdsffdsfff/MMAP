@@ -1,4 +1,4 @@
-﻿/*
+/*
 目标表：产品信息表(ST_PRODUCT)
 源表：	DMMKT层三张产品表：
 	投资理财类产品信息表(PDInvFs)
@@ -9,6 +9,7 @@
 特殊说明:
 变更记录:
 */
+TRUNCATE TABLE MMAPST.ST_PRODUCT;
 INSERT INTO MMAPST.ST_PRODUCT
 (
 	ETL_DATE	--跑批日期
@@ -29,8 +30,8 @@ INSERT INTO MMAPST.ST_PRODUCT
 )
 SELECT
 	to_number(to_char(SYSDATE,'YYYYMMDD')) AS ETL_DATE
-	,TRIM(ProdTyp_ID) AS PROD_CODE
-	,TRIM(ProdTyp_NM) AS PROD_DESC
+	,UPPER(TRIM(ProdTyp_ID)) AS PROD_CODE
+	,REPLACE(REPLACE(TRIM(ProdTyp_NM),'“',''),'”','') AS PROD_DESC
 	,TRIM(ProdCat_ID) AS PROD_TYP_CODE
 	,null	 AS GLGrp_ID
 	,RefYield_Rate
@@ -44,11 +45,12 @@ SELECT
 	,IncmEnd_Dt
 	,'PDINVFS' AS	SourceGrp
 FROM        MMAPST.DMMKT_PDInvFs
+WHERE TRIM(ProdTyp_NM)<>'(null)'
 UNION ALL
 SELECT
 	to_number(to_char(SYSDATE,'YYYYMMDD'))
-	,TRIM(ProdTyp_ID)
-	,TRIM(ProdTyp_NM)
+	,UPPER(TRIM(ProdTyp_ID))
+	,REPLACE(REPLACE(TRIM(ProdTyp_NM),'“',''),'”','')
 	,TRIM(ProdCat_ID)
 	,TRIM(GLGrp_ID)
 	,NULL
@@ -62,11 +64,12 @@ SELECT
 	,NULL
 	,'PDASSET'
 FROM MMAPST.DMMKT_PDAsset
+WHERE TRIM(ProdTyp_NM)<>'(null)'
 UNION ALL
 SELECT
 	to_number(to_char(SYSDATE,'YYYYMMDD'))
-	,TRIM(ProdTyp_ID)
-	,TRIM(ProdTyp_NM)
+	,UPPER(TRIM(ProdTyp_ID))
+	,REPLACE(REPLACE(TRIM(ProdTyp_NM),'“',''),'”','')
 	,TRIM(ProdCat_ID)
 	,TRIM(GLGrp_ID)
 	,NULL
@@ -80,4 +83,4 @@ SELECT
 	,NULL
 	,'PDLIABI'
 FROM MMAPST.DMMKT_PDLiabi
-
+WHERE TRIM(ProdTyp_NM)<>'(null)'
