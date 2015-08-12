@@ -3,7 +3,8 @@ CREATE OR REPLACE PROCEDURE "P_DM_CUST_BAL_STAT"
 
 AS
     VO_SQLERR  VARCHAR2(255);
-    TABLE_NAME VARCHAR2(125) :='P_DM_CUST_BAL_STAT'; -- table name
+    TABLE_NAME VARCHAR2(125) :='DM_CUST_BAL_STAT'; -- table name
+    PROCEDURE_NAME VARCHAR2(125) :='P_'||TABLE_NAME;
     DM_SQL VARCHAR2(20000); -- the variable to loading the SQL statment 
     IO_ROW INTEGER;
     IO_STATUS INTEGER;
@@ -238,16 +239,16 @@ DM_SQL:= 'INSERT INTO MMAPDM.DM_CUST_BAL_STAT
     ,FREQ_VALUE             --频度值(1\2\3\4)    
     ,FREQ_DIFF              --频度差(与更新日期的季度差值)   
     ,PROD_TYPE              --产品大类（活期、定期、基金、资产总额（人民币+外币）等）   
-    ,CUST_BAL               --余额  
-    ,CUST_BAL_CWS           --余额_同期      
-    ,CUST_BAL_SQT           --余额_上期        
-    ,CUST_BAL_MAX           --余额_最大值          
-    ,CUST_BAL_MAX_DATE      --余额_最大值_日期                 
-    ,CUST_BAL_MIN           --余额_最小值                  
-    ,CUST_BAL_MIN_DATE      --余额_最小值_日期                       
-    ,CUST_BAL_AVG           --日平均余额              
-    ,CUST_BAL_AVG_CWS       --日平均余额_同期                      
-    ,CUST_BAL_AVG_SQT       --日平均余额_上期                        
+    ,CUST_BAL_LC               --余额  
+    ,CUST_BAL_CWS_LC           --余额_同期      
+    ,CUST_BAL_SQT_LC           --余额_上期        
+    ,CUST_BAL_MAX_LC           --余额_最大值          
+    ,CUST_BAL_MAX_DATE_LC      --余额_最大值_日期                 
+    ,CUST_BAL_MIN_LC           --余额_最小值                  
+    ,CUST_BAL_MIN_DATE_LC      --余额_最小值_日期                       
+    ,CUST_BAL_AVG_LC           --日平均余额              
+    ,CUST_BAL_AVG_CWS_LC       --日平均余额_同期                      
+    ,CUST_BAL_AVG_SQT_LC       --日平均余额_上期                        
     ,CUST_BAL_FC            --外币余额                
     ,CUST_BAL_CWS_FC        --外币余额_同期
     ,CUST_BAL_SQT_FC        --外币余额_上期
@@ -294,6 +295,7 @@ SELECT
 FROM  MMAPDM.TMP_CUST_BAL_CAL'
 ;
 EXECUTE  IMMEDIATE DM_SQL;
+IO_ROW := SQL%ROWCOUNT ;
 COMMIT;
 
 /*
@@ -311,7 +313,7 @@ AND     NEW_FLAG = '0'
 */
 
 DELETE FROM MMAPDM.DM_CUST_BAL_STAT
-WHERE       FREQ_VALUE >= '12'
+WHERE       FREQ_DIFF >= '12'
 AND         FREQ = 'W';
 
 -----------------------客户活期产品余额月频率统计-----------------------
@@ -453,16 +455,16 @@ DM_SQL:= 'INSERT INTO MMAPDM.DM_CUST_BAL_STAT
     ,FREQ_VALUE             --频度值(1\2\3\4)    
     ,FREQ_DIFF              --频度差(与更新日期的季度差值)   
     ,PROD_TYPE              --产品大类（活期、定期、基金、资产总额（人民币+外币）等）   
-    ,CUST_BAL               --余额  
-    ,CUST_BAL_CWS           --余额_同期      
-    ,CUST_BAL_SQT           --余额_上期        
-    ,CUST_BAL_MAX           --余额_最大值          
-    ,CUST_BAL_MAX_DATE      --余额_最大值_日期                 
-    ,CUST_BAL_MIN           --余额_最小值                  
-    ,CUST_BAL_MIN_DATE      --余额_最小值_日期                       
-    ,CUST_BAL_AVG           --日平均余额              
-    ,CUST_BAL_AVG_CWS       --日平均余额_同期                      
-    ,CUST_BAL_AVG_SQT       --日平均余额_上期                        
+    ,CUST_BAL_LC               --余额  
+    ,CUST_BAL_CWS_LC           --余额_同期      
+    ,CUST_BAL_SQT_LC           --余额_上期        
+    ,CUST_BAL_MAX_LC           --余额_最大值          
+    ,CUST_BAL_MAX_DATE_LC      --余额_最大值_日期                 
+    ,CUST_BAL_MIN_LC           --余额_最小值                  
+    ,CUST_BAL_MIN_DATE_LC      --余额_最小值_日期                       
+    ,CUST_BAL_AVG_LC           --日平均余额              
+    ,CUST_BAL_AVG_CWS_LC       --日平均余额_同期                      
+    ,CUST_BAL_AVG_SQT_LC       --日平均余额_上期                        
     ,CUST_BAL_FC            --外币余额                
     ,CUST_BAL_CWS_FC        --外币余额_同期
     ,CUST_BAL_SQT_FC        --外币余额_上期
@@ -509,6 +511,7 @@ SELECT  --a.st_cust_bal b.mid_calender
 FROM  MMAPDM.TMP_CUST_BAL_CAL'
 ;
 EXECUTE  IMMEDIATE DM_SQL;
+IO_ROW := IO_ROW+SQL%ROWCOUNT ;
 COMMIT;
 /*
     4. 更新频度差
@@ -521,11 +524,11 @@ AND     NEW_FLAG = '0'
 ;
 
 /*
-    5. 删除过期数据（周数据留存12期）
+    5. 删除过期数据（月数据留存12期）
 */
 
 DELETE FROM MMAPDM.DM_CUST_BAL_STAT
-WHERE       FREQ_VALUE >= '24'
+WHERE       FREQ_DIFF >= '24'
 AND         FREQ = 'M';
 
 -----------------------客户活期产品余额季频率统计-----------------------
@@ -667,16 +670,16 @@ DM_SQL:= 'INSERT INTO MMAPDM.DM_CUST_BAL_STAT
     ,FREQ_VALUE             --频度值(1\2\3\4)    
     ,FREQ_DIFF              --频度差(与更新日期的季度差值)   
     ,PROD_TYPE              --产品大类（活期、定期、基金、资产总额（人民币+外币）等）   
-    ,CUST_BAL               --余额  
-    ,CUST_BAL_CWS           --余额_同期      
-    ,CUST_BAL_SQT           --余额_上期        
-    ,CUST_BAL_MAX           --余额_最大值          
-    ,CUST_BAL_MAX_DATE      --余额_最大值_日期                 
-    ,CUST_BAL_MIN           --余额_最小值                  
-    ,CUST_BAL_MIN_DATE      --余额_最小值_日期                       
-    ,CUST_BAL_AVG           --日平均余额              
-    ,CUST_BAL_AVG_CWS       --日平均余额_同期                      
-    ,CUST_BAL_AVG_SQT       --日平均余额_上期                        
+    ,CUST_BAL_LC               --余额  
+    ,CUST_BAL_CWS_LC           --余额_同期      
+    ,CUST_BAL_SQT_LC           --余额_上期        
+    ,CUST_BAL_MAX_LC           --余额_最大值          
+    ,CUST_BAL_MAX_DATE_LC      --余额_最大值_日期                 
+    ,CUST_BAL_MIN_LC           --余额_最小值                  
+    ,CUST_BAL_MIN_DATE_LC      --余额_最小值_日期                       
+    ,CUST_BAL_AVG_LC           --日平均余额              
+    ,CUST_BAL_AVG_CWS_LC       --日平均余额_同期                      
+    ,CUST_BAL_AVG_SQT_LC       --日平均余额_上期                        
     ,CUST_BAL_FC            --外币余额                
     ,CUST_BAL_CWS_FC        --外币余额_同期
     ,CUST_BAL_SQT_FC        --外币余额_上期
@@ -723,6 +726,7 @@ SELECT  --a.st_cust_bal b.mid_calender
 FROM  MMAPDM.TMP_CUST_BAL_CAL'
 ;
 EXECUTE  IMMEDIATE DM_SQL;
+IO_ROW := IO_ROW+SQL%ROWCOUNT ;
 COMMIT;
 
 /*
@@ -740,7 +744,7 @@ AND     NEW_FLAG = '0'
 */
 
 DELETE FROM MMAPDM.DM_CUST_BAL_STAT
-WHERE       FREQ_VALUE >= '8'
+WHERE       FREQ_DIFF >= '8'
 AND         FREQ = 'Q';
 
 -----------------------客户活期产品余额年频率统计-----------------------
@@ -881,16 +885,16 @@ DM_SQL:= 'INSERT INTO MMAPDM.DM_CUST_BAL_STAT
     ,FREQ_VALUE             --频度值(1\2\3\4)    
     ,FREQ_DIFF              --频度差(与更新日期的季度差值)   
     ,PROD_TYPE              --产品大类（活期、定期、基金、资产总额（人民币+外币）等）   
-    ,CUST_BAL               --余额  
-    ,CUST_BAL_CWS           --余额_同期      
-    ,CUST_BAL_SQT           --余额_上期        
-    ,CUST_BAL_MAX           --余额_最大值          
-    ,CUST_BAL_MAX_DATE      --余额_最大值_日期                 
-    ,CUST_BAL_MIN           --余额_最小值                  
-    ,CUST_BAL_MIN_DATE      --余额_最小值_日期                       
-    ,CUST_BAL_AVG           --日平均余额              
-    ,CUST_BAL_AVG_CWS       --日平均余额_同期                      
-    ,CUST_BAL_AVG_SQT       --日平均余额_上期                        
+    ,CUST_BAL_LC               --余额  
+    ,CUST_BAL_CWS_LC           --余额_同期      
+    ,CUST_BAL_SQT_LC           --余额_上期        
+    ,CUST_BAL_MAX_LC           --余额_最大值          
+    ,CUST_BAL_MAX_DATE_LC      --余额_最大值_日期                 
+    ,CUST_BAL_MIN_LC           --余额_最小值                  
+    ,CUST_BAL_MIN_DATE_LC      --余额_最小值_日期                       
+    ,CUST_BAL_AVG_LC           --日平均余额              
+    ,CUST_BAL_AVG_CWS_LC       --日平均余额_同期                      
+    ,CUST_BAL_AVG_SQT_LC       --日平均余额_上期                        
     ,CUST_BAL_FC            --外币余额                
     ,CUST_BAL_CWS_FC        --外币余额_同期
     ,CUST_BAL_SQT_FC        --外币余额_上期
@@ -937,6 +941,7 @@ SELECT  --a.st_cust_bal b.mid_calender
 FROM  MMAPDM.TMP_CUST_BAL_CAL'
 ;
 EXECUTE  IMMEDIATE DM_SQL;
+IO_ROW := IO_ROW+SQL%ROWCOUNT ;
 COMMIT;
 
 /*
@@ -944,7 +949,7 @@ COMMIT;
 */
 
 DELETE FROM MMAPDM.DM_CUST_BAL_STAT
-WHERE       FREQ_VALUE <= YEAR - 2
+WHERE       FREQ_DIFF >= 2
 AND         FREQ = 'Y';
 /* 
     写入日志 
@@ -953,7 +958,7 @@ AND         FREQ = 'Y';
     SELECT SYSDATE INTO V_END_TIMESTAMP   FROM dual;    -- 加载程序运行结束时间
     IO_STATUS := 0 ;
     VO_SQLERR := 'SUSSCESS';
-    P_MMAPDM_WRITE_LOGS(TABLE_NAME,IO_STATUS,IO_ROW,V_START_TIMESTAMP,V_END_TIMESTAMP,VO_SQLERR);
+    P_MMAPDM_WRITE_LOGS(PROCEDURE_NAME,IO_STATUS,IO_ROW,V_START_TIMESTAMP,V_END_TIMESTAMP,VO_SQLERR);
     COMMIT;
     
   EXCEPTION
@@ -962,5 +967,5 @@ AND         FREQ = 'Y';
   IO_STATUS := 9 ;
   VO_SQLERR := SQLCODE ||  SQLERRM  ;
   SELECT SYSDATE INTO  V_END_TIMESTAMP  FROM dual;
-  P_MMAPDM_WRITE_LOGS(TABLE_NAME,IO_STATUS,IO_ROW,V_START_TIMESTAMP,V_END_TIMESTAMP,VO_SQLERR);
+  P_MMAPDM_WRITE_LOGS(PROCEDURE_NAME,IO_STATUS,IO_ROW,V_START_TIMESTAMP,V_END_TIMESTAMP,VO_SQLERR);
 END P_DM_CUST_BAL_STAT;
