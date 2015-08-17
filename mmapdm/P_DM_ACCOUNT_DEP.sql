@@ -14,7 +14,9 @@ AS
 	V_END_TIMESTAMP   TIMESTAMP;    -- 加载结束时间
 
 	DM_TODAY NUMBER;        -- 数据日期"当日"
-	TX_DATE NUMBER;
+	DM_YESTERDAY NUMBER;	-- 数据日期"上一日"
+	
+	TX_DATE NUMBER;		
 
 BEGIN
 	SELECT SYSDATE INTO V_START_TIMESTAMP FROM dual;    -- 加载程序运行开始时间
@@ -27,141 +29,153 @@ BEGIN
 
 	IF ST_ROW>0
 	THEN
-		/*针对同一天重复执行此存储过程的异常情况，插入前先删除"当日"数据*/
-		DELETE FROM MMAPDM.DM_ACCOUNT_DEP WHERE PERIOD_ID = DM_TODAY;    -- 删除"当日"数据
+		IO_ROW := 0;
+		--备份"上日"数据
+		SELECT PRE_DATE INTO DM_YESTERDAY FROM MMAPST.ST_SYSTEM_DATE;  -- 取数据日期"上一日"
+		--查询DM层表中是否有"上一日"数据，是否为重跑。
+		SELECT COUNT(1) INTO ST_ROW FROM MMAPDM.DM_ACCOUNT_DEP WHERE PERIOD_ID=DM_YESTERDAY;
+		IF ST_ROW>0
+		THEN
+			DM_SQL :='TRUNCATE TABLE MMAPDM.DM_ACCOUNT_DEP_PRE' ;   -- 删除备份表中数据
+			EXECUTE IMMEDIATE DM_SQL;
+			COMMIT;
+			DM_SQL :='INSERT INTO MMAPDM.DM_ACCOUNT_DEP_PRE SELECT * FROM MMAPDM.DM_ACCOUNT_DEP' ;   -- 备份表中数据
+			EXECUTE IMMEDIATE DM_SQL;
+			IO_ROW := SQL%ROWCOUNT ;
+			COMMIT;
+		END IF;
+		
+		/*ETL逻辑为全删全插*/
+		DM_SQL :='TRUNCATE TABLE MMAPDM.DM_ACCOUNT_DEP' ;   -- 删除表中数据
+		EXECUTE IMMEDIATE DM_SQL;
 		COMMIT;
 
 
-
-
-
-		/*插入当日交易数据*/
+		/*插入当日数据*/
 		DM_SQL := 'INSERT INTO MMAPDM.DM_ACCOUNT_DEP(
 				ETL_DATE,
 				TX_DATE,
-				period_ID,
+				PERIOD_ID,
 				CUSTOMER_ID,
 				ACCOUNT_ID,
 				CURR_CODE,
 				ACCT_STATUS_CODE,
 				OPEN_BRANCH,
 				OPEN_DATE,
-				ACCT_Bal,
+				ACCT_BAL,
 				ACCT_TYPE,
-				Offcr_ID,
-				StMaint_Dt,
-				StMaint_Tm,
-				MaintBuss_ID,
-				ProdTyp_ID,
+				OFFCR_ID,
+				STMAINT_DT,
+				STMAINT_TM,
+				MAINTBUSS_ID,
+				PRODTYP_ID,
 				END_DATE,
-				Prod_Org,
+				PROD_ORG,
 				PROD_CODE,
-				PayStmtDis_No,
-				Value_DT,
-				PayStmtDis_ID,
-				Exch_Rate,
-				GLGrp_ID,
-				N_Bal,
-				Score_Bal,
-				Mgmt_ID,
-				CkTyp_ID,
-				IntCal_ID,
-				ReDemp_DT,
-				YrBase_ID,
-				Renew_FG,
-				WDisp_ID,
-				Dy_AGGL,
+				PAYSTMTDIS_NO,
+				VALUE_DT,
+				PAYSTMTDIS_ID,
+				EXCH_RATE,
+				GLGRP_ID,
+				N_BAL,
+				SCORE_BAL,
+				MGMT_ID,
+				CKTYP_ID,
+				INTCAL_ID,
+				REDEMP_DT,
+				YRBASE_ID,
+				RENEW_FG,
+				WDISP_ID,
+				DY_AGGL,
 				PMTFRQ_ID,
-				Receipt_ID,
-				TermTYP_ID,
-				Int_Rate,
-				LeftInt_Amt,
-				MTPRN_Amt,
+				RECEIPT_ID,
+				TERMTYP_ID,
+				INT_RATE,
+				LEFTINT_AMT,
+				MTPRN_AMT,
 				TW_AMTCR,
 				TW_AMTDR,
-				AccGrp_ORG,
-				Hold_ID,
+				ACCGRP_ORG,
+				HOLD_ID,
 				TD_ID,
-				Sched_Amt,
-				FxTyp_Fg,
+				SCHED_AMT,
+				FXTYP_FG,
 				N_RENEW,
-				RPriceFreq,
-				RPriceFreq_ID,
-				Hold_Amt,
-				CrtAcc_Amt,
-				Pen_Amt,
-				thirdPart_Org,
-				Eff_DT,
-				Eff_Tm
+				RPRICEFREQ,
+				RPRICEFREQ_ID,
+				HOLD_AMT,
+				CRTACC_AMT,
+				PEN_AMT,
+				THIRDPART_ORG,
+				EFF_DT,
+				EFF_TM
 
 			)
 			SELECT
 				'||V_ETL_DATE||',
-				da.TX_DATE,
-				da.period_ID,
-				da.CUSTOMER_ID,
-				da.ACCOUNT_ID,
-				da.CURR_CODE,
-				da.ACCT_STATUS_CODE,
-				da.OPEN_BRANCH,
-				da.OPEN_DATE,
-				da.ACCT_Bal,
-				da.ACCT_TYPE,
-				da.Offcr_ID,
-				da.StMaint_Dt,
-				da.StMaint_Tm,
-				da.MaintBuss_ID,
-				(select PROD_TYPE_CODE from MMAPDM.DM_PRODUCT where PROD_CODE = da.PRODTYP_ID),
-				da.END_DATE,
-				da.Prod_Org,
-				(select PROD_CODE from MMAPDM.DM_PRODUCT where PROD_CODE = da.PRODTYP_ID),
-				da.PayStmtDis_No,
-				da.Value_DT,
-				da.PayStmtDis_ID,
-				da.Exch_Rate,
-				da.GLGrp_ID,
-				da.N_Bal,
-				da.Score_Bal,
-				da.Mgmt_ID,
-				da.CkTyp_ID,
-				da.IntCal_ID,
-				da.ReDemp_DT,
-				da.YrBase_ID,
-				da.Renew_FG,
-				da.WDisp_ID,
-				da.Dy_AGGL,
-				da.PMTFRQ_ID,
-				da.Receipt_ID,
-				da.TermTYP_ID,
-				da.Int_Rate,
-				da.LeftInt_Amt,
-				da.MTPRN_Amt,
-				da.TW_AMTCR,
-				da.TW_AMTDR,
-				da.AccGrp_ORG,
-				da.Hold_ID,
-				da.TD_ID,
-				da.Sched_Amt,
-				da.FxTyp_Fg,
-				da.N_RENEW,
-				da.RPriceFreq,
-				da.RPriceFreq_ID,
-				da.Hold_Amt,
-				da.CrtAcc_Amt,
-				da.Pen_Amt,
-				da.thirdPart_Org,
-				da.Eff_DT,
-				da.Eff_TM
-     		FROM MMAPST.ST_ACCOUNT_DEP da';
+				DA.TX_DATE,
+				DA.PERIOD_ID,
+				DA.CUSTOMER_ID,
+				DA.ACCOUNT_ID,
+				DA.CURR_CODE,
+				DA.ACCT_STATUS_CODE,
+				DA.OPEN_BRANCH,
+				DA.OPEN_DATE,
+				DA.ACCT_BAL,
+				DA.ACCT_TYPE,
+				DA.OFFCR_ID,
+				DA.STMAINT_DT,
+				DA.STMAINT_TM,
+				DA.MAINTBUSS_ID,
+				B.PROD_TYPE_CODE,
+				DA.END_DATE,
+				DA.PROD_ORG,
+				DA.PRODTYP_ID,
+				DA.PAYSTMTDIS_NO,
+				DA.VALUE_DT,
+				DA.PAYSTMTDIS_ID,
+				DA.EXCH_RATE,
+				DA.GLGRP_ID,
+				DA.N_BAL,
+				DA.SCORE_BAL,
+				DA.MGMT_ID,
+				DA.CKTYP_ID,
+				DA.INTCAL_ID,
+				DA.REDEMP_DT,
+				DA.YRBASE_ID,
+				DA.RENEW_FG,
+				DA.WDISP_ID,
+				DA.DY_AGGL,
+				DA.PMTFRQ_ID,
+				DA.RECEIPT_ID,
+				DA.TERMTYP_ID,
+				DA.INT_RATE,
+				DA.LEFTINT_AMT,
+				DA.MTPRN_AMT,
+				DA.TW_AMTCR,
+				DA.TW_AMTDR,
+				DA.ACCGRP_ORG,
+				DA.HOLD_ID,
+				DA.TD_ID,
+				DA.SCHED_AMT,
+				DA.FXTYP_FG,
+				DA.N_RENEW,
+				DA.RPRICEFREQ,
+				DA.RPRICEFREQ_ID,
+				DA.HOLD_AMT,
+				DA.CRTACC_AMT,
+				DA.PEN_AMT,
+				DA.THIRDPART_ORG,
+				DA.EFF_DT,
+				DA.EFF_TM
+			FROM MMAPST.ST_ACCOUNT_DEP DA
+			LEFT JOIN MMAPDM.DM_PRODUCT B
+			ON B.PROD_CODE = DA.PRODTYP_ID';
 
 		EXECUTE IMMEDIATE DM_SQL;
-		IO_ROW := SQL%ROWCOUNT ;
+		IO_ROW := IO_ROW+SQL%ROWCOUNT ;
 		COMMIT;
 	END IF;
-
-
-
-
 
 
 	/*写入日志信息*/
