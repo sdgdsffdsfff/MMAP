@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE "P_DM_CUST_BAL_STAT" 
+ï»¿CREATE OR REPLACE PROCEDURE "P_DM_CUST_BAL_STAT" 
 
 
 AS
@@ -14,9 +14,9 @@ AS
 
 BEGIN
   
-SELECT SYSDATE INTO V_START_TIMESTAMP FROM dual;    -- ¼ÓÔØ³ÌÐòÔËÐÐ¿ªÊ¼Ê±¼ä
+SELECT SYSDATE INTO V_START_TIMESTAMP FROM dual;    -- åŠ è½½ç¨‹åºè¿è¡Œå¼€å§‹æ—¶é—´
 
------------------------Ô´±íST_CUST_BAL×ªÖÃ²¢·­±¶-----------------------
+-----------------------æºè¡¨ST_CUST_BALè½¬ç½®å¹¶ç¿»å€-----------------------
  
 SELECT COUNT(1) INTO COUNT_NUM
 FROM USER_TABLES 
@@ -94,16 +94,16 @@ ORDER BY A.DAYOFYEAR'
 EXECUTE  IMMEDIATE DM_SQL;
 COMMIT;
 
------------------------¿Í»§»îÆÚ²úÆ·Óà¶îÖÜÆµÂÊÍ³¼Æ-----------------------
+-----------------------å®¢æˆ·æ´»æœŸäº§å“ä½™é¢å‘¨é¢‘çŽ‡ç»Ÿè®¡-----------------------
 /*
-    0. ¸üÐÂÊý¾Ý±êÇ©
+    0. æ›´æ–°æ•°æ®æ ‡ç­¾
 */
 UPDATE MMAPDM.DM_CUST_BAL_STAT SET NEW_FLAG = '0';
 /*
-    1. ½¨Á¢ÁÙÊ±±í
+    1. å»ºç«‹ä¸´æ—¶è¡¨
 */
 
------È¡Ç°Ò»ÌìÊý¾Ý-----
+-----å–å‰ä¸€å¤©æ•°æ®-----
 SELECT COUNT(1) INTO COUNT_NUM
 FROM USER_TABLES 
 WHERE TABLE_NAME = 'TMP_CUST_BAL_CAL'
@@ -121,111 +121,115 @@ DM_SQL:= 'CREATE TABLE MMAPDM.TMP_CUST_BAL_CAL AS
 SELECT
    a.ETL_DATE     
   ,a.TX_DATE
-  ,''W''                        AS FREQ                 --Æµ¶È£¨D\W\M\Q\Y£©ÐèÒªÐÞ¸Ä
+  ,''W''                        AS FREQ                 --é¢‘åº¦ï¼ˆD\W\M\Q\Yï¼‰éœ€è¦ä¿®æ”¹
   ,b.YEAR
   ,''0''                        AS FREQ_DIFF
-  ,a.PROD_TYPE                  AS PROD_TYPE          --²úÆ·´óÀà-»îÆÚ ÐèÒªÐÞ¸Ä   
-  ,a.CUSTOMER_ID                                        --¿Í»§ºÅ
+  ,a.PROD_TYPE                  AS PROD_TYPE          --äº§å“å¤§ç±»-æ´»æœŸ éœ€è¦ä¿®æ”¹   
+  ,a.CUSTOMER_ID                                        --å®¢æˆ·å·
   ,a.PERIOD_ID        
-  ,b.DAYOFWEEK                                          --ÐèÒªÐÞ¸Ä
-  ,b.WEEKOFYEAR                                         --ÐèÒªÐÞ¸Ä
-  ,a.CUST_BAL_LC                AS CUST_BAL_LC             --»îÆÚ£¨CD£©²úÆ·µÄ£¨ÈËÃñ±ÒLC£©µ±ÆÚÓà¶î
-  ,c.CUST_BAL_LC                AS CUST_BAL_CWS_LC         --Í¬ÆÚÓà¶î
-  ,d.CUST_BAL_LC                AS CUST_BAL_SQT_LC         --ÉÏÆÚÓà¶î
+  ,b.DAYOFWEEK                                          --éœ€è¦ä¿®æ”¹
+  ,b.WEEKOFYEAR                                         --éœ€è¦ä¿®æ”¹
+  ,a.CUST_BAL_LC                AS CUST_BAL_LC             --æ´»æœŸï¼ˆCDï¼‰äº§å“çš„ï¼ˆäººæ°‘å¸LCï¼‰å½“æœŸä½™é¢
+  ,c.CUST_BAL_LC                AS CUST_BAL_CWS_LC         --åŒæœŸä½™é¢
+  ,d.CUST_BAL_LC                AS CUST_BAL_SQT_LC         --ä¸ŠæœŸä½™é¢
   ,(CASE WHEN b.DAYOFWEEK = ''1'' THEN a.CUST_BAL_LC
     ELSE 
         greatest(NVL(a.CUST_BAL_LC,0),NVL(e.CUST_BAL_MAX_LC,0)) END)
-                        AS CUST_BAL_MAX_LC       --Óà¶î_×î´óÖµ
+                        AS CUST_BAL_MAX_LC       --ä½™é¢_æœ€å¤§å€¼
   ,(CASE WHEN b.DAYOFWEEK = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_LC,0) - NVL(e.CUST_BAL_MAX_LC,0) > 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MAX_DATE_LC END) END) 
-                        AS CUST_BAL_MAX_DATE_LC    --Óà¶î_×î´óÖµ_ÈÕÆÚ
+                        AS CUST_BAL_MAX_DATE_LC    --ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFWEEK = ''1'' THEN a.CUST_BAL_LC
     ELSE 
         least(NVL(a.CUST_BAL_LC,0),NVL(e.CUST_BAL_MIN_LC,0)) END)
-                        AS CUST_BAL_MIN_LC         --Óà¶î_×îÐ¡Öµ
+                        AS CUST_BAL_MIN_LC         --ä½™é¢_æœ€å°å€¼
   ,(CASE WHEN b.DAYOFWEEK = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_LC,0) - NVL(e.CUST_BAL_MIN_LC,0) < 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MIN_DATE_LC END) END)
-                        AS CUST_BAL_MIN_DATE_LC    --Óà¶î_×îÐ¡Öµ_ÈÕÆÚ
+                        AS CUST_BAL_MIN_DATE_LC    --ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFWEEK = ''1''THEN a.CUST_BAL_LC
     ELSE 
         ((NVL(e.CUST_BAL_AVG_LC,0) * (b.DAYOFWEEK-1) + NVL(a.CUST_BAL_LC,0)) / b.DAYOFWEEK) END)
-                            AS CUST_BAL_AVG_LC         --ÈÕÆ½¾ùÓà¶î
-  ,c.CUST_BAL_AVG_LC        AS CUST_BAL_AVG_CWS_LC     --ÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_AVG_LC        AS CUST_BAL_AVG_SQT_LC     --ÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
-  ,a.CUST_BAL_FC            AS CUST_BAL_FC          --Íâ±ÒÓà¶î
-  ,c.CUST_BAL_FC           AS CUST_BAL_CWS_FC      --Íâ±ÒÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_FC           AS CUST_BAL_SQT_FC      --Íâ±ÒÓà¶î_ÉÏÆÚ
+                            AS CUST_BAL_AVG_LC         --æ—¥å¹³å‡ä½™é¢
+  ,c.CUST_BAL_AVG_LC        AS CUST_BAL_AVG_CWS_LC     --æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_AVG_LC        AS CUST_BAL_AVG_SQT_LC     --æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
+  ,a.CUST_BAL_FC            AS CUST_BAL_FC          --å¤–å¸ä½™é¢
+  ,c.CUST_BAL_FC           AS CUST_BAL_CWS_FC      --å¤–å¸ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_FC           AS CUST_BAL_SQT_FC      --å¤–å¸ä½™é¢_ä¸ŠæœŸ
   ,(CASE WHEN b.DAYOFWEEK = ''1'' THEN a.CUST_BAL_FC
     ELSE 
         greatest(NVL(a.CUST_BAL_FC,0),NVL(e.CUST_BAL_MAX_FC,0)) END)
-                        AS CUST_BAL_MAX_FC      --Íâ±ÒÓà¶î_×î´óÖµ
+                        AS CUST_BAL_MAX_FC      --å¤–å¸ä½™é¢_æœ€å¤§å€¼
   ,(CASE WHEN b.DAYOFWEEK = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_FC,0) - NVL(e.CUST_BAL_MAX_FC,0) > 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MAX_DATE_FC END) END)
-                        AS CUST_BAL_MAX_DATE_FC --Íâ±ÒÓà¶î_×î´óÖµ_ÈÕÆÚ
+                        AS CUST_BAL_MAX_DATE_FC --å¤–å¸ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFWEEK = ''1'' THEN a.CUST_BAL_FC
     ELSE
         least(NVL(a.CUST_BAL_FC,0),NVL(e.CUST_BAL_MIN_FC,0)) END)
-                        AS CUST_BAL_MIN_FC      --Íâ±ÒÓà¶î_×îÐ¡Öµ
+                        AS CUST_BAL_MIN_FC      --å¤–å¸ä½™é¢_æœ€å°å€¼
   ,(CASE WHEN b.DAYOFWEEK = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_FC,0) - NVL(e.CUST_BAL_MIN_FC,0) < 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MIN_DATE_FC END) END)
-                        AS CUST_BAL_MIN_DATE_FC --Íâ±ÒÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
+                        AS CUST_BAL_MIN_DATE_FC --å¤–å¸ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFWEEK = ''1'' THEN a.CUST_BAL_FC
     ELSE
         ((NVL(e.CUST_BAL_AVG_FC,0) * (b.DAYOFWEEK-1) + NVL(a.CUST_BAL_FC,0)) / b.DAYOFWEEK) END)
-                        AS CUST_BAL_AVG_FC      --Íâ±ÒÈÕÆ½¾ùÓà¶î
-  ,c.CUST_BAL_AVG_FC    AS CUST_BAL_AVG_CWS_FC  --Íâ±ÒÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_AVG_FC    AS  CUST_BAL_AVG_SQT_FC --Íâ±ÒÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,a.CUST_BAL                AS CUST_BAL             --ºÏ¼Æµ±ÆÚÓà¶î
-  ,c.CUST_BAL                AS CUST_BAL_CWS         --ºÏ¼ÆÍ¬ÆÚÓà¶î
-  ,d.CUST_BAL                AS CUST_BAL_SQT         --ºÏ¼ÆÉÏÆÚÓà¶î
+                        AS CUST_BAL_AVG_FC      --å¤–å¸æ—¥å¹³å‡ä½™é¢
+  ,c.CUST_BAL_AVG_FC    AS CUST_BAL_AVG_CWS_FC  --å¤–å¸æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_AVG_FC    AS  CUST_BAL_AVG_SQT_FC --å¤–å¸æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,a.CUST_BAL                AS CUST_BAL             --åˆè®¡å½“æœŸä½™é¢
+  ,c.CUST_BAL                AS CUST_BAL_CWS         --åˆè®¡åŒæœŸä½™é¢
+  ,d.CUST_BAL                AS CUST_BAL_SQT         --åˆè®¡ä¸ŠæœŸä½™é¢
   ,(CASE WHEN b.DAYOFWEEK = ''1'' THEN a.CUST_BAL
     ELSE 
         greatest(NVL(a.CUST_BAL,0),NVL(e.CUST_BAL_MAX,0)) END)
-                        AS CUST_BAL_MAX       --ºÏ¼ÆÓà¶î_×î´óÖµ
+                        AS CUST_BAL_MAX       --åˆè®¡ä½™é¢_æœ€å¤§å€¼
   ,(CASE WHEN b.DAYOFWEEK = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL,0) - NVL(e.CUST_BAL_MAX,0) > 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MAX_DATE END) END) 
-                        AS CUST_BAL_MAX_DATE    --ºÏ¼ÆÓà¶î_×î´óÖµ_ÈÕÆÚ
+                        AS CUST_BAL_MAX_DATE    --åˆè®¡ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFWEEK = ''1'' THEN a.CUST_BAL
     ELSE 
         least(NVL(a.CUST_BAL,0),NVL(e.CUST_BAL_MIN,0)) END)
-                        AS CUST_BAL_MIN         --ºÏ¼ÆÓà¶î_×îÐ¡Öµ
+                        AS CUST_BAL_MIN         --åˆè®¡ä½™é¢_æœ€å°å€¼
   ,(CASE WHEN b.DAYOFWEEK = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL,0) - NVL(e.CUST_BAL_MIN,0) < 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MIN_DATE END) END)
-                        AS CUST_BAL_MIN_DATE    --ºÏ¼ÆÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
+                        AS CUST_BAL_MIN_DATE    --åˆè®¡ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFWEEK = ''1''THEN a.CUST_BAL
     ELSE 
         ((NVL(e.CUST_BAL_AVG,0) * (b.DAYOFWEEK-1) + NVL(a.CUST_BAL,0)) / b.DAYOFWEEK) END)
-                        AS CUST_BAL_AVG         --ºÏ¼ÆÈÕÆ½¾ùÓà¶î
-  ,c.CUST_BAL_AVG       AS CUST_BAL_AVG_CWS     --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_AVG       AS CUST_BAL_AVG_SQT     --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
+                        AS CUST_BAL_AVG         --åˆè®¡æ—¥å¹³å‡ä½™é¢
+  ,c.CUST_BAL_AVG       AS CUST_BAL_AVG_CWS     --åˆè®¡æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_AVG       AS CUST_BAL_AVG_SQT     --åˆè®¡æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
 
 FROM MMAPDM.TMP_CUST_BAL_T a
 LEFT JOIN  MMAPST.MID_CALENDAR b
 ON a.PERIOD_ID = b.PERIOD_ID
---Í¬ÆÚc
+--åŒæœŸc
 LEFT JOIN  MMAPDM.DM_CUST_BAL_STAT c
 ON b.YEAR - 1 = c.YEAR
 AND b.weekofyear = c.freq_value
 AND a.CUSTOMER_ID = c.CUSTOMER_ID
 AND c.PROD_TYPE = a.PROD_TYPE
---ÉÏÆÚd
+AND c.FREQ = ''W''
+--ä¸ŠæœŸd
 LEFT JOIN MMAPDM.DM_CUST_BAL_STAT d
 ON b.YEAR = d.YEAR
 AND b.weekofyear - 1= d.freq_value
 AND a.CUSTOMER_ID = d.CUSTOMER_ID
 AND d.PROD_TYPE = a.PROD_TYPE
---×îÖµe
+AND d.FREQ = ''W''
+--æœ€å€¼e
 LEFT JOIN MMAPDM.DM_CUST_BAL_STAT e
-ON TO_NUMBER(TO_CHAR(a.TX_DATE - 1,''yyyymmdd'')) = e.PERIOD_ID
+ON 	b.YEAR = d.YEAR
+AND TO_NUMBER(TO_CHAR(a.TX_DATE - 1,''yyyymmdd'')) = e.PERIOD_ID
 AND b.weekofyear = e.freq_value
 AND a.CUSTOMER_ID = e.CUSTOMER_ID
 AND e.PROD_TYPE = a.PROD_TYPE
+AND e.FREQ = ''W''
 '
 
 ;
@@ -233,7 +237,7 @@ EXECUTE  IMMEDIATE DM_SQL;
 COMMIT;
 
 /*
-    2. É¾³ýÇ°Ò»ÌìÀúÊ·Êý¾Ý
+    2. åˆ é™¤å‰ä¸€å¤©åŽ†å²æ•°æ®
 */
 DELETE FROM MMAPDM.DM_CUST_BAL_STAT
 WHERE       FREQ_VALUE IN (
@@ -249,50 +253,50 @@ AND         PERIOD_ID IN (
 AND         FREQ = 'W';
 
 /*
-    3. ²åÈëµ±ÌìÊý¾Ý
+    3. æ’å…¥å½“å¤©æ•°æ®
 */
 
 DM_SQL:= 'INSERT INTO MMAPDM.DM_CUST_BAL_STAT
 (
-     ETL_DATE               --ÅÜÅúÈÕÆÚ(YYYYMMDD)                        
-    ,TX_DATE                --Êý¾ÝÈÕÆÚ(YYYYMMDD)
-    ,PERIOD_ID              --ÈÕÆÚ(YYYYMMDD)
-    ,CUSTOMER_ID            --¿Í»§ºÅ
-    ,FREQ                   --Æµ¶È£¨D\W\M\Q\Y£©  
-    ,YEAR                   --Äê·Ý(YYYY)  
-    ,FREQ_VALUE             --Æµ¶ÈÖµ(1\2\3\4)    
-    ,FREQ_DIFF              --Æµ¶È²î(Óë¸üÐÂÈÕÆÚµÄ¼¾¶È²îÖµ)   
-    ,PROD_TYPE              --²úÆ·´óÀà£¨»îÆÚ¡¢¶¨ÆÚ¡¢»ù½ð¡¢×Ê²ú×Ü¶î£¨ÈËÃñ±Ò+Íâ±Ò£©µÈ£©   
-    ,CUST_BAL_LC            --Óà¶î  
-    ,CUST_BAL_CWS_LC        --Óà¶î_Í¬ÆÚ      
-    ,CUST_BAL_SQT_LC        --Óà¶î_ÉÏÆÚ        
-    ,CUST_BAL_MAX_LC        --Óà¶î_×î´óÖµ          
-    ,CUST_BAL_MAX_DATE_LC   --Óà¶î_×î´óÖµ_ÈÕÆÚ                 
-    ,CUST_BAL_MIN_LC        --Óà¶î_×îÐ¡Öµ                  
-    ,CUST_BAL_MIN_DATE_LC   --Óà¶î_×îÐ¡Öµ_ÈÕÆÚ                       
-    ,CUST_BAL_AVG_LC        --ÈÕÆ½¾ùÓà¶î              
-    ,CUST_BAL_AVG_CWS_LC    --ÈÕÆ½¾ùÓà¶î_Í¬ÆÚ                      
-    ,CUST_BAL_AVG_SQT_LC    --ÈÕÆ½¾ùÓà¶î_ÉÏÆÚ                        
-    ,CUST_BAL_FC            --Íâ±ÒÓà¶î                
-    ,CUST_BAL_CWS_FC        --Íâ±ÒÓà¶î_Í¬ÆÚ
-    ,CUST_BAL_SQT_FC        --Íâ±ÒÓà¶î_ÉÏÆÚ
-    ,CUST_BAL_MAX_FC        --Íâ±ÒÓà¶î_×î´óÖµ
-    ,CUST_BAL_MAX_DATE_FC   --Íâ±ÒÓà¶î_×î´óÖµ_ÈÕÆÚ
-    ,CUST_BAL_MIN_FC        --Íâ±ÒÓà¶î_×îÐ¡Öµ
-    ,CUST_BAL_MIN_DATE_FC   --Íâ±ÒÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
-    ,CUST_BAL_AVG_FC        --Íâ±ÒÈÕÆ½¾ùÓà¶î
-    ,CUST_BAL_AVG_CWS_FC    --Íâ±ÒÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-    ,CUST_BAL_AVG_SQT_FC    --Íâ±ÒÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
-    ,CUST_BAL               --ºÏ¼ÆÓà¶î  
-    ,CUST_BAL_CWS           --ºÏ¼ÆÓà¶î_Í¬ÆÚ      
-    ,CUST_BAL_SQT           --ºÏ¼ÆÓà¶î_ÉÏÆÚ        
-    ,CUST_BAL_MAX           --ºÏ¼ÆÓà¶î_×î´óÖµ          
-    ,CUST_BAL_MAX_DATE      --ºÏ¼ÆÓà¶î_×î´óÖµ_ÈÕÆÚ                 
-    ,CUST_BAL_MIN           --ºÏ¼ÆÓà¶î_×îÐ¡Öµ                  
-    ,CUST_BAL_MIN_DATE      --ºÏ¼ÆÓà¶î_×îÐ¡Öµ_ÈÕÆÚ                       
-    ,CUST_BAL_AVG           --ºÏ¼ÆÈÕÆ½¾ùÓà¶î              
-    ,CUST_BAL_AVG_CWS       --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_Í¬ÆÚ                      
-    ,CUST_BAL_AVG_SQT       --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_ÉÏÆÚ 
+     ETL_DATE               --è·‘æ‰¹æ—¥æœŸ(YYYYMMDD)                        
+    ,TX_DATE                --æ•°æ®æ—¥æœŸ(YYYYMMDD)
+    ,PERIOD_ID              --æ—¥æœŸ(YYYYMMDD)
+    ,CUSTOMER_ID            --å®¢æˆ·å·
+    ,FREQ                   --é¢‘åº¦ï¼ˆD\W\M\Q\Yï¼‰  
+    ,YEAR                   --å¹´ä»½(YYYY)  
+    ,FREQ_VALUE             --é¢‘åº¦å€¼(1\2\3\4)    
+    ,FREQ_DIFF              --é¢‘åº¦å·®(ä¸Žæ›´æ–°æ—¥æœŸçš„å­£åº¦å·®å€¼)   
+    ,PROD_TYPE              --äº§å“å¤§ç±»ï¼ˆæ´»æœŸã€å®šæœŸã€åŸºé‡‘ã€èµ„äº§æ€»é¢ï¼ˆäººæ°‘å¸+å¤–å¸ï¼‰ç­‰ï¼‰   
+    ,CUST_BAL_LC            --ä½™é¢  
+    ,CUST_BAL_CWS_LC        --ä½™é¢_åŒæœŸ      
+    ,CUST_BAL_SQT_LC        --ä½™é¢_ä¸ŠæœŸ        
+    ,CUST_BAL_MAX_LC        --ä½™é¢_æœ€å¤§å€¼          
+    ,CUST_BAL_MAX_DATE_LC   --ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ                 
+    ,CUST_BAL_MIN_LC        --ä½™é¢_æœ€å°å€¼                  
+    ,CUST_BAL_MIN_DATE_LC   --ä½™é¢_æœ€å°å€¼_æ—¥æœŸ                       
+    ,CUST_BAL_AVG_LC        --æ—¥å¹³å‡ä½™é¢              
+    ,CUST_BAL_AVG_CWS_LC    --æ—¥å¹³å‡ä½™é¢_åŒæœŸ                      
+    ,CUST_BAL_AVG_SQT_LC    --æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ                        
+    ,CUST_BAL_FC            --å¤–å¸ä½™é¢                
+    ,CUST_BAL_CWS_FC        --å¤–å¸ä½™é¢_åŒæœŸ
+    ,CUST_BAL_SQT_FC        --å¤–å¸ä½™é¢_ä¸ŠæœŸ
+    ,CUST_BAL_MAX_FC        --å¤–å¸ä½™é¢_æœ€å¤§å€¼
+    ,CUST_BAL_MAX_DATE_FC   --å¤–å¸ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
+    ,CUST_BAL_MIN_FC        --å¤–å¸ä½™é¢_æœ€å°å€¼
+    ,CUST_BAL_MIN_DATE_FC   --å¤–å¸ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
+    ,CUST_BAL_AVG_FC        --å¤–å¸æ—¥å¹³å‡ä½™é¢
+    ,CUST_BAL_AVG_CWS_FC    --å¤–å¸æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+    ,CUST_BAL_AVG_SQT_FC    --å¤–å¸æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
+    ,CUST_BAL               --åˆè®¡ä½™é¢  
+    ,CUST_BAL_CWS           --åˆè®¡ä½™é¢_åŒæœŸ      
+    ,CUST_BAL_SQT           --åˆè®¡ä½™é¢_ä¸ŠæœŸ        
+    ,CUST_BAL_MAX           --åˆè®¡ä½™é¢_æœ€å¤§å€¼          
+    ,CUST_BAL_MAX_DATE      --åˆè®¡ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ                 
+    ,CUST_BAL_MIN           --åˆè®¡ä½™é¢_æœ€å°å€¼                  
+    ,CUST_BAL_MIN_DATE      --åˆè®¡ä½™é¢_æœ€å°å€¼_æ—¥æœŸ                       
+    ,CUST_BAL_AVG           --åˆè®¡æ—¥å¹³å‡ä½™é¢              
+    ,CUST_BAL_AVG_CWS       --åˆè®¡æ—¥å¹³å‡ä½™é¢_åŒæœŸ                      
+    ,CUST_BAL_AVG_SQT       --åˆè®¡æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ 
     ,NEW_FLAG    
 )
 SELECT 
@@ -300,11 +304,11 @@ SELECT
     ,TX_DATE      
     ,PERIOD_ID    
     ,CUSTOMER_ID
-    ,''W'' AS FREQ        --Æµ¶È£¨D\W\M\Q\Y£©
+    ,''W'' AS FREQ        --é¢‘åº¦ï¼ˆD\W\M\Q\Yï¼‰
     ,YEAR
     ,WEEKOFYEAR
     ,0 AS FREQ_DIFF
-    ,PROD_TYPE  --²úÆ·´óÀà£¨»îÆÚ¡¢¶¨ÆÚ¡¢»ù½ð¡¢×Ê²ú×Ü¶î£¨ÈËÃñ±Ò
+    ,PROD_TYPE  --äº§å“å¤§ç±»ï¼ˆæ´»æœŸã€å®šæœŸã€åŸºé‡‘ã€èµ„äº§æ€»é¢ï¼ˆäººæ°‘å¸
     ,CUST_BAL_LC         
     ,CUST_BAL_CWS_LC     
     ,CUST_BAL_SQT_LC     
@@ -343,7 +347,7 @@ IO_ROW := SQL%ROWCOUNT ;
 COMMIT;
 
 /*
-    4. ¸üÐÂÆµ¶È²î
+    4. æ›´æ–°é¢‘åº¦å·®
 */
 
 UPDATE  MMAPDM.DM_CUST_BAL_STAT
@@ -356,17 +360,17 @@ AND     (SELECT DISTINCT a.DAYOFWEEK FROM MMAPST.ST_CUST_BAL b
 ;
 
 /*
-    5. É¾³ý¹ýÆÚÊý¾Ý£¨ÖÜÊý¾ÝÁô´æ12ÆÚ£©
+    5. åˆ é™¤è¿‡æœŸæ•°æ®ï¼ˆå‘¨æ•°æ®ç•™å­˜12æœŸï¼‰
 */
 
 DELETE FROM MMAPDM.DM_CUST_BAL_STAT
-WHERE       FREQ_DIFF >= '12'
+WHERE       FREQ_DIFF >= 12
 AND         FREQ = 'W';
 
------------------------¿Í»§»îÆÚ²úÆ·Óà¶îÔÂÆµÂÊÍ³¼Æ-----------------------
+-----------------------å®¢æˆ·æ´»æœŸäº§å“ä½™é¢æœˆé¢‘çŽ‡ç»Ÿè®¡-----------------------
 
 /*
-    1. ¸üÐÂÁÙÊ±±í
+    1. æ›´æ–°ä¸´æ—¶è¡¨
 */
 SELECT COUNT(1) INTO COUNT_NUM
 FROM USER_TABLES 
@@ -385,118 +389,121 @@ DM_SQL:= 'CREATE TABLE MMAPDM.TMP_CUST_BAL_CAL AS
 SELECT
    a.ETL_DATE     
   ,a.TX_DATE
-  ,''M''                       AS FREQ                    --Æµ¶È£¨D\W\M\Q\Y£©ÐèÒªÐÞ¸Ä
+  ,''M''                       AS FREQ                    --é¢‘åº¦ï¼ˆD\W\M\Q\Yï¼‰éœ€è¦ä¿®æ”¹
   ,b.YEAR
   ,''0''                AS FREQ_DIFF
-  ,a.PROD_TYPE               AS PROD_TYPE           --²úÆ·´óÀà-»îÆÚ ÐèÒªÐÞ¸Ä   
-  ,a.CUSTOMER_ID                                --¿Í»§ºÅ
+  ,a.PROD_TYPE               AS PROD_TYPE           --äº§å“å¤§ç±»-æ´»æœŸ éœ€è¦ä¿®æ”¹   
+  ,a.CUSTOMER_ID                                --å®¢æˆ·å·
   ,a.PERIOD_ID        
-  ,b.DAYOFMONTH                                 --ÐèÒªÐÞ¸Ä
-  ,b.MONTH                              --ÐèÒªÐÞ¸Ä
-  ,a.CUST_BAL_LC            AS CUST_BAL_LC             --»îÆÚ£¨CD£©²úÆ·µÄ£¨ÈËÃñ±ÒLC£©µ±ÆÚÓà¶î
-  ,c.CUST_BAL_LC               AS CUST_BAL_CWS_LC         --Í¬ÆÚÓà¶î
-  ,d.CUST_BAL_LC               AS CUST_BAL_SQT_LC         --ÉÏÆÚÓà¶î
+  ,b.DAYOFMONTH                                 --éœ€è¦ä¿®æ”¹
+  ,b.MONTH                              --éœ€è¦ä¿®æ”¹
+  ,a.CUST_BAL_LC            AS CUST_BAL_LC             --æ´»æœŸï¼ˆCDï¼‰äº§å“çš„ï¼ˆäººæ°‘å¸LCï¼‰å½“æœŸä½™é¢
+  ,c.CUST_BAL_LC               AS CUST_BAL_CWS_LC         --åŒæœŸä½™é¢
+  ,d.CUST_BAL_LC               AS CUST_BAL_SQT_LC         --ä¸ŠæœŸä½™é¢
   ,(CASE WHEN b.DAYOFMONTH = ''1'' THEN a.CUST_BAL_LC
     ELSE 
         greatest(NVL(a.CUST_BAL_LC,0),NVL(e.CUST_BAL_MAX_LC,0)) END)
-                        AS CUST_BAL_MAX_LC       --Óà¶î_×î´óÖµ
+                        AS CUST_BAL_MAX_LC       --ä½™é¢_æœ€å¤§å€¼
   ,(CASE WHEN b.DAYOFMONTH = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_LC,0) - NVL(e.CUST_BAL_MAX_LC,0) > 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MAX_DATE_LC END) END) 
-                        AS CUST_BAL_MAX_DATE_LC    --Óà¶î_×î´óÖµ_ÈÕÆÚ
+                        AS CUST_BAL_MAX_DATE_LC    --ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFMONTH = ''1'' THEN a.CUST_BAL_LC
     ELSE 
         least(NVL(a.CUST_BAL_LC,0),NVL(e.CUST_BAL_MIN_LC,0)) END)
-                        AS CUST_BAL_MIN_LC         --Óà¶î_×îÐ¡Öµ
+                        AS CUST_BAL_MIN_LC         --ä½™é¢_æœ€å°å€¼
   ,(CASE WHEN b.DAYOFMONTH = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_LC,0) - NVL(e.CUST_BAL_MIN_LC,0) < 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MIN_DATE_LC END) END)
-                        AS CUST_BAL_MIN_DATE_LC    --Óà¶î_×îÐ¡Öµ_ÈÕÆÚ
+                        AS CUST_BAL_MIN_DATE_LC    --ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFMONTH = ''1'' THEN a.CUST_BAL_LC
     ELSE 
         ((NVL(e.CUST_BAL_AVG_LC,0) * (b.DAYOFMONTH-1) + NVL(a.CUST_BAL_LC,0)) / b.DAYOFMONTH) END)
-                        AS CUST_BAL_AVG_LC         --ÈÕÆ½¾ùÓà¶î
-  ,c.CUST_BAL_AVG_LC       AS CUST_BAL_AVG_CWS_LC     --ÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_AVG_LC       AS CUST_BAL_AVG_SQT_LC     --ÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
-  ,a.CUST_BAL_FC        AS CUST_BAL_FC             --Íâ±ÒÓà¶î
-  ,c.CUST_BAL_FC       AS CUST_BAL_CWS_FC      --Íâ±ÒÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_FC       AS CUST_BAL_SQT_FC      --Íâ±ÒÓà¶î_ÉÏÆÚ
+                        AS CUST_BAL_AVG_LC         --æ—¥å¹³å‡ä½™é¢
+  ,c.CUST_BAL_AVG_LC       AS CUST_BAL_AVG_CWS_LC     --æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_AVG_LC       AS CUST_BAL_AVG_SQT_LC     --æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
+  ,a.CUST_BAL_FC        AS CUST_BAL_FC             --å¤–å¸ä½™é¢
+  ,c.CUST_BAL_FC       AS CUST_BAL_CWS_FC      --å¤–å¸ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_FC       AS CUST_BAL_SQT_FC      --å¤–å¸ä½™é¢_ä¸ŠæœŸ
   ,(CASE WHEN b.DAYOFMONTH = ''1'' THEN a.CUST_BAL_FC
     ELSE 
         greatest(NVL(a.CUST_BAL_FC,0),NVL(e.CUST_BAL_MAX_FC,0)) END)
-                        AS CUST_BAL_MAX_FC      --Íâ±ÒÓà¶î_×î´óÖµ
+                        AS CUST_BAL_MAX_FC      --å¤–å¸ä½™é¢_æœ€å¤§å€¼
   ,(CASE WHEN b.DAYOFMONTH = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_FC,0) - NVL(e.CUST_BAL_MAX_FC,0) > 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MAX_DATE_FC END) END)
-                        AS CUST_BAL_MAX_DATE_FC --Íâ±ÒÓà¶î_×î´óÖµ_ÈÕÆÚ
+                        AS CUST_BAL_MAX_DATE_FC --å¤–å¸ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFMONTH = ''1'' THEN a.CUST_BAL_FC
     ELSE
         least(NVL(a.CUST_BAL_FC,0),NVL(e.CUST_BAL_MIN_FC,0)) END)
-                        AS CUST_BAL_MIN_FC      --Íâ±ÒÓà¶î_×îÐ¡Öµ
+                        AS CUST_BAL_MIN_FC      --å¤–å¸ä½™é¢_æœ€å°å€¼
   ,(CASE WHEN b.DAYOFMONTH = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_FC,0) - NVL(e.CUST_BAL_MIN_FC,0) < 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MIN_DATE_FC END) END)
-                        AS CUST_BAL_MIN_DATE_FC --Íâ±ÒÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
+                        AS CUST_BAL_MIN_DATE_FC --å¤–å¸ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFMONTH = ''1'' THEN a.CUST_BAL_FC
     ELSE
         ((NVL(e.CUST_BAL_AVG_FC,0) * (b.DAYOFMONTH-1) + NVL(a.CUST_BAL_FC,0)) / b.DAYOFMONTH) END)
-                        AS CUST_BAL_AVG_FC      --Íâ±ÒÈÕÆ½¾ùÓà¶î
-  ,c.CUST_BAL_AVG_FC    AS CUST_BAL_AVG_CWS_FC  --Íâ±ÒÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_AVG_FC    AS  CUST_BAL_AVG_SQT_FC --Íâ±ÒÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,a.CUST_BAL               AS CUST_BAL             --ºÏ¼Æµ±ÆÚÓà¶î
-  ,c.CUST_BAL               AS CUST_BAL_CWS         --ºÏ¼ÆÍ¬ÆÚÓà¶î
-  ,d.CUST_BAL               AS CUST_BAL_SQT         --ºÏ¼ÆÉÏÆÚÓà¶î
+                        AS CUST_BAL_AVG_FC      --å¤–å¸æ—¥å¹³å‡ä½™é¢
+  ,c.CUST_BAL_AVG_FC    AS CUST_BAL_AVG_CWS_FC  --å¤–å¸æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_AVG_FC    AS  CUST_BAL_AVG_SQT_FC --å¤–å¸æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,a.CUST_BAL               AS CUST_BAL             --åˆè®¡å½“æœŸä½™é¢
+  ,c.CUST_BAL               AS CUST_BAL_CWS         --åˆè®¡åŒæœŸä½™é¢
+  ,d.CUST_BAL               AS CUST_BAL_SQT         --åˆè®¡ä¸ŠæœŸä½™é¢
   ,(CASE WHEN b.DAYOFMONTH = ''1'' THEN a.CUST_BAL
     ELSE 
         greatest(NVL(a.CUST_BAL,0),NVL(e.CUST_BAL_MAX,0)) END)
-                        AS CUST_BAL_MAX       --ºÏ¼ÆÓà¶î_×î´óÖµ
+                        AS CUST_BAL_MAX       --åˆè®¡ä½™é¢_æœ€å¤§å€¼
   ,(CASE WHEN b.DAYOFMONTH = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL,0) - NVL(e.CUST_BAL_MAX,0) > 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MAX_DATE END) END) 
-                        AS CUST_BAL_MAX_DATE    --ºÏ¼ÆÓà¶î_×î´óÖµ_ÈÕÆÚ
+                        AS CUST_BAL_MAX_DATE    --åˆè®¡ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFMONTH = ''1'' THEN a.CUST_BAL
     ELSE 
         least(NVL(a.CUST_BAL,0),NVL(e.CUST_BAL_MIN,0)) END)
-                        AS CUST_BAL_MIN         --ºÏ¼ÆÓà¶î_×îÐ¡Öµ
+                        AS CUST_BAL_MIN         --åˆè®¡ä½™é¢_æœ€å°å€¼
   ,(CASE WHEN b.DAYOFMONTH = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL,0) - NVL(e.CUST_BAL_MIN,0) < 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MIN_DATE END) END)
-                        AS CUST_BAL_MIN_DATE    --ºÏ¼ÆÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
+                        AS CUST_BAL_MIN_DATE    --åˆè®¡ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFMONTH = ''1'' THEN a.CUST_BAL
     ELSE 
         ((NVL(e.CUST_BAL_AVG,0) * (b.DAYOFMONTH-1) + NVL(a.CUST_BAL,0)) / b.DAYOFMONTH) END)
-                        AS CUST_BAL_AVG         --ºÏ¼ÆÈÕÆ½¾ùÓà¶î
-  ,c.CUST_BAL_AVG       AS CUST_BAL_AVG_CWS     --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_AVG       AS CUST_BAL_AVG_SQT     --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
+                        AS CUST_BAL_AVG         --åˆè®¡æ—¥å¹³å‡ä½™é¢
+  ,c.CUST_BAL_AVG       AS CUST_BAL_AVG_CWS     --åˆè®¡æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_AVG       AS CUST_BAL_AVG_SQT     --åˆè®¡æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
  
 FROM MMAPDM.TMP_CUST_BAL_T a
 LEFT JOIN  MMAPST.MID_CALENDAR b
 ON a.PERIOD_ID = b.PERIOD_ID
---Í¬ÆÚc
+--åŒæœŸc
 LEFT JOIN  MMAPDM.DM_CUST_BAL_STAT c
 ON b.YEAR - 1 = c.YEAR
 AND b.MONTH = c.freq_value
 AND a.CUSTOMER_ID = c.CUSTOMER_ID
 AND c.PROD_TYPE = a.PROD_TYPE
---ÉÏÆÚd
+AND c.FREQ = ''M''
+--ä¸ŠæœŸd
 LEFT JOIN MMAPDM.DM_CUST_BAL_STAT d
 ON b.YEAR = d.YEAR
 AND b.MONTH - 1= d.freq_value
 AND a.CUSTOMER_ID = d.CUSTOMER_ID
 AND d.PROD_TYPE = a.PROD_TYPE
---×îÖµe
+AND d.FREQ = ''M''
+--æœ€å€¼e
 LEFT JOIN MMAPDM.DM_CUST_BAL_STAT e
 ON TO_NUMBER(TO_CHAR(a.TX_DATE - 1,''yyyymmdd'')) = e.PERIOD_ID
 AND b.MONTH = e.freq_value
 AND a.CUSTOMER_ID = e.CUSTOMER_ID
 AND e.PROD_TYPE = a.PROD_TYPE
+AND d.FREQ = ''M''
 '
 ;
 EXECUTE  IMMEDIATE DM_SQL;
 COMMIT;
 
 /*
-    2. É¾³ýÇ°Ò»ÌìÀúÊ·Êý¾Ý
+    2. åˆ é™¤å‰ä¸€å¤©åŽ†å²æ•°æ®
 */
 DELETE FROM MMAPDM.DM_CUST_BAL_STAT
 WHERE       FREQ_VALUE IN (
@@ -514,50 +521,50 @@ AND         FREQ = 'M';
 
 
 /*
-    3. ²åÈëµ±ÌìÊý¾Ý
+    3. æ’å…¥å½“å¤©æ•°æ®
 */
 
 DM_SQL:= 'INSERT INTO MMAPDM.DM_CUST_BAL_STAT
 (
-     ETL_DATE               --ÅÜÅúÈÕÆÚ(YYYYMMDD)                        
-    ,TX_DATE                --Êý¾ÝÈÕÆÚ(YYYYMMDD)
-    ,PERIOD_ID              --ÈÕÆÚ(YYYYMMDD)
-    ,CUSTOMER_ID            --¿Í»§ºÅ
-    ,FREQ                   --Æµ¶È£¨D\W\M\Q\Y£©  
-    ,YEAR                   --Äê·Ý(YYYY)  
-    ,FREQ_VALUE             --Æµ¶ÈÖµ(1\2\3\4)    
-    ,FREQ_DIFF              --Æµ¶È²î(Óë¸üÐÂÈÕÆÚµÄ¼¾¶È²îÖµ)   
-    ,PROD_TYPE              --²úÆ·´óÀà£¨»îÆÚ¡¢¶¨ÆÚ¡¢»ù½ð¡¢×Ê²ú×Ü¶î£¨ÈËÃñ±Ò+Íâ±Ò£©µÈ£©   
-    ,CUST_BAL_LC            --Óà¶î  
-    ,CUST_BAL_CWS_LC        --Óà¶î_Í¬ÆÚ      
-    ,CUST_BAL_SQT_LC        --Óà¶î_ÉÏÆÚ        
-    ,CUST_BAL_MAX_LC        --Óà¶î_×î´óÖµ          
-    ,CUST_BAL_MAX_DATE_LC   --Óà¶î_×î´óÖµ_ÈÕÆÚ                 
-    ,CUST_BAL_MIN_LC        --Óà¶î_×îÐ¡Öµ                  
-    ,CUST_BAL_MIN_DATE_LC   --Óà¶î_×îÐ¡Öµ_ÈÕÆÚ                       
-    ,CUST_BAL_AVG_LC        --ÈÕÆ½¾ùÓà¶î              
-    ,CUST_BAL_AVG_CWS_LC    --ÈÕÆ½¾ùÓà¶î_Í¬ÆÚ                      
-    ,CUST_BAL_AVG_SQT_LC    --ÈÕÆ½¾ùÓà¶î_ÉÏÆÚ                        
-    ,CUST_BAL_FC            --Íâ±ÒÓà¶î                
-    ,CUST_BAL_CWS_FC        --Íâ±ÒÓà¶î_Í¬ÆÚ
-    ,CUST_BAL_SQT_FC        --Íâ±ÒÓà¶î_ÉÏÆÚ
-    ,CUST_BAL_MAX_FC        --Íâ±ÒÓà¶î_×î´óÖµ
-    ,CUST_BAL_MAX_DATE_FC   --Íâ±ÒÓà¶î_×î´óÖµ_ÈÕÆÚ
-    ,CUST_BAL_MIN_FC        --Íâ±ÒÓà¶î_×îÐ¡Öµ
-    ,CUST_BAL_MIN_DATE_FC   --Íâ±ÒÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
-    ,CUST_BAL_AVG_FC        --Íâ±ÒÈÕÆ½¾ùÓà¶î
-    ,CUST_BAL_AVG_CWS_FC    --Íâ±ÒÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-    ,CUST_BAL_AVG_SQT_FC    --Íâ±ÒÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
-    ,CUST_BAL               --ºÏ¼ÆÓà¶î  
-    ,CUST_BAL_CWS           --ºÏ¼ÆÓà¶î_Í¬ÆÚ      
-    ,CUST_BAL_SQT           --ºÏ¼ÆÓà¶î_ÉÏÆÚ        
-    ,CUST_BAL_MAX           --ºÏ¼ÆÓà¶î_×î´óÖµ          
-    ,CUST_BAL_MAX_DATE      --ºÏ¼ÆÓà¶î_×î´óÖµ_ÈÕÆÚ                 
-    ,CUST_BAL_MIN           --ºÏ¼ÆÓà¶î_×îÐ¡Öµ                  
-    ,CUST_BAL_MIN_DATE      --ºÏ¼ÆÓà¶î_×îÐ¡Öµ_ÈÕÆÚ                       
-    ,CUST_BAL_AVG           --ºÏ¼ÆÈÕÆ½¾ùÓà¶î              
-    ,CUST_BAL_AVG_CWS       --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_Í¬ÆÚ                      
-    ,CUST_BAL_AVG_SQT       --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_ÉÏÆÚ 
+     ETL_DATE               --è·‘æ‰¹æ—¥æœŸ(YYYYMMDD)                        
+    ,TX_DATE                --æ•°æ®æ—¥æœŸ(YYYYMMDD)
+    ,PERIOD_ID              --æ—¥æœŸ(YYYYMMDD)
+    ,CUSTOMER_ID            --å®¢æˆ·å·
+    ,FREQ                   --é¢‘åº¦ï¼ˆD\W\M\Q\Yï¼‰  
+    ,YEAR                   --å¹´ä»½(YYYY)  
+    ,FREQ_VALUE             --é¢‘åº¦å€¼(1\2\3\4)    
+    ,FREQ_DIFF              --é¢‘åº¦å·®(ä¸Žæ›´æ–°æ—¥æœŸçš„å­£åº¦å·®å€¼)   
+    ,PROD_TYPE              --äº§å“å¤§ç±»ï¼ˆæ´»æœŸã€å®šæœŸã€åŸºé‡‘ã€èµ„äº§æ€»é¢ï¼ˆäººæ°‘å¸+å¤–å¸ï¼‰ç­‰ï¼‰   
+    ,CUST_BAL_LC            --ä½™é¢  
+    ,CUST_BAL_CWS_LC        --ä½™é¢_åŒæœŸ      
+    ,CUST_BAL_SQT_LC        --ä½™é¢_ä¸ŠæœŸ        
+    ,CUST_BAL_MAX_LC        --ä½™é¢_æœ€å¤§å€¼          
+    ,CUST_BAL_MAX_DATE_LC   --ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ                 
+    ,CUST_BAL_MIN_LC        --ä½™é¢_æœ€å°å€¼                  
+    ,CUST_BAL_MIN_DATE_LC   --ä½™é¢_æœ€å°å€¼_æ—¥æœŸ                       
+    ,CUST_BAL_AVG_LC        --æ—¥å¹³å‡ä½™é¢              
+    ,CUST_BAL_AVG_CWS_LC    --æ—¥å¹³å‡ä½™é¢_åŒæœŸ                      
+    ,CUST_BAL_AVG_SQT_LC    --æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ                        
+    ,CUST_BAL_FC            --å¤–å¸ä½™é¢                
+    ,CUST_BAL_CWS_FC        --å¤–å¸ä½™é¢_åŒæœŸ
+    ,CUST_BAL_SQT_FC        --å¤–å¸ä½™é¢_ä¸ŠæœŸ
+    ,CUST_BAL_MAX_FC        --å¤–å¸ä½™é¢_æœ€å¤§å€¼
+    ,CUST_BAL_MAX_DATE_FC   --å¤–å¸ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
+    ,CUST_BAL_MIN_FC        --å¤–å¸ä½™é¢_æœ€å°å€¼
+    ,CUST_BAL_MIN_DATE_FC   --å¤–å¸ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
+    ,CUST_BAL_AVG_FC        --å¤–å¸æ—¥å¹³å‡ä½™é¢
+    ,CUST_BAL_AVG_CWS_FC    --å¤–å¸æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+    ,CUST_BAL_AVG_SQT_FC    --å¤–å¸æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
+    ,CUST_BAL               --åˆè®¡ä½™é¢  
+    ,CUST_BAL_CWS           --åˆè®¡ä½™é¢_åŒæœŸ      
+    ,CUST_BAL_SQT           --åˆè®¡ä½™é¢_ä¸ŠæœŸ        
+    ,CUST_BAL_MAX           --åˆè®¡ä½™é¢_æœ€å¤§å€¼          
+    ,CUST_BAL_MAX_DATE      --åˆè®¡ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ                 
+    ,CUST_BAL_MIN           --åˆè®¡ä½™é¢_æœ€å°å€¼                  
+    ,CUST_BAL_MIN_DATE      --åˆè®¡ä½™é¢_æœ€å°å€¼_æ—¥æœŸ                       
+    ,CUST_BAL_AVG           --åˆè®¡æ—¥å¹³å‡ä½™é¢              
+    ,CUST_BAL_AVG_CWS       --åˆè®¡æ—¥å¹³å‡ä½™é¢_åŒæœŸ                      
+    ,CUST_BAL_AVG_SQT       --åˆè®¡æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ 
     ,NEW_FLAG    
 )
 SELECT 
@@ -565,11 +572,11 @@ SELECT
     ,TX_DATE      
     ,PERIOD_ID    
     ,CUSTOMER_ID
-    ,''M'' AS FREQ        --Æµ¶È£¨D\W\M\Q\Y£©
+    ,''M'' AS FREQ        --é¢‘åº¦ï¼ˆD\W\M\Q\Yï¼‰
     ,YEAR
     ,MONTH
     ,0 AS FREQ_DIFF
-    ,PROD_TYPE  --²úÆ·´óÀà£¨»îÆÚ¡¢¶¨ÆÚ¡¢»ù½ð¡¢×Ê²ú×Ü¶î£¨ÈËÃñ±Ò
+    ,PROD_TYPE  --äº§å“å¤§ç±»ï¼ˆæ´»æœŸã€å®šæœŸã€åŸºé‡‘ã€èµ„äº§æ€»é¢ï¼ˆäººæ°‘å¸
     ,CUST_BAL_LC         
     ,CUST_BAL_CWS_LC     
     ,CUST_BAL_SQT_LC     
@@ -607,7 +614,7 @@ EXECUTE  IMMEDIATE DM_SQL;
 IO_ROW := IO_ROW+SQL%ROWCOUNT ;
 COMMIT;
 /*
-    4. ¸üÐÂÆµ¶È²î
+    4. æ›´æ–°é¢‘åº¦å·®
 */
 
 UPDATE  MMAPDM.DM_CUST_BAL_STAT 
@@ -620,18 +627,18 @@ AND     (SELECT DISTINCT a.DAYOFMONTH FROM MMAPST.ST_CUST_BAL b
 ;
 
 /*
-    5. É¾³ý¹ýÆÚÊý¾Ý£¨ÔÂÊý¾ÝÁô´æ12ÆÚ£©
+    5. åˆ é™¤è¿‡æœŸæ•°æ®ï¼ˆæœˆæ•°æ®ç•™å­˜12æœŸï¼‰
 */
 
 DELETE FROM MMAPDM.DM_CUST_BAL_STAT
-WHERE       FREQ_DIFF >= '24'
+WHERE       FREQ_DIFF >= 24
 AND         FREQ = 'M'
 ;
 
------------------------¿Í»§»îÆÚ²úÆ·Óà¶î¼¾ÆµÂÊÍ³¼Æ-----------------------
+-----------------------å®¢æˆ·æ´»æœŸäº§å“ä½™é¢å­£é¢‘çŽ‡ç»Ÿè®¡-----------------------
 
 /*
-    1. ¸üÐÂÁÙÊ±±í
+    1. æ›´æ–°ä¸´æ—¶è¡¨
 */
 SELECT COUNT(1) INTO COUNT_NUM
 FROM USER_TABLES 
@@ -650,119 +657,122 @@ DM_SQL:= 'CREATE TABLE MMAPDM.TMP_CUST_BAL_CAL AS
 SELECT
    a.ETL_DATE     
   ,a.TX_DATE
-  ,''Q''                        AS FREQ                   --Æµ¶È£¨D\W\M\Q\Y£©ÐèÒªÐÞ¸Ä
+  ,''Q''                        AS FREQ                   --é¢‘åº¦ï¼ˆD\W\M\Q\Yï¼‰éœ€è¦ä¿®æ”¹
   ,b.YEAR
   ,''0''                        AS FREQ_DIFF
-  ,a.PROD_TYPE                AS PROD_TYPE          --²úÆ·´óÀà-»îÆÚ ÐèÒªÐÞ¸Ä   
-  ,a.CUSTOMER_ID                                --¿Í»§ºÅ
+  ,a.PROD_TYPE                AS PROD_TYPE          --äº§å“å¤§ç±»-æ´»æœŸ éœ€è¦ä¿®æ”¹   
+  ,a.CUSTOMER_ID                                --å®¢æˆ·å·
   ,a.PERIOD_ID        
-  ,b.DAYOFQUARTER                               --ÐèÒªÐÞ¸Ä
-  ,b.QUARTER                                   --ÐèÒªÐÞ¸Ä
-  ,a.CUST_BAL_LC               AS CUST_BAL_LC             --»îÆÚ£¨CD£©²úÆ·µÄ£¨ÈËÃñ±ÒLC£©µ±ÆÚÓà¶î
-  ,c.CUST_BAL_LC               AS CUST_BAL_CWS_LC         --Í¬ÆÚÓà¶î
-  ,d.CUST_BAL_LC               AS CUST_BAL_SQT_LC         --ÉÏÆÚÓà¶î
+  ,b.DAYOFQUARTER                               --éœ€è¦ä¿®æ”¹
+  ,b.QUARTER                                   --éœ€è¦ä¿®æ”¹
+  ,a.CUST_BAL_LC               AS CUST_BAL_LC             --æ´»æœŸï¼ˆCDï¼‰äº§å“çš„ï¼ˆäººæ°‘å¸LCï¼‰å½“æœŸä½™é¢
+  ,c.CUST_BAL_LC               AS CUST_BAL_CWS_LC         --åŒæœŸä½™é¢
+  ,d.CUST_BAL_LC               AS CUST_BAL_SQT_LC         --ä¸ŠæœŸä½™é¢
   ,(CASE WHEN b.DAYOFQUARTER = ''1'' THEN a.CUST_BAL_LC
     ELSE 
         greatest(NVL(a.CUST_BAL_LC,0),NVL(e.CUST_BAL_MAX_LC,0)) END)
-                        AS CUST_BAL_MAX_LC       --Óà¶î_×î´óÖµ
+                        AS CUST_BAL_MAX_LC       --ä½™é¢_æœ€å¤§å€¼
   ,(CASE WHEN b.DAYOFQUARTER = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_LC,0) - NVL(e.CUST_BAL_MAX_LC,0) > 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MAX_DATE_LC END) END) 
-                        AS CUST_BAL_MAX_DATE_LC    --Óà¶î_×î´óÖµ_ÈÕÆÚ
+                        AS CUST_BAL_MAX_DATE_LC    --ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFQUARTER = ''1'' THEN a.CUST_BAL_LC
     ELSE 
         least(NVL(a.CUST_BAL_LC,0),NVL(e.CUST_BAL_MIN_LC,0)) END)
-                        AS CUST_BAL_MIN_LC         --Óà¶î_×îÐ¡Öµ
+                        AS CUST_BAL_MIN_LC         --ä½™é¢_æœ€å°å€¼
   ,(CASE WHEN b.DAYOFQUARTER = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_LC,0) - NVL(e.CUST_BAL_MIN_LC,0) < 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MIN_DATE_LC END) END)
-                        AS CUST_BAL_MIN_DATE_LC    --Óà¶î_×îÐ¡Öµ_ÈÕÆÚ
+                        AS CUST_BAL_MIN_DATE_LC    --ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFQUARTER = ''1'' THEN a.CUST_BAL_LC
     ELSE 
         ((NVL(e.CUST_BAL_AVG_LC,0) * (b.DAYOFQUARTER-1) + NVL(a.CUST_BAL_LC,0)) / b.DAYOFQUARTER) END)
-                        AS CUST_BAL_AVG_LC         --ÈÕÆ½¾ùÓà¶î
-  ,c.CUST_BAL_AVG_LC       AS CUST_BAL_AVG_CWS_LC     --ÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_AVG_LC       AS CUST_BAL_AVG_SQT_LC     --ÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
-  ,a.CUST_BAL_FC    AS CUST_BAL_FC          --Íâ±ÒÓà¶î
-  ,c.CUST_BAL_FC       AS CUST_BAL_CWS_FC      --Íâ±ÒÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_FC       AS CUST_BAL_SQT_FC      --Íâ±ÒÓà¶î_ÉÏÆÚ
+                        AS CUST_BAL_AVG_LC         --æ—¥å¹³å‡ä½™é¢
+  ,c.CUST_BAL_AVG_LC       AS CUST_BAL_AVG_CWS_LC     --æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_AVG_LC       AS CUST_BAL_AVG_SQT_LC     --æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
+  ,a.CUST_BAL_FC    AS CUST_BAL_FC          --å¤–å¸ä½™é¢
+  ,c.CUST_BAL_FC       AS CUST_BAL_CWS_FC      --å¤–å¸ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_FC       AS CUST_BAL_SQT_FC      --å¤–å¸ä½™é¢_ä¸ŠæœŸ
   ,(CASE WHEN b.DAYOFQUARTER = ''1'' THEN a.CUST_BAL_FC
     ELSE 
         greatest(NVL(a.CUST_BAL_FC,0),NVL(e.CUST_BAL_MAX_FC,0)) END)
-                        AS CUST_BAL_MAX_FC      --Íâ±ÒÓà¶î_×î´óÖµ
+                        AS CUST_BAL_MAX_FC      --å¤–å¸ä½™é¢_æœ€å¤§å€¼
   ,(CASE WHEN b.DAYOFQUARTER = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_FC,0) - NVL(e.CUST_BAL_MAX_FC,0) > 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MAX_DATE_FC END) END)
-                        AS CUST_BAL_MAX_DATE_FC --Íâ±ÒÓà¶î_×î´óÖµ_ÈÕÆÚ
+                        AS CUST_BAL_MAX_DATE_FC --å¤–å¸ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFQUARTER = ''1'' THEN a.CUST_BAL_FC
     ELSE
         least(NVL(a.CUST_BAL_FC,0),NVL(e.CUST_BAL_MIN_FC,0)) END)
-                        AS CUST_BAL_MIN_FC      --Íâ±ÒÓà¶î_×îÐ¡Öµ
+                        AS CUST_BAL_MIN_FC      --å¤–å¸ä½™é¢_æœ€å°å€¼
   ,(CASE WHEN b.DAYOFQUARTER = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_FC,0) - NVL(e.CUST_BAL_MIN_FC,0) < 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MIN_DATE_FC END) END)
-                        AS CUST_BAL_MIN_DATE_FC --Íâ±ÒÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
+                        AS CUST_BAL_MIN_DATE_FC --å¤–å¸ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFQUARTER = ''1'' THEN a.CUST_BAL_FC
     ELSE
         ((NVL(e.CUST_BAL_AVG_FC,0) * (b.DAYOFQUARTER-1) + NVL(a.CUST_BAL_FC,0)) / b.DAYOFQUARTER) END)
-                        AS CUST_BAL_AVG_FC      --Íâ±ÒÈÕÆ½¾ùÓà¶î
-  ,c.CUST_BAL_AVG_FC    AS CUST_BAL_AVG_CWS_FC  --Íâ±ÒÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_AVG_FC    AS  CUST_BAL_AVG_SQT_FC --Íâ±ÒÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,a.CUST_BAL               AS CUST_BAL            --ºÏ¼Æµ±ÆÚÓà¶î
-  ,c.CUST_BAL               AS CUST_BAL_CWS        --ºÏ¼ÆÍ¬ÆÚÓà¶î
-  ,d.CUST_BAL               AS CUST_BAL_SQT        --ºÏ¼ÆÉÏÆÚÓà¶î
+                        AS CUST_BAL_AVG_FC      --å¤–å¸æ—¥å¹³å‡ä½™é¢
+  ,c.CUST_BAL_AVG_FC    AS CUST_BAL_AVG_CWS_FC  --å¤–å¸æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_AVG_FC    AS  CUST_BAL_AVG_SQT_FC --å¤–å¸æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,a.CUST_BAL               AS CUST_BAL            --åˆè®¡å½“æœŸä½™é¢
+  ,c.CUST_BAL               AS CUST_BAL_CWS        --åˆè®¡åŒæœŸä½™é¢
+  ,d.CUST_BAL               AS CUST_BAL_SQT        --åˆè®¡ä¸ŠæœŸä½™é¢
   ,(CASE WHEN b.DAYOFQUARTER = ''1'' THEN a.CUST_BAL
     ELSE 
         greatest(NVL(a.CUST_BAL,0),NVL(e.CUST_BAL_MAX,0)) END)
-                        AS CUST_BAL_MAX       --ºÏ¼ÆÓà¶î_×î´óÖµ
+                        AS CUST_BAL_MAX       --åˆè®¡ä½™é¢_æœ€å¤§å€¼
   ,(CASE WHEN b.DAYOFQUARTER = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL,0) - NVL(e.CUST_BAL_MAX,0) > 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MAX_DATE END) END) 
-                        AS CUST_BAL_MAX_DATE    --ºÏ¼ÆÓà¶î_×î´óÖµ_ÈÕÆÚ
+                        AS CUST_BAL_MAX_DATE    --åˆè®¡ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFQUARTER = ''1'' THEN a.CUST_BAL
     ELSE 
         least(NVL(a.CUST_BAL,0),NVL(e.CUST_BAL_MIN,0)) END)
-                        AS CUST_BAL_MIN         --ºÏ¼ÆÓà¶î_×îÐ¡Öµ
+                        AS CUST_BAL_MIN         --åˆè®¡ä½™é¢_æœ€å°å€¼
   ,(CASE WHEN b.DAYOFQUARTER = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL,0) - NVL(e.CUST_BAL_MIN,0) < 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MIN_DATE END) END)
-                        AS CUST_BAL_MIN_DATE    --ºÏ¼ÆÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
+                        AS CUST_BAL_MIN_DATE    --åˆè®¡ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFQUARTER = ''1'' THEN a.CUST_BAL
     ELSE 
         ((NVL(e.CUST_BAL_AVG,0) * (b.DAYOFQUARTER-1) + NVL(a.CUST_BAL,0)) / b.DAYOFQUARTER) END)
-                        AS CUST_BAL_AVG         --ºÏ¼ÆÈÕÆ½¾ùÓà¶î
-  ,c.CUST_BAL_AVG       AS CUST_BAL_AVG_CWS     --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_AVG       AS CUST_BAL_AVG_SQT    --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
+                        AS CUST_BAL_AVG         --åˆè®¡æ—¥å¹³å‡ä½™é¢
+  ,c.CUST_BAL_AVG       AS CUST_BAL_AVG_CWS     --åˆè®¡æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_AVG       AS CUST_BAL_AVG_SQT    --åˆè®¡æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
 
 
 FROM MMAPDM.TMP_CUST_BAL_T a
 LEFT JOIN  MMAPST.MID_CALENDAR b
 ON a.PERIOD_ID = b.PERIOD_ID
---Í¬ÆÚc
+--åŒæœŸc
 LEFT JOIN  MMAPDM.DM_CUST_BAL_STAT c
 ON b.YEAR - 1 = c.YEAR
 AND b.QUARTER = c.freq_value
 AND a.CUSTOMER_ID = c.CUSTOMER_ID
 AND c.PROD_TYPE = a.PROD_TYPE
---ÉÏÆÚd
+AND c.FREQ = ''Q''
+--ä¸ŠæœŸd
 LEFT JOIN MMAPDM.DM_CUST_BAL_STAT d
 ON b.YEAR = d.YEAR
 AND b.QUARTER - 1= d.freq_value
 AND a.CUSTOMER_ID = d.CUSTOMER_ID
 AND d.PROD_TYPE = a.PROD_TYPE
---×îÖµe
+AND d.FREQ = ''Q''
+--æœ€å€¼e
 LEFT JOIN MMAPDM.DM_CUST_BAL_STAT e
 ON TO_NUMBER(TO_CHAR(a.TX_DATE - 1,''yyyymmdd'')) = e.PERIOD_ID
 AND b.QUARTER = e.freq_value
 AND a.CUSTOMER_ID = e.CUSTOMER_ID
 AND e.PROD_TYPE = a.PROD_TYPE
+AND e.FREQ = ''Q''
 '
 ;
 EXECUTE  IMMEDIATE DM_SQL;
 COMMIT;
 
 /*
-    2. É¾³ýÇ°Ò»ÌìÀúÊ·Êý¾Ý
+    2. åˆ é™¤å‰ä¸€å¤©åŽ†å²æ•°æ®
 */
 DELETE FROM MMAPDM.DM_CUST_BAL_STAT
 WHERE       FREQ_VALUE IN (
@@ -780,50 +790,50 @@ AND         FREQ = 'Q';
 
 
 /*
-    3. ²åÈëµ±ÌìÊý¾Ý
+    3. æ’å…¥å½“å¤©æ•°æ®
 */
 
 DM_SQL:= 'INSERT INTO MMAPDM.DM_CUST_BAL_STAT
 (
-     ETL_DATE               --ÅÜÅúÈÕÆÚ(YYYYMMDD)                        
-    ,TX_DATE                --Êý¾ÝÈÕÆÚ(YYYYMMDD)
-    ,PERIOD_ID              --ÈÕÆÚ(YYYYMMDD)
-    ,CUSTOMER_ID            --¿Í»§ºÅ
-    ,FREQ                   --Æµ¶È£¨D\W\M\Q\Y£©  
-    ,YEAR                   --Äê·Ý(YYYY)  
-    ,FREQ_VALUE             --Æµ¶ÈÖµ(1\2\3\4)    
-    ,FREQ_DIFF              --Æµ¶È²î(Óë¸üÐÂÈÕÆÚµÄ¼¾¶È²îÖµ)   
-    ,PROD_TYPE              --²úÆ·´óÀà£¨»îÆÚ¡¢¶¨ÆÚ¡¢»ù½ð¡¢×Ê²ú×Ü¶î£¨ÈËÃñ±Ò+Íâ±Ò£©µÈ£©   
-    ,CUST_BAL_LC            --Óà¶î  
-    ,CUST_BAL_CWS_LC        --Óà¶î_Í¬ÆÚ      
-    ,CUST_BAL_SQT_LC        --Óà¶î_ÉÏÆÚ        
-    ,CUST_BAL_MAX_LC        --Óà¶î_×î´óÖµ          
-    ,CUST_BAL_MAX_DATE_LC   --Óà¶î_×î´óÖµ_ÈÕÆÚ                 
-    ,CUST_BAL_MIN_LC        --Óà¶î_×îÐ¡Öµ                  
-    ,CUST_BAL_MIN_DATE_LC   --Óà¶î_×îÐ¡Öµ_ÈÕÆÚ                       
-    ,CUST_BAL_AVG_LC        --ÈÕÆ½¾ùÓà¶î              
-    ,CUST_BAL_AVG_CWS_LC    --ÈÕÆ½¾ùÓà¶î_Í¬ÆÚ                      
-    ,CUST_BAL_AVG_SQT_LC    --ÈÕÆ½¾ùÓà¶î_ÉÏÆÚ                        
-    ,CUST_BAL_FC            --Íâ±ÒÓà¶î                
-    ,CUST_BAL_CWS_FC        --Íâ±ÒÓà¶î_Í¬ÆÚ
-    ,CUST_BAL_SQT_FC        --Íâ±ÒÓà¶î_ÉÏÆÚ
-    ,CUST_BAL_MAX_FC        --Íâ±ÒÓà¶î_×î´óÖµ
-    ,CUST_BAL_MAX_DATE_FC   --Íâ±ÒÓà¶î_×î´óÖµ_ÈÕÆÚ
-    ,CUST_BAL_MIN_FC        --Íâ±ÒÓà¶î_×îÐ¡Öµ
-    ,CUST_BAL_MIN_DATE_FC   --Íâ±ÒÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
-    ,CUST_BAL_AVG_FC        --Íâ±ÒÈÕÆ½¾ùÓà¶î
-    ,CUST_BAL_AVG_CWS_FC    --Íâ±ÒÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-    ,CUST_BAL_AVG_SQT_FC    --Íâ±ÒÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
-    ,CUST_BAL               --ºÏ¼ÆÓà¶î  
-    ,CUST_BAL_CWS           --ºÏ¼ÆÓà¶î_Í¬ÆÚ      
-    ,CUST_BAL_SQT           --ºÏ¼ÆÓà¶î_ÉÏÆÚ        
-    ,CUST_BAL_MAX           --ºÏ¼ÆÓà¶î_×î´óÖµ          
-    ,CUST_BAL_MAX_DATE      --ºÏ¼ÆÓà¶î_×î´óÖµ_ÈÕÆÚ                 
-    ,CUST_BAL_MIN           --ºÏ¼ÆÓà¶î_×îÐ¡Öµ                  
-    ,CUST_BAL_MIN_DATE      --ºÏ¼ÆÓà¶î_×îÐ¡Öµ_ÈÕÆÚ                       
-    ,CUST_BAL_AVG           --ºÏ¼ÆÈÕÆ½¾ùÓà¶î              
-    ,CUST_BAL_AVG_CWS       --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_Í¬ÆÚ                      
-    ,CUST_BAL_AVG_SQT       --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_ÉÏÆÚ 
+     ETL_DATE               --è·‘æ‰¹æ—¥æœŸ(YYYYMMDD)                        
+    ,TX_DATE                --æ•°æ®æ—¥æœŸ(YYYYMMDD)
+    ,PERIOD_ID              --æ—¥æœŸ(YYYYMMDD)
+    ,CUSTOMER_ID            --å®¢æˆ·å·
+    ,FREQ                   --é¢‘åº¦ï¼ˆD\W\M\Q\Yï¼‰  
+    ,YEAR                   --å¹´ä»½(YYYY)  
+    ,FREQ_VALUE             --é¢‘åº¦å€¼(1\2\3\4)    
+    ,FREQ_DIFF              --é¢‘åº¦å·®(ä¸Žæ›´æ–°æ—¥æœŸçš„å­£åº¦å·®å€¼)   
+    ,PROD_TYPE              --äº§å“å¤§ç±»ï¼ˆæ´»æœŸã€å®šæœŸã€åŸºé‡‘ã€èµ„äº§æ€»é¢ï¼ˆäººæ°‘å¸+å¤–å¸ï¼‰ç­‰ï¼‰   
+    ,CUST_BAL_LC            --ä½™é¢  
+    ,CUST_BAL_CWS_LC        --ä½™é¢_åŒæœŸ      
+    ,CUST_BAL_SQT_LC        --ä½™é¢_ä¸ŠæœŸ        
+    ,CUST_BAL_MAX_LC        --ä½™é¢_æœ€å¤§å€¼          
+    ,CUST_BAL_MAX_DATE_LC   --ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ                 
+    ,CUST_BAL_MIN_LC        --ä½™é¢_æœ€å°å€¼                  
+    ,CUST_BAL_MIN_DATE_LC   --ä½™é¢_æœ€å°å€¼_æ—¥æœŸ                       
+    ,CUST_BAL_AVG_LC        --æ—¥å¹³å‡ä½™é¢              
+    ,CUST_BAL_AVG_CWS_LC    --æ—¥å¹³å‡ä½™é¢_åŒæœŸ                      
+    ,CUST_BAL_AVG_SQT_LC    --æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ                        
+    ,CUST_BAL_FC            --å¤–å¸ä½™é¢                
+    ,CUST_BAL_CWS_FC        --å¤–å¸ä½™é¢_åŒæœŸ
+    ,CUST_BAL_SQT_FC        --å¤–å¸ä½™é¢_ä¸ŠæœŸ
+    ,CUST_BAL_MAX_FC        --å¤–å¸ä½™é¢_æœ€å¤§å€¼
+    ,CUST_BAL_MAX_DATE_FC   --å¤–å¸ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
+    ,CUST_BAL_MIN_FC        --å¤–å¸ä½™é¢_æœ€å°å€¼
+    ,CUST_BAL_MIN_DATE_FC   --å¤–å¸ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
+    ,CUST_BAL_AVG_FC        --å¤–å¸æ—¥å¹³å‡ä½™é¢
+    ,CUST_BAL_AVG_CWS_FC    --å¤–å¸æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+    ,CUST_BAL_AVG_SQT_FC    --å¤–å¸æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
+    ,CUST_BAL               --åˆè®¡ä½™é¢  
+    ,CUST_BAL_CWS           --åˆè®¡ä½™é¢_åŒæœŸ      
+    ,CUST_BAL_SQT           --åˆè®¡ä½™é¢_ä¸ŠæœŸ        
+    ,CUST_BAL_MAX           --åˆè®¡ä½™é¢_æœ€å¤§å€¼          
+    ,CUST_BAL_MAX_DATE      --åˆè®¡ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ                 
+    ,CUST_BAL_MIN           --åˆè®¡ä½™é¢_æœ€å°å€¼                  
+    ,CUST_BAL_MIN_DATE      --åˆè®¡ä½™é¢_æœ€å°å€¼_æ—¥æœŸ                       
+    ,CUST_BAL_AVG           --åˆè®¡æ—¥å¹³å‡ä½™é¢              
+    ,CUST_BAL_AVG_CWS       --åˆè®¡æ—¥å¹³å‡ä½™é¢_åŒæœŸ                      
+    ,CUST_BAL_AVG_SQT       --åˆè®¡æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ 
     ,NEW_FLAG    
 )
 SELECT 
@@ -831,11 +841,11 @@ SELECT
     ,TX_DATE      
     ,PERIOD_ID    
     ,CUSTOMER_ID
-    ,''Q'' AS FREQ        --Æµ¶È£¨D\W\M\Q\Y£©
+    ,''Q'' AS FREQ        --é¢‘åº¦ï¼ˆD\W\M\Q\Yï¼‰
     ,YEAR
     ,QUARTER
     ,0 AS FREQ_DIFF
-    ,PROD_TYPE  --²úÆ·´óÀà£¨»îÆÚ¡¢¶¨ÆÚ¡¢»ù½ð¡¢×Ê²ú×Ü¶î£¨ÈËÃñ±Ò
+    ,PROD_TYPE  --äº§å“å¤§ç±»ï¼ˆæ´»æœŸã€å®šæœŸã€åŸºé‡‘ã€èµ„äº§æ€»é¢ï¼ˆäººæ°‘å¸
     ,CUST_BAL_LC         
     ,CUST_BAL_CWS_LC     
     ,CUST_BAL_SQT_LC     
@@ -874,7 +884,7 @@ IO_ROW := IO_ROW+SQL%ROWCOUNT ;
 COMMIT;
 
 /*
-    4. ¸üÐÂÆµ¶È²î
+    4. æ›´æ–°é¢‘åº¦å·®
 */
 
 UPDATE  MMAPDM.DM_CUST_BAL_STAT 
@@ -886,17 +896,17 @@ AND     (SELECT DISTINCT a.DAYOFQUARTER FROM MMAPST.ST_CUST_BAL b
           ON a.PERIOD_ID=b.PERIOD_ID) = 1;
 
 /*
-    5. É¾³ý¹ýÆÚÊý¾Ý£¨¼¾¶ÈÊý¾ÝÁô´æ8ÆÚ£©
+    5. åˆ é™¤è¿‡æœŸæ•°æ®ï¼ˆå­£åº¦æ•°æ®ç•™å­˜8æœŸï¼‰
 */
 
 DELETE FROM MMAPDM.DM_CUST_BAL_STAT
-WHERE       FREQ_DIFF >= '8'
+WHERE       FREQ_DIFF >= 8
 AND         FREQ = 'Q';
 
------------------------¿Í»§»îÆÚ²úÆ·Óà¶îÄêÆµÂÊÍ³¼Æ-----------------------
+-----------------------å®¢æˆ·æ´»æœŸäº§å“ä½™é¢å¹´é¢‘çŽ‡ç»Ÿè®¡-----------------------
 
 /*
-    1. ¸üÐÂÁÙÊ±±í
+    1. æ›´æ–°ä¸´æ—¶è¡¨
 */
 SELECT COUNT(1) INTO COUNT_NUM
 FROM USER_TABLES 
@@ -915,117 +925,120 @@ DM_SQL:= 'CREATE TABLE MMAPDM.TMP_CUST_BAL_CAL AS
 SELECT
    a.ETL_DATE     
   ,a.TX_DATE
-  ,''Y''                        AS FREQ                   --Æµ¶È£¨D\W\M\Q\Y£©ÐèÒªÐÞ¸Ä
+  ,''Y''                        AS FREQ                   --é¢‘åº¦ï¼ˆD\W\M\Q\Yï¼‰éœ€è¦ä¿®æ”¹
   ,b.YEAR
   ,''0''                        AS FREQ_DIFF
-  ,a.PROD_TYPE                    AS PROD_TYPE          --²úÆ·´óÀà-»îÆÚ ÐèÒªÐÞ¸Ä   
-  ,a.CUSTOMER_ID                                --¿Í»§ºÅ
+  ,a.PROD_TYPE                    AS PROD_TYPE          --äº§å“å¤§ç±»-æ´»æœŸ éœ€è¦ä¿®æ”¹   
+  ,a.CUSTOMER_ID                                --å®¢æˆ·å·
   ,a.PERIOD_ID        
-  ,b.DAYOFYEAR                                  --ÐèÒªÐÞ¸Ä
-  ,b.YEAR                   AS  FREQ_VALUE      --ÐèÒªÐÞ¸Ä
-  ,a.CUST_BAL_LC               AS CUST_BAL_LC             --ºÏ¼Æ»îÆÚ£¨CD£©²úÆ·µÄ£¨ÈËÃñ±ÒLC£©µ±ÆÚÓà¶î
-  ,c.CUST_BAL_LC               AS CUST_BAL_CWS_LC         --ºÏ¼ÆÍ¬ÆÚÓà¶î
-  ,d.CUST_BAL_LC               AS CUST_BAL_SQT_LC         --ºÏ¼ÆÉÏÆÚÓà¶î
+  ,b.DAYOFYEAR                                  --éœ€è¦ä¿®æ”¹
+  ,b.YEAR                   AS  FREQ_VALUE      --éœ€è¦ä¿®æ”¹
+  ,a.CUST_BAL_LC               AS CUST_BAL_LC             --åˆè®¡æ´»æœŸï¼ˆCDï¼‰äº§å“çš„ï¼ˆäººæ°‘å¸LCï¼‰å½“æœŸä½™é¢
+  ,c.CUST_BAL_LC               AS CUST_BAL_CWS_LC         --åˆè®¡åŒæœŸä½™é¢
+  ,d.CUST_BAL_LC               AS CUST_BAL_SQT_LC         --åˆè®¡ä¸ŠæœŸä½™é¢
   ,(CASE WHEN b.DAYOFYEAR = ''1'' THEN a.CUST_BAL_LC
     ELSE 
         greatest(NVL(a.CUST_BAL_LC,0),NVL(e.CUST_BAL_MAX_LC,0)) END)
-                        AS CUST_BAL_MAX_LC       --ºÏ¼ÆÓà¶î_×î´óÖµ
+                        AS CUST_BAL_MAX_LC       --åˆè®¡ä½™é¢_æœ€å¤§å€¼
   ,(CASE WHEN b.DAYOFYEAR = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_LC,0) - NVL(e.CUST_BAL_MAX_LC,0) > 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MAX_DATE_LC END) END) 
-                        AS CUST_BAL_MAX_DATE_LC    --ºÏ¼ÆÓà¶î_×î´óÖµ_ÈÕÆÚ
+                        AS CUST_BAL_MAX_DATE_LC    --åˆè®¡ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFYEAR = ''1'' THEN a.CUST_BAL_LC
     ELSE 
         least(NVL(a.CUST_BAL_LC,0),NVL(e.CUST_BAL_MIN_LC,0)) END)
-                        AS CUST_BAL_MIN_LC         --ºÏ¼ÆÓà¶î_×îÐ¡Öµ
+                        AS CUST_BAL_MIN_LC         --åˆè®¡ä½™é¢_æœ€å°å€¼
   ,(CASE WHEN b.DAYOFYEAR = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_LC,0) - NVL(e.CUST_BAL_MIN_LC,0) < 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MIN_DATE_LC END) END)
-                        AS CUST_BAL_MIN_DATE_LC    --ºÏ¼ÆÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
+                        AS CUST_BAL_MIN_DATE_LC    --åˆè®¡ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFYEAR = ''1'' THEN a.CUST_BAL_LC
     ELSE 
         ((NVL(e.CUST_BAL_AVG_LC,0) * (b.DAYOFYEAR-1) + NVL(a.CUST_BAL_LC,0)) / b.DAYOFYEAR) END)
-                        AS CUST_BAL_AVG_LC        --ºÏ¼ÆÈÕÆ½¾ùÓà¶î
-  ,c.CUST_BAL_AVG_LC      AS CUST_BAL_AVG_CWS_LC     --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_AVG_LC      AS CUST_BAL_AVG_SQT_LC     --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
-  ,a.CUST_BAL_FC          AS CUST_BAL_FC              --Íâ±ÒÓà¶î
-  ,c.CUST_BAL_FC          AS CUST_BAL_CWS_FC      --Íâ±ÒÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_FC          AS CUST_BAL_SQT_FC      --Íâ±ÒÓà¶î_ÉÏÆÚ
+                        AS CUST_BAL_AVG_LC        --åˆè®¡æ—¥å¹³å‡ä½™é¢
+  ,c.CUST_BAL_AVG_LC      AS CUST_BAL_AVG_CWS_LC     --åˆè®¡æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_AVG_LC      AS CUST_BAL_AVG_SQT_LC     --åˆè®¡æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
+  ,a.CUST_BAL_FC          AS CUST_BAL_FC              --å¤–å¸ä½™é¢
+  ,c.CUST_BAL_FC          AS CUST_BAL_CWS_FC      --å¤–å¸ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_FC          AS CUST_BAL_SQT_FC      --å¤–å¸ä½™é¢_ä¸ŠæœŸ
   ,(CASE WHEN b.DAYOFYEAR = ''1'' THEN a.CUST_BAL_FC
     ELSE 
         greatest(NVL(a.CUST_BAL_FC,0),NVL(e.CUST_BAL_MAX_FC,0)) END)
-                        AS CUST_BAL_MAX_FC      --Íâ±ÒÓà¶î_×î´óÖµ
+                        AS CUST_BAL_MAX_FC      --å¤–å¸ä½™é¢_æœ€å¤§å€¼
   ,(CASE WHEN b.DAYOFYEAR = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_FC,0) - NVL(e.CUST_BAL_MAX_FC,0) > 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MAX_DATE_FC END) END)
-                        AS CUST_BAL_MAX_DATE_FC --Íâ±ÒÓà¶î_×î´óÖµ_ÈÕÆÚ
+                        AS CUST_BAL_MAX_DATE_FC --å¤–å¸ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFYEAR = ''1'' THEN a.CUST_BAL_FC
     ELSE
         least(NVL(a.CUST_BAL_FC,0),NVL(e.CUST_BAL_MIN_FC,0)) END)
-                        AS CUST_BAL_MIN_FC      --Íâ±ÒÓà¶î_×îÐ¡Öµ
+                        AS CUST_BAL_MIN_FC      --å¤–å¸ä½™é¢_æœ€å°å€¼
   ,(CASE WHEN b.DAYOFYEAR = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL_FC,0) - NVL(e.CUST_BAL_MIN_FC,0) < 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MIN_DATE_FC END) END)
-                        AS CUST_BAL_MIN_DATE_FC --Íâ±ÒÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
+                        AS CUST_BAL_MIN_DATE_FC --å¤–å¸ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFYEAR = ''1'' THEN a.CUST_BAL_FC
     ELSE
         ((NVL(e.CUST_BAL_AVG_FC,0) * (b.DAYOFYEAR-1) + NVL(a.CUST_BAL_FC,0)) / b.DAYOFYEAR) END)
-                        AS CUST_BAL_AVG_FC      --Íâ±ÒÈÕÆ½¾ùÓà¶î
-  ,c.CUST_BAL_AVG_FC    AS CUST_BAL_AVG_CWS_FC  --Íâ±ÒÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_AVG_FC    AS  CUST_BAL_AVG_SQT_FC --Íâ±ÒÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,a.CUST_BAL               AS CUST_BAL             --ºÏ¼Æ»îÆÚ£¨CD£©²úÆ·µÄ£¨ÈËÃñ±ÒLC£©µ±ÆÚÓà¶î
-  ,c.CUST_BAL               AS CUST_BAL_CWS         --ºÏ¼ÆÍ¬ÆÚÓà¶î
-  ,d.CUST_BAL               AS CUST_BAL_SQT         --ºÏ¼ÆÉÏÆÚÓà¶î
+                        AS CUST_BAL_AVG_FC      --å¤–å¸æ—¥å¹³å‡ä½™é¢
+  ,c.CUST_BAL_AVG_FC    AS CUST_BAL_AVG_CWS_FC  --å¤–å¸æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_AVG_FC    AS  CUST_BAL_AVG_SQT_FC --å¤–å¸æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,a.CUST_BAL               AS CUST_BAL             --åˆè®¡æ´»æœŸï¼ˆCDï¼‰äº§å“çš„ï¼ˆäººæ°‘å¸LCï¼‰å½“æœŸä½™é¢
+  ,c.CUST_BAL               AS CUST_BAL_CWS         --åˆè®¡åŒæœŸä½™é¢
+  ,d.CUST_BAL               AS CUST_BAL_SQT         --åˆè®¡ä¸ŠæœŸä½™é¢
   ,(CASE WHEN b.DAYOFYEAR = ''1'' THEN a.CUST_BAL
     ELSE 
         greatest(NVL(a.CUST_BAL,0),NVL(e.CUST_BAL_MAX,0)) END)
-                        AS CUST_BAL_MAX       --ºÏ¼ÆÓà¶î_×î´óÖµ
+                        AS CUST_BAL_MAX       --åˆè®¡ä½™é¢_æœ€å¤§å€¼
   ,(CASE WHEN b.DAYOFYEAR = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL,0) - NVL(e.CUST_BAL_MAX,0) > 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MAX_DATE END) END) 
-                        AS CUST_BAL_MAX_DATE    --ºÏ¼ÆÓà¶î_×î´óÖµ_ÈÕÆÚ
+                        AS CUST_BAL_MAX_DATE    --åˆè®¡ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFYEAR = ''1'' THEN a.CUST_BAL
     ELSE 
         least(NVL(a.CUST_BAL,0),NVL(e.CUST_BAL_MIN,0)) END)
-                        AS CUST_BAL_MIN         --ºÏ¼ÆÓà¶î_×îÐ¡Öµ
+                        AS CUST_BAL_MIN         --åˆè®¡ä½™é¢_æœ€å°å€¼
   ,(CASE WHEN b.DAYOFYEAR = ''1'' THEN a.PERIOD_ID
     ELSE
         (CASE WHEN NVL(a.CUST_BAL,0) - NVL(e.CUST_BAL_MIN,0) < 0 THEN a.PERIOD_ID ELSE e.CUST_BAL_MIN_DATE END) END)
-                        AS CUST_BAL_MIN_DATE    --ºÏ¼ÆÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
+                        AS CUST_BAL_MIN_DATE    --åˆè®¡ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
   ,(CASE WHEN b.DAYOFYEAR = ''1'' THEN a.CUST_BAL
     ELSE 
         ((NVL(e.CUST_BAL_AVG,0) * (b.DAYOFYEAR-1) + NVL(a.CUST_BAL,0)) / b.DAYOFYEAR) END)
-                        AS CUST_BAL_AVG         --ºÏ¼ÆÈÕÆ½¾ùÓà¶î
-  ,c.CUST_BAL_AVG       AS CUST_BAL_AVG_CWS     --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-  ,d.CUST_BAL_AVG       AS CUST_BAL_AVG_SQT     --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
+                        AS CUST_BAL_AVG         --åˆè®¡æ—¥å¹³å‡ä½™é¢
+  ,c.CUST_BAL_AVG       AS CUST_BAL_AVG_CWS     --åˆè®¡æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+  ,d.CUST_BAL_AVG       AS CUST_BAL_AVG_SQT     --åˆè®¡æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
 
 FROM MMAPDM.TMP_CUST_BAL_T a
 LEFT JOIN  MMAPST.MID_CALENDAR b
 ON a.PERIOD_ID = b.PERIOD_ID
---Í¬ÆÚc
+--åŒæœŸc
 LEFT JOIN  MMAPDM.DM_CUST_BAL_STAT c
 ON b.YEAR - 1 = c.YEAR
 AND b.YEAR = c.freq_value
 AND a.CUSTOMER_ID = c.CUSTOMER_ID
 AND c.PROD_TYPE = a.PROD_TYPE
---ÉÏÆÚd
+AND c.FREQ = ''Y''
+--ä¸ŠæœŸd
 LEFT JOIN MMAPDM.DM_CUST_BAL_STAT d
 ON b.YEAR = d.YEAR
 AND b.YEAR - 1= d.freq_value
 AND a.CUSTOMER_ID = d.CUSTOMER_ID
 AND d.PROD_TYPE = a.PROD_TYPE
---×îÖµe
+AND d.FREQ = ''Y''
+--æœ€å€¼e
 LEFT JOIN MMAPDM.DM_CUST_BAL_STAT e
 ON TO_NUMBER(TO_CHAR(a.TX_DATE - 1,''yyyymmdd'')) = e.PERIOD_ID
 AND b.YEAR = e.freq_value
 AND a.CUSTOMER_ID = e.CUSTOMER_ID
 AND e.PROD_TYPE = a.PROD_TYPE
+AND e.FREQ = ''Y''
 '
 ;
 EXECUTE  IMMEDIATE DM_SQL;
 COMMIT;
 /*
-    2. É¾³ýÇ°Ò»ÌìÀúÊ·Êý¾Ý
+    2. åˆ é™¤å‰ä¸€å¤©åŽ†å²æ•°æ®
 */
 DELETE FROM MMAPDM.DM_CUST_BAL_STAT
 WHERE       FREQ_VALUE IN (
@@ -1043,50 +1056,50 @@ AND         FREQ = 'Y';
 
 
 /*
-    3. ²åÈëµ±ÌìÊý¾Ý
+    3. æ’å…¥å½“å¤©æ•°æ®
 */
 
 DM_SQL:= 'INSERT INTO MMAPDM.DM_CUST_BAL_STAT
 (
-     ETL_DATE               --ÅÜÅúÈÕÆÚ(YYYYMMDD)                        
-    ,TX_DATE                --Êý¾ÝÈÕÆÚ(YYYYMMDD)
-    ,PERIOD_ID              --ÈÕÆÚ(YYYYMMDD)
-    ,CUSTOMER_ID            --¿Í»§ºÅ
-    ,FREQ                   --Æµ¶È£¨D\W\M\Q\Y£©  
-    ,YEAR                   --Äê·Ý(YYYY)  
-    ,FREQ_VALUE             --Æµ¶ÈÖµ(1\2\3\4)    
-    ,FREQ_DIFF              --Æµ¶È²î(Óë¸üÐÂÈÕÆÚµÄ¼¾¶È²îÖµ)   
-    ,PROD_TYPE              --²úÆ·´óÀà£¨»îÆÚ¡¢¶¨ÆÚ¡¢»ù½ð¡¢×Ê²ú×Ü¶î£¨ÈËÃñ±Ò+Íâ±Ò£©µÈ£©   
-    ,CUST_BAL_LC            --Óà¶î  
-    ,CUST_BAL_CWS_LC        --Óà¶î_Í¬ÆÚ      
-    ,CUST_BAL_SQT_LC        --Óà¶î_ÉÏÆÚ        
-    ,CUST_BAL_MAX_LC        --Óà¶î_×î´óÖµ          
-    ,CUST_BAL_MAX_DATE_LC   --Óà¶î_×î´óÖµ_ÈÕÆÚ                 
-    ,CUST_BAL_MIN_LC        --Óà¶î_×îÐ¡Öµ                  
-    ,CUST_BAL_MIN_DATE_LC   --Óà¶î_×îÐ¡Öµ_ÈÕÆÚ                       
-    ,CUST_BAL_AVG_LC        --ÈÕÆ½¾ùÓà¶î              
-    ,CUST_BAL_AVG_CWS_LC    --ÈÕÆ½¾ùÓà¶î_Í¬ÆÚ                      
-    ,CUST_BAL_AVG_SQT_LC    --ÈÕÆ½¾ùÓà¶î_ÉÏÆÚ                        
-    ,CUST_BAL_FC            --Íâ±ÒÓà¶î                
-    ,CUST_BAL_CWS_FC        --Íâ±ÒÓà¶î_Í¬ÆÚ
-    ,CUST_BAL_SQT_FC        --Íâ±ÒÓà¶î_ÉÏÆÚ
-    ,CUST_BAL_MAX_FC        --Íâ±ÒÓà¶î_×î´óÖµ
-    ,CUST_BAL_MAX_DATE_FC   --Íâ±ÒÓà¶î_×î´óÖµ_ÈÕÆÚ
-    ,CUST_BAL_MIN_FC        --Íâ±ÒÓà¶î_×îÐ¡Öµ
-    ,CUST_BAL_MIN_DATE_FC   --Íâ±ÒÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
-    ,CUST_BAL_AVG_FC        --Íâ±ÒÈÕÆ½¾ùÓà¶î
-    ,CUST_BAL_AVG_CWS_FC    --Íâ±ÒÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-    ,CUST_BAL_AVG_SQT_FC    --Íâ±ÒÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
-    ,CUST_BAL               --ºÏ¼ÆÓà¶î  
-    ,CUST_BAL_CWS           --ºÏ¼ÆÓà¶î_Í¬ÆÚ      
-    ,CUST_BAL_SQT           --ºÏ¼ÆÓà¶î_ÉÏÆÚ        
-    ,CUST_BAL_MAX           --ºÏ¼ÆÓà¶î_×î´óÖµ          
-    ,CUST_BAL_MAX_DATE      --ºÏ¼ÆÓà¶î_×î´óÖµ_ÈÕÆÚ                 
-    ,CUST_BAL_MIN           --ºÏ¼ÆÓà¶î_×îÐ¡Öµ                  
-    ,CUST_BAL_MIN_DATE      --ºÏ¼ÆÓà¶î_×îÐ¡Öµ_ÈÕÆÚ                       
-    ,CUST_BAL_AVG           --ºÏ¼ÆÈÕÆ½¾ùÓà¶î              
-    ,CUST_BAL_AVG_CWS       --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_Í¬ÆÚ                      
-    ,CUST_BAL_AVG_SQT       --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_ÉÏÆÚ 
+     ETL_DATE               --è·‘æ‰¹æ—¥æœŸ(YYYYMMDD)                        
+    ,TX_DATE                --æ•°æ®æ—¥æœŸ(YYYYMMDD)
+    ,PERIOD_ID              --æ—¥æœŸ(YYYYMMDD)
+    ,CUSTOMER_ID            --å®¢æˆ·å·
+    ,FREQ                   --é¢‘åº¦ï¼ˆD\W\M\Q\Yï¼‰  
+    ,YEAR                   --å¹´ä»½(YYYY)  
+    ,FREQ_VALUE             --é¢‘åº¦å€¼(1\2\3\4)    
+    ,FREQ_DIFF              --é¢‘åº¦å·®(ä¸Žæ›´æ–°æ—¥æœŸçš„å­£åº¦å·®å€¼)   
+    ,PROD_TYPE              --äº§å“å¤§ç±»ï¼ˆæ´»æœŸã€å®šæœŸã€åŸºé‡‘ã€èµ„äº§æ€»é¢ï¼ˆäººæ°‘å¸+å¤–å¸ï¼‰ç­‰ï¼‰   
+    ,CUST_BAL_LC            --ä½™é¢  
+    ,CUST_BAL_CWS_LC        --ä½™é¢_åŒæœŸ      
+    ,CUST_BAL_SQT_LC        --ä½™é¢_ä¸ŠæœŸ        
+    ,CUST_BAL_MAX_LC        --ä½™é¢_æœ€å¤§å€¼          
+    ,CUST_BAL_MAX_DATE_LC   --ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ                 
+    ,CUST_BAL_MIN_LC        --ä½™é¢_æœ€å°å€¼                  
+    ,CUST_BAL_MIN_DATE_LC   --ä½™é¢_æœ€å°å€¼_æ—¥æœŸ                       
+    ,CUST_BAL_AVG_LC        --æ—¥å¹³å‡ä½™é¢              
+    ,CUST_BAL_AVG_CWS_LC    --æ—¥å¹³å‡ä½™é¢_åŒæœŸ                      
+    ,CUST_BAL_AVG_SQT_LC    --æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ                        
+    ,CUST_BAL_FC            --å¤–å¸ä½™é¢                
+    ,CUST_BAL_CWS_FC        --å¤–å¸ä½™é¢_åŒæœŸ
+    ,CUST_BAL_SQT_FC        --å¤–å¸ä½™é¢_ä¸ŠæœŸ
+    ,CUST_BAL_MAX_FC        --å¤–å¸ä½™é¢_æœ€å¤§å€¼
+    ,CUST_BAL_MAX_DATE_FC   --å¤–å¸ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
+    ,CUST_BAL_MIN_FC        --å¤–å¸ä½™é¢_æœ€å°å€¼
+    ,CUST_BAL_MIN_DATE_FC   --å¤–å¸ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
+    ,CUST_BAL_AVG_FC        --å¤–å¸æ—¥å¹³å‡ä½™é¢
+    ,CUST_BAL_AVG_CWS_FC    --å¤–å¸æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+    ,CUST_BAL_AVG_SQT_FC    --å¤–å¸æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
+    ,CUST_BAL               --åˆè®¡ä½™é¢  
+    ,CUST_BAL_CWS           --åˆè®¡ä½™é¢_åŒæœŸ      
+    ,CUST_BAL_SQT           --åˆè®¡ä½™é¢_ä¸ŠæœŸ        
+    ,CUST_BAL_MAX           --åˆè®¡ä½™é¢_æœ€å¤§å€¼          
+    ,CUST_BAL_MAX_DATE      --åˆè®¡ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ                 
+    ,CUST_BAL_MIN           --åˆè®¡ä½™é¢_æœ€å°å€¼                  
+    ,CUST_BAL_MIN_DATE      --åˆè®¡ä½™é¢_æœ€å°å€¼_æ—¥æœŸ                       
+    ,CUST_BAL_AVG           --åˆè®¡æ—¥å¹³å‡ä½™é¢              
+    ,CUST_BAL_AVG_CWS       --åˆè®¡æ—¥å¹³å‡ä½™é¢_åŒæœŸ                      
+    ,CUST_BAL_AVG_SQT       --åˆè®¡æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ 
     ,NEW_FLAG    
 )
 SELECT 
@@ -1094,11 +1107,11 @@ SELECT
     ,TX_DATE      
     ,PERIOD_ID    
     ,CUSTOMER_ID
-    ,''Y'' AS FREQ        --Æµ¶È£¨D\W\M\Q\Y£©
+    ,''Y'' AS FREQ        --é¢‘åº¦ï¼ˆD\W\M\Q\Yï¼‰
     ,YEAR
     ,FREQ_VALUE
     ,0 AS FREQ_DIFF
-    ,PROD_TYPE  --²úÆ·´óÀà£¨»îÆÚ¡¢¶¨ÆÚ¡¢»ù½ð¡¢×Ê²ú×Ü¶î£¨ÈËÃñ±Ò
+    ,PROD_TYPE  --äº§å“å¤§ç±»ï¼ˆæ´»æœŸã€å®šæœŸã€åŸºé‡‘ã€èµ„äº§æ€»é¢ï¼ˆäººæ°‘å¸
     ,CUST_BAL_LC         
     ,CUST_BAL_CWS_LC     
     ,CUST_BAL_SQT_LC     
@@ -1137,7 +1150,7 @@ IO_ROW := IO_ROW+SQL%ROWCOUNT ;
 COMMIT;
 
 /*
-    4. ¸üÐÂÆµ¶È²î
+    4. æ›´æ–°é¢‘åº¦å·®
 */
 
 UPDATE  MMAPDM.DM_CUST_BAL_STAT 
@@ -1149,7 +1162,7 @@ AND     (SELECT DISTINCT a.DAYOFYEAR FROM MMAPST.ST_CUST_BAL b
           ON a.PERIOD_ID=b.PERIOD_ID) = 1;
 
 /*
-    5. É¾³ý¹ýÆÚÊý¾Ý£¨ÖÜÊý¾ÝÁô´æ12ÆÚ£©
+    5. åˆ é™¤è¿‡æœŸæ•°æ®ï¼ˆå‘¨æ•°æ®ç•™å­˜12æœŸï¼‰
 */
 
 DELETE FROM MMAPDM.DM_CUST_BAL_STAT
@@ -1158,7 +1171,7 @@ AND         FREQ = 'Y'
 
 ;
 /*
-  6. É¾³ýÁÙÊ±±í
+  6. åˆ é™¤ä¸´æ—¶è¡¨
 */
 DM_SQL:= 'DROP TABLE MMAPDM.TMP_CUST_BAL_T';                   
 EXECUTE  IMMEDIATE DM_SQL;
@@ -1168,10 +1181,10 @@ DM_SQL:= 'DROP TABLE MMAPDM.TMP_CUST_BAL_CAL';
 EXECUTE  IMMEDIATE DM_SQL;
 COMMIT;
 /* 
-    Ð´ÈëÈÕÖ¾ 
+    å†™å…¥æ—¥å¿— 
 */
     
-    SELECT SYSDATE INTO V_END_TIMESTAMP   FROM dual;    -- ¼ÓÔØ³ÌÐòÔËÐÐ½áÊøÊ±¼ä
+    SELECT SYSDATE INTO V_END_TIMESTAMP   FROM dual;    -- åŠ è½½ç¨‹åºè¿è¡Œç»“æŸæ—¶é—´
     IO_STATUS := 0 ;
     VO_SQLERR := 'SUSSCESS';
     P_MMAPDM_WRITE_LOGS(PROCEDURE_NAME,IO_STATUS,IO_ROW,V_START_TIMESTAMP,V_END_TIMESTAMP,VO_SQLERR);
