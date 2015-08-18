@@ -10,6 +10,7 @@ CREATE OR REPLACE PROCEDURE P_DM_CUST_BAL_HIS
 	RETURN_NUM NUMBER;                -- 返回状态值
 	RETURN_STATUS VARCHAR2(5000);          -- 返回的描述
 	
+	V_ETL_DATE NUMBER;  -- 跑批日期
 	V_START_TIMESTAMP TIMESTAMP;  -- 加载开始时间
 	V_END_TIMESTAMP    TIMESTAMP;  -- 加载结束时间
 	
@@ -26,6 +27,8 @@ CREATE OR REPLACE PROCEDURE P_DM_CUST_BAL_HIS
 BEGIN
 
 	SELECT SYSDATE INTO V_START_TIMESTAMP FROM dual;  -- 加载程序运行开始时间
+	
+	SELECT TO_NUMBER(TO_CHAR((SYSDATE),'YYYYMMDD')) INTO V_ETL_DATE FROM DUAL;  -- 取系统日期作为跑批日期
 	
 	SELECT TX_DATE INTO DM_TODAY FROM MMAPST.ST_SYSTEM_DATE;  -- 取数据日期
 	
@@ -146,7 +149,7 @@ BEGIN
 		  ,CUST_CREDIT_BAL_FC    --  信用卡消费额（外币折合人民币）
 		  ,CUST_ALL_BAL_FC    --  客户总资产余额（外币折合人民币）
 		  ,CUST_ALL_BAL      --  客户总资产余额（人民币+外币）
-		  ,ETL_DATE        --  跑批日期
+		  ,'||  V_ETL_DATE  ||'
 		  ,'||  DM_TODAY ||  '
 		  ,'||  DM_MAX_DATE  ||'
 		FROM MMAPST.ST_CUST_BAL';
