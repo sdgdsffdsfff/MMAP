@@ -6,7 +6,7 @@
   ETL逻辑：全删全插
 */
 
-INSERT INTO ST_CUST_BAL
+INSERT INTO MMAPST.ST_CUST_BAL
 (
    ETL_DATE                   --跑批日期
   ,TX_DATE                    --数据日期
