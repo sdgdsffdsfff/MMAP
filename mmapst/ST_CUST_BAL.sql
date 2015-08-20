@@ -5,7 +5,7 @@
   date:2015-07-30
   ETL逻辑：全删全插
 */
-
+TRUNCATE TABLE MMAPST.ST_CUST_BAL;
 INSERT INTO MMAPST.ST_CUST_BAL
 (
    ETL_DATE                   --跑批日期
