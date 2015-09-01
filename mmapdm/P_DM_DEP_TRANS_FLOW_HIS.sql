@@ -84,8 +84,8 @@ BEGIN
 			)
 			SELECT
 				'|| V_ETL_DATE ||'
-				,TX_DATE
-				,PERIOD_ID
+				,A.TX_DATE
+				,A.PERIOD_ID
 				,TRANS_DT
 				,TRANS_TM
 				,SER_NO

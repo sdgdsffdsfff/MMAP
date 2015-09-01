@@ -16,7 +16,6 @@ AS
 	DM_TODAY NUMBER;        -- 数据日期"当日"
 	DM_YESTERDAY NUMBER;	-- 数据日期"上一日"
 
-	TX_DATE NUMBER;
 
 BEGIN
 	SELECT SYSDATE INTO V_START_TIMESTAMP FROM dual;  -- 加载程序运行开始时间
