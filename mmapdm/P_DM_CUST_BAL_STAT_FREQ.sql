@@ -1,18 +1,18 @@
 CREATE OR REPLACE PROCEDURE P_DM_CUST_BAL_STAT_FREQ
-(TABLE_NAME IN VARCHAR2, --è¡¨å
-  FREQ IN VARCHAR2, --é¢‘åº¦
-  FREQ_VALUE IN VARCHAR2, --é¢‘åº¦å€¼
-  DAY_OF_FREQ IN VARCHAR2, --é¢‘åº¦ä¸­çš„ç¬¬å‡ å¤©
-  FREQ_HIS IN NUMBER, --é¢‘åº¦ç•™å­˜åŽ†å²æœŸæ•°
-  DM_TODAY IN NUMBER,        -- æ•°æ®æ—¥æœŸ"å½“æ—¥"
-  DM_YESTERDAY IN NUMBER, -- æ•°æ®æ—¥æœŸ"ä¸Šä¸€æ—¥"
+(TABLE_NAME IN VARCHAR2, --±íÃû
+  FREQ IN VARCHAR2, --Æµ¶È
+  FREQ_VALUE IN VARCHAR2, --Æµ¶ÈÖµ
+  DAY_OF_FREQ IN VARCHAR2, --Æµ¶ÈÖÐµÄµÚ¼¸Ìì
+  FREQ_HIS IN NUMBER, --Æµ¶ÈÁô´æÀúÊ·ÆÚÊý
+  DM_TODAY IN NUMBER,        -- Êý¾ÝÈÕÆÚ"µ±ÈÕ"
+  DM_YESTERDAY IN NUMBER, -- Êý¾ÝÈÕÆÚ"ÉÏÒ»ÈÕ"
   IO_ROW OUT INTEGER,
   IO_STATUS OUT INTEGER
 )
 
 AS
 
-  PROCEDURE_NAME VARCHAR2(125) :='P_'||TABLE_NAME;  -- å­˜å‚¨è¿‡ç¨‹å(ä¿®æ”¹)
+  PROCEDURE_NAME VARCHAR2(125) :='P_'||TABLE_NAME;  -- ´æ´¢¹ý³ÌÃû(ÐÞ¸Ä)
 
   
   IO_SQLERR VARCHAR2(2000);
@@ -20,7 +20,7 @@ AS
   DM_SQL VARCHAR2(30000); -- the variable to loading the SQL statment
 
 
-  ST_ROW INTEGER;  --æºæ•°æ®æ¡æ•°
+  ST_ROW INTEGER;  --Ô´Êý¾ÝÌõÊý
 
 
   V_START_TIMESTAMP TIMESTAMP;    --the start time of procedures
@@ -30,71 +30,71 @@ AS
 
 BEGIN
 
-  IO_ROW := 0;  --æ’å…¥æ¡æ•°
+  IO_ROW := 0;  --²åÈëÌõÊý
 
-  SELECT SYSDATE INTO V_START_TIMESTAMP FROM dual;    -- åŠ è½½ç¨‹åºè¿è¡Œå¼€å§‹æ—¶é—´
+  SELECT SYSDATE INTO V_START_TIMESTAMP FROM dual;    -- ¼ÓÔØ³ÌÐòÔËÐÐ¿ªÊ¼Ê±¼ä
 
-  --æ¢å¤'ä¸Šä¸€æ—¥'æ•°æ®ã€‚
-  --æŸ¥è¯¢DMå±‚è¡¨ä¸­æ˜¯å¦æœ‰"ä»Šæ—¥"æ•°æ®ï¼Œæ˜¯å¦ä¸ºé‡è·‘ã€‚
+  --»Ö¸´'ÉÏÒ»ÈÕ'Êý¾Ý¡£
+  --²éÑ¯DM²ã±íÖÐÊÇ·ñÓÐ"½ñÈÕ"Êý¾Ý£¬ÊÇ·ñÎªÖØÅÜ¡£
   DM_SQL := ' SELECT COUNT(1) FROM MMAPDM.'||TABLE_NAME||' WHERE PERIOD_ID='||DM_TODAY;
   EXECUTE  IMMEDIATE DM_SQL  INTO ST_ROW;
   IF ST_ROW>0
-    --å¦‚æžœä¸ºé‡è·‘æ•°æ®ï¼Œåˆ™å°†æ•°æ®æ¢å¤ä¸º'å‰ä¸€æ—¥'æ•°æ®çŠ¶æ€
+    --Èç¹ûÎªÖØÅÜÊý¾Ý£¬Ôò½«Êý¾Ý»Ö¸´Îª'Ç°Ò»ÈÕ'Êý¾Ý×´Ì¬
   THEN
-    --1.åˆ é™¤'ä»Šæ—¥'æ•°æ®
+    --1.É¾³ý'½ñÈÕ'Êý¾Ý
     DM_SQL :='DELETE FROM MMAPDM.'||TABLE_NAME||' WHERE PERIOD_ID='||DM_TODAY;
     EXECUTE IMMEDIATE DM_SQL;
     IO_ROW := IO_ROW+SQL%ROWCOUNT ;
     COMMIT;
-    --2.æ¢å¤é¢‘åº¦å·®
+    --2.»Ö¸´Æµ¶È²î
     DM_SQL :='UPDATE MMAPDM.'||TABLE_NAME||' SET FREQ_DIFF = FREQ_DIFF - 1
         WHERE (SELECT '||DAY_OF_FREQ||' FROM MMAPST.MID_CALENDAR WHERE PERIOD_ID='||DM_TODAY||')=1
       ';
     EXECUTE IMMEDIATE DM_SQL;
     IO_ROW := IO_ROW+SQL%ROWCOUNT ;
     COMMIT;
-    --3.æ’å…¥æ˜¨æ—¥æ•°æ®
+    --3.²åÈë×òÈÕÊý¾Ý
     DM_SQL:= 'INSERT INTO MMAPDM.'||TABLE_NAME||'
     (
-         ETL_DATE               --è·‘æ‰¹æ—¥æœŸ(YYYYMMDD)
-        ,TX_DATE                --æ•°æ®æ—¥æœŸ(YYYYMMDD)
-        ,PERIOD_ID              --æ—¥æœŸ(YYYYMMDD)
-        ,FREQ                   --é¢‘åº¦ï¼ˆD\W\M\Q\Yï¼‰
-        ,YEAR                   --å¹´ä»½(YYYY)
-        ,FREQ_VALUE             --é¢‘åº¦å€¼(1\2\3\4)
-        ,FREQ_DIFF              --é¢‘åº¦å·®(ä¸Žæ›´æ–°æ—¥æœŸçš„å­£åº¦å·®å€¼)
-        ,CUSTOMER_ID            --å®¢æˆ·å·
-        ,PROD_TYPE              --äº§å“å¤§ç±»ï¼ˆæ´»æœŸã€å®šæœŸã€åŸºé‡‘ã€èµ„äº§æ€»é¢ï¼ˆäººæ°‘å¸+å¤–å¸ï¼‰ç­‰ï¼‰
-        ,CUST_BAL_LC            --ä½™é¢
-        ,CUST_BAL_CWS_LC        --ä½™é¢_åŒæœŸ
-        ,CUST_BAL_SQT_LC        --ä½™é¢_ä¸ŠæœŸ
-        ,CUST_BAL_MAX_LC        --ä½™é¢_æœ€å¤§å€¼
-        ,CUST_BAL_MAX_DATE_LC   --ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
-        ,CUST_BAL_MIN_LC        --ä½™é¢_æœ€å°å€¼
-        ,CUST_BAL_MIN_DATE_LC   --ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
-        ,CUST_BAL_AVG_LC        --æ—¥å¹³å‡ä½™é¢
-        ,CUST_BAL_AVG_CWS_LC    --æ—¥å¹³å‡ä½™é¢_åŒæœŸ
-        ,CUST_BAL_AVG_SQT_LC    --æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
-        ,CUST_BAL_FC            --å¤–å¸ä½™é¢
-        ,CUST_BAL_CWS_FC        --å¤–å¸ä½™é¢_åŒæœŸ
-        ,CUST_BAL_SQT_FC        --å¤–å¸ä½™é¢_ä¸ŠæœŸ
-        ,CUST_BAL_MAX_FC        --å¤–å¸ä½™é¢_æœ€å¤§å€¼
-        ,CUST_BAL_MAX_DATE_FC   --å¤–å¸ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
-        ,CUST_BAL_MIN_FC        --å¤–å¸ä½™é¢_æœ€å°å€¼
-        ,CUST_BAL_MIN_DATE_FC   --å¤–å¸ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
-        ,CUST_BAL_AVG_FC        --å¤–å¸æ—¥å¹³å‡ä½™é¢
-        ,CUST_BAL_AVG_CWS_FC    --å¤–å¸æ—¥å¹³å‡ä½™é¢_åŒæœŸ
-        ,CUST_BAL_AVG_SQT_FC    --å¤–å¸æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
-        ,CUST_BAL               --åˆè®¡ä½™é¢
-        ,CUST_BAL_CWS           --åˆè®¡ä½™é¢_åŒæœŸ
-        ,CUST_BAL_SQT           --åˆè®¡ä½™é¢_ä¸ŠæœŸ
-        ,CUST_BAL_MAX           --åˆè®¡ä½™é¢_æœ€å¤§å€¼
-        ,CUST_BAL_MAX_DATE      --åˆè®¡ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
-        ,CUST_BAL_MIN           --åˆè®¡ä½™é¢_æœ€å°å€¼
-        ,CUST_BAL_MIN_DATE      --åˆè®¡ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
-        ,CUST_BAL_AVG           --åˆè®¡æ—¥å¹³å‡ä½™é¢
-        ,CUST_BAL_AVG_CWS       --åˆè®¡æ—¥å¹³å‡ä½™é¢_åŒæœŸ
-        ,CUST_BAL_AVG_SQT       --åˆè®¡æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
+         ETL_DATE               --ÅÜÅúÈÕÆÚ(YYYYMMDD)
+        ,TX_DATE                --Êý¾ÝÈÕÆÚ(YYYYMMDD)
+        ,PERIOD_ID              --ÈÕÆÚ(YYYYMMDD)
+        ,FREQ                   --Æµ¶È£¨D\W\M\Q\Y£©
+        ,YEAR                   --Äê·Ý(YYYY)
+        ,FREQ_VALUE             --Æµ¶ÈÖµ(1\2\3\4)
+        ,FREQ_DIFF              --Æµ¶È²î(Óë¸üÐÂÈÕÆÚµÄ¼¾¶È²îÖµ)
+        ,CUSTOMER_ID            --¿Í»§ºÅ
+        ,PROD_TYPE              --²úÆ·´óÀà£¨»îÆÚ¡¢¶¨ÆÚ¡¢»ù½ð¡¢×Ê²ú×Ü¶î£¨ÈËÃñ±Ò+Íâ±Ò£©µÈ£©
+        ,CUST_BAL_LC            --Óà¶î
+        ,CUST_BAL_CWS_LC        --Óà¶î_Í¬ÆÚ
+        ,CUST_BAL_SQT_LC        --Óà¶î_ÉÏÆÚ
+        ,CUST_BAL_MAX_LC        --Óà¶î_×î´óÖµ
+        ,CUST_BAL_MAX_DATE_LC   --Óà¶î_×î´óÖµ_ÈÕÆÚ
+        ,CUST_BAL_MIN_LC        --Óà¶î_×îÐ¡Öµ
+        ,CUST_BAL_MIN_DATE_LC   --Óà¶î_×îÐ¡Öµ_ÈÕÆÚ
+        ,CUST_BAL_AVG_LC        --ÈÕÆ½¾ùÓà¶î
+        ,CUST_BAL_AVG_CWS_LC    --ÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
+        ,CUST_BAL_AVG_SQT_LC    --ÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
+        ,CUST_BAL_FC            --Íâ±ÒÓà¶î
+        ,CUST_BAL_CWS_FC        --Íâ±ÒÓà¶î_Í¬ÆÚ
+        ,CUST_BAL_SQT_FC        --Íâ±ÒÓà¶î_ÉÏÆÚ
+        ,CUST_BAL_MAX_FC        --Íâ±ÒÓà¶î_×î´óÖµ
+        ,CUST_BAL_MAX_DATE_FC   --Íâ±ÒÓà¶î_×î´óÖµ_ÈÕÆÚ
+        ,CUST_BAL_MIN_FC        --Íâ±ÒÓà¶î_×îÐ¡Öµ
+        ,CUST_BAL_MIN_DATE_FC   --Íâ±ÒÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
+        ,CUST_BAL_AVG_FC        --Íâ±ÒÈÕÆ½¾ùÓà¶î
+        ,CUST_BAL_AVG_CWS_FC    --Íâ±ÒÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
+        ,CUST_BAL_AVG_SQT_FC    --Íâ±ÒÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
+        ,CUST_BAL               --ºÏ¼ÆÓà¶î
+        ,CUST_BAL_CWS           --ºÏ¼ÆÓà¶î_Í¬ÆÚ
+        ,CUST_BAL_SQT           --ºÏ¼ÆÓà¶î_ÉÏÆÚ
+        ,CUST_BAL_MAX           --ºÏ¼ÆÓà¶î_×î´óÖµ
+        ,CUST_BAL_MAX_DATE      --ºÏ¼ÆÓà¶î_×î´óÖµ_ÈÕÆÚ
+        ,CUST_BAL_MIN           --ºÏ¼ÆÓà¶î_×îÐ¡Öµ
+        ,CUST_BAL_MIN_DATE      --ºÏ¼ÆÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
+        ,CUST_BAL_AVG           --ºÏ¼ÆÈÕÆ½¾ùÓà¶î
+        ,CUST_BAL_AVG_CWS       --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
+        ,CUST_BAL_AVG_SQT       --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
     )
     SELECT
          ETL_DATE
@@ -145,22 +145,22 @@ BEGIN
     COMMIT;
     END IF;
 
-    --å¤‡ä»½"ä¸Šæ—¥"æ•°æ®
-    --æŸ¥è¯¢DMå±‚è¡¨ä¸­æ˜¯å¦æœ‰"ä¸Šä¸€æ—¥"æ•°æ®ï¼Œæ˜¯å¦ä¸ºé‡è·‘ã€‚
+    --±¸·Ý"ÉÏÈÕ"Êý¾Ý
+    --²éÑ¯DM²ã±íÖÐÊÇ·ñÓÐ"ÉÏÒ»ÈÕ"Êý¾Ý£¬ÊÇ·ñÎªÖØÅÜ¡£
     DM_SQL := ' SELECT COUNT(1) FROM MMAPDM.'||TABLE_NAME||' WHERE PERIOD_ID='||DM_YESTERDAY;
     EXECUTE  IMMEDIATE DM_SQL  INTO ST_ROW;
     IF ST_ROW>0
     THEN
-      DM_SQL :='DELETE FROM MMAPDM.DM_CUST_BAL_STAT_PRE WHERE FREQ='''||FREQ||'''' ;   -- åˆ é™¤å¤‡ä»½è¡¨ä¸­æœˆé¢‘åº¦æ•°æ®
+      DM_SQL :='DELETE FROM MMAPDM.DM_CUST_BAL_STAT_PRE WHERE FREQ='''||FREQ||'''' ;   -- É¾³ý±¸·Ý±íÖÐÔÂÆµ¶ÈÊý¾Ý
       EXECUTE IMMEDIATE DM_SQL;
       COMMIT;
-      DM_SQL :='INSERT INTO MMAPDM.DM_CUST_BAL_STAT_PRE SELECT * FROM MMAPDM.'||TABLE_NAME||' WHERE PERIOD_ID='||DM_YESTERDAY ;   -- å¤‡ä»½è¡¨ä¸­ä¸Šæ—¥æ•°æ®
+      DM_SQL :='INSERT INTO MMAPDM.DM_CUST_BAL_STAT_PRE SELECT * FROM MMAPDM.'||TABLE_NAME||' WHERE PERIOD_ID='||DM_YESTERDAY ;   -- ±¸·Ý±íÖÐÉÏÈÕÊý¾Ý
       EXECUTE IMMEDIATE DM_SQL;
       IO_ROW :=IO_ROW+ SQL%ROWCOUNT ;
       COMMIT;
     END IF;
 
-    --1.æ›´æ–°é¢‘åº¦å·®
+    --1.¸üÐÂÆµ¶È²î
     DM_SQL :='UPDATE MMAPDM.'||TABLE_NAME||' SET FREQ_DIFF = FREQ_DIFF + 1
         WHERE (SELECT '||DAY_OF_FREQ||' FROM MMAPST.MID_CALENDAR WHERE PERIOD_ID='||DM_TODAY||')=1
       ';
@@ -168,9 +168,9 @@ BEGIN
     IO_ROW := IO_ROW+SQL%ROWCOUNT ;
     COMMIT;
 
-    --2. å»ºç«‹ä¸´æ—¶è¡¨
+    --2. ½¨Á¢ÁÙÊ±±í
 
-    -----å–å‰ä¸€å¤©æ•°æ®-----
+    -----È¡Ç°Ò»ÌìÊý¾Ý-----
     SELECT COUNT(1) INTO ST_ROW FROM USER_TABLES WHERE TABLE_NAME = 'TMP_CUST_BAL_CAL';
     IF ST_ROW >0
     THEN
@@ -257,24 +257,24 @@ BEGIN
          END AS CUST_BAL_AVG
         --,C.CUST_BAL_AVG       AS CUST_BAL_AVG_CWS
         ,0       AS CUST_BAL_AVG_CWS
-        ,D.CUST_BAL_AVG       AS CUST_BAL_AVG_SQT     --åˆè®¡æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
+        ,D.CUST_BAL_AVG       AS CUST_BAL_AVG_SQT     --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
       FROM MMAPDM.TMP_CUST_BAL_T A
       LEFT JOIN  MMAPST.MID_CALENDAR B
       ON A.PERIOD_ID = B.PERIOD_ID
       /*
-      --åŒæœŸcï¼Œæš‚ä¸è®¡ç®—åŒæœŸæ•°æ®
+      --Í¬ÆÚc£¬ÔÝ²»¼ÆËãÍ¬ÆÚÊý¾Ý
       LEFT JOIN  MMAPDM.'||TABLE_NAME||' C
       ON B.YEAR - 1 = C.YEAR
       AND B.'||FREQ_VALUE||' = C.FREQ_VALUE
       AND A.CUSTOMER_ID = C.CUSTOMER_ID
       AND C.PROD_TYPE = A.PROD_TYPE
       */
-      --ä¸ŠæœŸdï¼Œå–ä¸Šä¸€ç»Ÿè®¡æœŸæ•°æ®
+      --ÉÏÆÚd£¬È¡ÉÏÒ»Í³¼ÆÆÚÊý¾Ý
       LEFT JOIN MMAPDM.'||TABLE_NAME||' D
       ON D.FREQ_DIFF = 1
       AND A.CUSTOMER_ID = D.CUSTOMER_ID
       AND D.PROD_TYPE = A.PROD_TYPE
-      --æœ€å€¼eï¼Œå–æœ¬ç»Ÿè®¡æœŸå†…æ•°æ®
+      --×îÖµe£¬È¡±¾Í³¼ÆÆÚÄÚÊý¾Ý
       LEFT JOIN MMAPDM.'||TABLE_NAME||' E
       ON B.YEAR = E.YEAR
       AND B.'||FREQ_VALUE||' = E.FREQ_VALUE
@@ -284,12 +284,12 @@ BEGIN
     EXECUTE IMMEDIATE DM_SQL;
     COMMIT;
 
-    --åˆ é™¤æœ¬ç»Ÿè®¡å‘¨æœŸæ—§æ•°æ®ï¼ŒåŠè¶…æœŸåŽ†å²æ•°æ®
+    --É¾³ý±¾Í³¼ÆÖÜÆÚ¾ÉÊý¾Ý£¬¼°³¬ÆÚÀúÊ·Êý¾Ý
     DM_SQL:= 'DELETE FROM MMAPDM.'||TABLE_NAME||' WHERE FREQ_DIFF =0 OR FREQ_DIFF>='||FREQ_HIS;
     EXECUTE IMMEDIATE DM_SQL;
     IO_ROW := IO_ROW+SQL%ROWCOUNT ;
     COMMIT;
-    --æ’å…¥å½“å¤©æ•°æ®
+    --²åÈëµ±ÌìÊý¾Ý
 
     DM_SQL:= 'INSERT INTO MMAPDM.'||TABLE_NAME||'
     (
@@ -379,10 +379,10 @@ BEGIN
     IO_ROW := IO_ROW+SQL%ROWCOUNT ;
 
     /*
-        å†™å…¥æ—¥å¿—
+        Ð´ÈëÈÕÖ¾
     */
 
-    SELECT SYSDATE INTO V_END_TIMESTAMP   FROM dual;    -- åŠ è½½ç¨‹åºè¿è¡Œç»“æŸæ—¶é—´
+    SELECT SYSDATE INTO V_END_TIMESTAMP   FROM dual;    -- ¼ÓÔØ³ÌÐòÔËÐÐ½áÊøÊ±¼ä
     IO_STATUS := 0 ;
     IO_SQLERR := 'SUSSCESS';
     P_MMAPDM_WRITE_LOGS(PROCEDURE_NAME,IO_STATUS,IO_ROW,V_START_TIMESTAMP,V_END_TIMESTAMP,IO_SQLERR);
