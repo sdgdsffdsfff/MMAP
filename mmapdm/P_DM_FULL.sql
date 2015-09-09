@@ -80,47 +80,49 @@ BEGIN
         IF DM_TABLE_NAME='DM_BRANCH'
         THEN
           FETCH C1 INTO V_DM_BRANCH;
+          EXIT WHEN C1%NOTFOUND;
           INSERT INTO DM_BRANCH VALUES V_DM_BRANCH;
           IO_ROW := IO_ROW+SQL%ROWCOUNT ;
           
         ELSIF DM_TABLE_NAME='DM_CUSTOMER'
         THEN
           FETCH C1 INTO V_DM_CUSTOMER;
+          EXIT WHEN C1%NOTFOUND;
           INSERT INTO DM_CUSTOMER VALUES V_DM_CUSTOMER;
           IO_ROW := IO_ROW+SQL%ROWCOUNT ;
           
         ELSIF DM_TABLE_NAME='DM_PRODUCT'
         THEN
           FETCH C1 INTO V_DM_PRODUCT;
+          EXIT WHEN C1%NOTFOUND;
           INSERT INTO DM_PRODUCT VALUES V_DM_PRODUCT;
           IO_ROW := IO_ROW+SQL%ROWCOUNT ;
           
         ELSIF DM_TABLE_NAME='DM_ACCOUNT_DEP'
         THEN
           FETCH C1 INTO V_DM_ACCOUNT_DEP;
+          EXIT WHEN C1%NOTFOUND;
           INSERT INTO DM_ACCOUNT_DEP VALUES V_DM_ACCOUNT_DEP;
           IO_ROW := IO_ROW+SQL%ROWCOUNT ;
           
         ELSIF DM_TABLE_NAME='DM_ACCOUNT_LOAN'
         THEN
           FETCH C1 INTO V_DM_ACCOUNT_LOAN;
+          EXIT WHEN C1%NOTFOUND;
           INSERT INTO DM_ACCOUNT_LOAN VALUES V_DM_ACCOUNT_LOAN;
           IO_ROW := IO_ROW+SQL%ROWCOUNT ;
           
         ELSE EXIT;
         END IF;
-        
+        V_COUNT := V_COUNT + 1;
         IF ((MOD(V_COUNT, V_COMMITNUM)) = 0) THEN        
           COMMIT; 
-        END IF;
-        V_COUNT := V_COUNT + 1;
-      EXIT WHEN C1%NOTFOUND;
+        END IF;      
         
       END LOOP;
       COMMIT;
       CLOSE C1;
 END; 
-
 END IF ;
 
 
