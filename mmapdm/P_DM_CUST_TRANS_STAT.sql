@@ -48,72 +48,73 @@ BEGIN
 
     DM_SQL:='CREATE TABLE MMAPDM.TMP_CUST_TRANS_STAT AS
     SELECT   
-    A.TX_DATE,
-    A.PERIOD_ID,
-    A.CUSTOMER_ID,
-    A.TRANSTYP_ID,
-    A.CHN_ID,
-    A.TRANSBR_ID,
-    A.PRODTYP_ID,
-    C.YEAR,
-    C.QUARTER,
-    C.MONTH,
-    C.WEEKOFYEAR,
-    C.DAYOFYEAR,
-    C.DAYOFQUARTER,
-    C.DAYOFMONTH,
-    C.DAYOFWEEK,
-    A.CUST_TRANS_AMT_LC,
-    A.CUST_TRANS_CNT_LC,
-    0 as CUST_TRANS_AMT_FC,
-    0 as CUST_TRANS_CNT_FC,
-    0 as CUST_TRANS_AMT,
-    0 as CUST_TRANS_CNT
-
-  FROM
-  (
-    SELECT   
       A.TX_DATE,
       A.PERIOD_ID,
-      CUSTOMER_ID,
-      B.TRANSTYP_ID,
-      CHN_ID,
-      TRANSBR_ID,
-      PRODTYP_ID,
-      SUM(TRANS_AMT) AS CUST_TRANS_AMT_LC,
-      COUNT(1) AS CUST_TRANS_CNT_LC
-    FROM  (
-            SELECT 
-              TX_DATE
-              ,PERIOD_ID
-              ,CUSTOMER_ID
-              ,TRANSCDE_ID
-              ,CHN_ID
-              ,TRANSBR_ID
-              ,PRODTYP_ID  
-              ,TRANS_AMT             
-            FROM MMAPDM.DM_DEP_TRANS_FLOW_HIS 
-            UNION ALL 
-            SELECT 
-              TX_DATE
-              ,PERIOD_ID
-              ,CUSTOMER_ID
-              ,TRANSCDE_ID
-              ,CHN_ID
-              ,TRANSBR_ID
-              ,PRODTYP_ID
-              ,TRANS_AMT
-            FROM MMAPDM.DM_LOAN_TRANS_FLOW_HIS
-           ) A 
-
-
-    FULL JOIN MMAPST.MID_TRANS_TYPE_IND B 
-    ON  substr(A.TRANSCDE_ID,4,4) = B.TRANSCDE_ID
-    GROUP BY A.TX_DATE,A.PERIOD_ID,A.CUSTOMER_ID,B.TRANSTYP_ID,A.CHN_ID,A.TRANSBR_ID,A.PRODTYP_ID
-  ) A 
-  LEFT JOIN MMAPST.MID_CALENDAR C 
-  ON  A.PERIOD_ID=C.PERIOD_ID
-  ';
+      A.CUSTOMER_ID,
+      A.TRANSTYP_ID,
+      A.CHN_ID,
+      A.TRANSBR_ID,
+      A.PRODTYP_ID,
+      A.TRANSDIR_FG,
+      C.YEAR,
+      C.QUARTER,
+      C.MONTH,
+      C.WEEKOFYEAR,
+      C.DAYOFYEAR,
+      C.DAYOFQUARTER,
+      C.DAYOFMONTH,
+      C.DAYOFWEEK,
+      A.CUST_TRANS_AMT_LC,
+      A.CUST_TRANS_CNT_LC,
+      0 as CUST_TRANS_AMT_FC,
+      0 as CUST_TRANS_CNT_FC,
+      0 as CUST_TRANS_AMT,
+      0 as CUST_TRANS_CNT
+  
+      FROM
+      (
+        SELECT   
+          A.TX_DATE,
+          A.PERIOD_ID,
+          CUSTOMER_ID,
+          A.TRANSCDE_ID AS TRANSTYP_ID,
+          CHN_ID,
+          TRANSBR_ID,
+          PRODTYP_ID,
+          SUM(TRANS_AMT) AS CUST_TRANS_AMT_LC,
+          COUNT(1) AS CUST_TRANS_CNT_LC,
+          TRANSDIR_FG
+        FROM  (
+                SELECT 
+                  TX_DATE
+                  ,PERIOD_ID
+                  ,CUSTOMER_ID
+                  ,TRANSCDE_ID
+                  ,NVL(CHN_ID,''*'') AS CHN_ID
+                  ,TRANSBR_ID
+                  ,PRODTYP_ID  
+                  ,TRANS_AMT
+                  ,TRANSDIR_FG             
+                FROM MMAPDM.DM_DEP_TRANS_FLOW_HIS 
+                UNION ALL 
+                SELECT 
+                  TX_DATE
+                  ,PERIOD_ID
+                  ,CUSTOMER_ID
+                  ,TRANSCDE_ID
+                  ,NVL(CHN_ID,''*'') AS CHN_ID
+                  ,TRANSBR_ID
+                  ,PRODTYP_ID
+                  ,TRANS_AMT
+                  ,NULL AS TRANSDIR_FG
+                FROM MMAPDM.DM_LOAN_TRANS_FLOW_HIS
+               ) A 
+  
+        GROUP BY A.TX_DATE,A.PERIOD_ID,A.CUSTOMER_ID,A.TRANSCDE_ID,A.CHN_ID,A.TRANSBR_ID,A.PRODTYP_ID,A.TRANSDIR_FG
+      ) A 
+      LEFT JOIN MMAPDM.MID_CALENDAR C 
+      ON  A.PERIOD_ID=C.PERIOD_ID
+      ';
   EXECUTE  IMMEDIATE DM_SQL;
   COMMIT;
 
