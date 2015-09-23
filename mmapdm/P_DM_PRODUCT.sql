@@ -2,10 +2,10 @@ CREATE OR REPLACE PROCEDURE P_DM_PRODUCT
 (IO_STATUS OUT INTEGER,IO_SQLERR OUT VARCHAR2)
 AS
 
-  TABLE_NAME VARCHAR2(125) :='PRODUCT';  -- ±Ì√˚(–ﬁ∏ƒ)
+  TABLE_NAME VARCHAR2(125) :='PRODUCT';  -- Ë°®Âêç(‰øÆÊîπ)
 BEGIN
  /*
- --±‡º≠»° ˝SQL
+ --ÁºñËæëÂèñÊï∞SQL
 DELETE MMAPDM.MMAPDM_PROC_SQL WHERE TABLE_NAME='DM_PRODUCT';
 COMMIT;
  DECLARE
@@ -20,7 +20,7 @@ COMMIT;
         ,NULL  AS PROD_START_DT
         ,NULL  AS PROD_END_DT
         ,''LOAN'' AS PROD_TYPE_CODE
-        ,''¥˚øÓ'' AS PROD_TYPE_DESC
+        ,''Ë¥∑Ê¨æ'' AS PROD_TYPE_DESC
         ,NULL  AS PROD_MID_CODE
         ,NULL  AS PROD_MID_DESC
         ,NULL  AS PROD_DET1_CODE
@@ -41,16 +41,16 @@ COMMIT;
         ,INCMBEG_DT AS PROD_START_DT
         ,INCMEND_DT AS PROD_END_DT
         ,''FIN'' AS PROD_TYPE_CODE
-        ,''¿Ì≤∆'' AS PROD_TYPE_DESC
+        ,''ÁêÜË¥¢'' AS PROD_TYPE_DESC
         ,SUBSTR(PROD_CODE,1,2) AS PROD_MID_CODE
         ,SUBSTR(PROD_DESC,1,2) AS PROD_MID_DESC
         ,Term_No AS PROD_DET1_CODE
         ,NULL  AS PROD_DET1_DESC
         ,TermUnit_ID AS PROD_DET2_CODE
         ,CASE  TermUnit_ID
-          WHEN ''D'' THEN  ''ÃÏ''
-          WHEN ''M'' THEN  ''‘¬''
-          WHEN ''Y'' THEN  ''ƒÍ''
+          WHEN ''D'' THEN  ''Â§©''
+          WHEN ''M'' THEN  ''Êúà''
+          WHEN ''Y'' THEN  ''Âπ¥''
          END AS PROD_DET2_DESC
         ,NULL  AS PROD_IND_CODE
         ,NULL  AS PROD_IND_DESC
@@ -68,16 +68,16 @@ COMMIT;
         ,INCMBEG_DT AS PROD_START_DT
         ,INCMEND_DT AS PROD_END_DT
         ,''FOUND'' AS  PROD_TYPE_CODE
-        ,''ª˘Ω'' AS PROD_TYPE_DESC
+        ,''Âü∫Èáë'' AS PROD_TYPE_DESC
         ,NULL  AS PROD_MID_CODE
         ,NULL  AS PROD_MID_DESC
         ,Term_No AS PROD_DET1_CODE
         ,NULL  AS PROD_DET1_DESC
         ,TermUnit_ID AS PROD_DET2_CODE
         ,CASE  TermUnit_ID
-          WHEN ''D'' THEN  ''ÃÏ''
-          WHEN ''M'' THEN  ''‘¬''
-          WHEN ''Y'' THEN  ''ƒÍ''
+          WHEN ''D'' THEN  ''Â§©''
+          WHEN ''M'' THEN  ''Êúà''
+          WHEN ''Y'' THEN  ''Âπ¥''
          END AS PROD_DET2_DESC
         ,NULL  AS PROD_IND_CODE
         ,NULL  AS PROD_IND_DESC
@@ -94,16 +94,16 @@ COMMIT;
         ,INCMBEG_DT AS PROD_START_DT
         ,INCMEND_DT AS PROD_END_DT
         ,''NDEBT'' AS  PROD_TYPE_CODE
-        ,''π˙’Æ'' AS PROD_TYPE_DESC
+        ,''ÂõΩÂÄ∫'' AS PROD_TYPE_DESC
         ,''ENDEBT'' AS PROD_MID_CODE
-        ,''µÁ◊” Ωπ˙’Æ'' AS PROD_MID_DESC
+        ,''ÁîµÂ≠êÂºèÂõΩÂÄ∫'' AS PROD_MID_DESC
         ,Term_No AS PROD_DET1_CODE
         ,NULL  AS PROD_DET1_DESC
         ,TermUnit_ID AS PROD_DET2_CODE
         ,CASE  TermUnit_ID
-          WHEN ''D'' THEN  ''ÃÏ''
-          WHEN ''M'' THEN  ''‘¬''
-          WHEN ''Y'' THEN  ''ƒÍ''
+          WHEN ''D'' THEN  ''Â§©''
+          WHEN ''M'' THEN  ''Êúà''
+          WHEN ''Y'' THEN  ''Âπ¥''
          END AS PROD_DET2_DESC
         ,NULL  AS PROD_IND_CODE
         ,NULL  AS PROD_IND_DESC
@@ -120,22 +120,22 @@ COMMIT;
         ,NULL  AS PROD_START_DT
         ,NULL  AS PROD_END_DT
         ,''NDEBT'' AS  PROD_TYPE_CODE
-        ,''π˙’Æ'' AS PROD_TYPE_DESC
+        ,''ÂõΩÂÄ∫'' AS PROD_TYPE_DESC
         ,''ENDEBT'' AS PROD_MID_CODE
-        ,''µÁ◊” Ωπ˙’Æ'' AS PROD_MID_DESC
-        ,TO_NUMBER(SUBSTR(A.PROD_CODE,INSTR£®A.PROD_CODE,''-'',1,1£©+1,INSTR£®A.PROD_CODE,''-'',1,2£©-1-INSTR£®A.PROD_CODE,''-'',1,1£©)) AS PROD_DET1_CODE
+        ,''ÁîµÂ≠êÂºèÂõΩÂÄ∫'' AS PROD_MID_DESC
+        ,TO_NUMBER(SUBSTR(A.PROD_CODE,INSTRÔºàA.PROD_CODE,''-'',1,1Ôºâ+1,INSTRÔºàA.PROD_CODE,''-'',1,2Ôºâ-1-INSTRÔºàA.PROD_CODE,''-'',1,1Ôºâ)) AS PROD_DET1_CODE
         ,NULL  AS PROD_DET1_DESC
-        ,CASE  WHEN INSTR£®A.PROD_CODE,''-'',1,2£©> 0 THEN SUBSTR(A.PROD_CODE,-1,1) END  AS PROD_DET2_CODE
+        ,CASE  WHEN INSTRÔºàA.PROD_CODE,''-'',1,2Ôºâ> 0 THEN SUBSTR(A.PROD_CODE,-1,1) END  AS PROD_DET2_CODE
         ,CASE  SUBSTR(A.PROD_CODE,-1,1)
-          WHEN ''D'' THEN  ''ÃÏ''
-          WHEN ''M'' THEN  ''‘¬''
-          WHEN ''Y'' THEN  ''ƒÍ''
+          WHEN ''D'' THEN  ''Â§©''
+          WHEN ''M'' THEN  ''Êúà''
+          WHEN ''Y'' THEN  ''Âπ¥''
          END AS PROD_DET2_DESC
         ,NULL  AS PROD_IND_CODE
         ,NULL  AS PROD_IND_DESC
       FROM MMAPST.ST_PRODUCT A
       WHERE SOURCEGRP=''PDLIABI''
-      AND PROD_DESC LIKE ''%µÁ◊”π˙’Æ%''
+      AND PROD_DESC LIKE ''%ÁîµÂ≠êÂõΩÂÄ∫%''
       UNION ALL
       SELECT
         TO_NUMBER(TO_CHAR((SYSDATE),''YYYYMMDD'')) AS ETL_DATE
@@ -146,22 +146,22 @@ COMMIT;
         ,NULL  AS PROD_START_DT
         ,NULL  AS PROD_END_DT
         ,''NDEBT'' AS  PROD_TYPE_CODE
-        ,''π˙’Æ'' AS PROD_TYPE_DESC
+        ,''ÂõΩÂÄ∫'' AS PROD_TYPE_DESC
         ,''PNDEBT'' AS PROD_MID_CODE
-        ,''∆æ÷§ Ωπ˙’Æ'' AS PROD_MID_DESC
-        ,TO_NUMBER(SUBSTR(A.PROD_CODE,INSTR£®A.PROD_CODE,''-'',1,1£©+1,INSTR£®A.PROD_CODE,''-'',1,2£©-1-INSTR£®A.PROD_CODE,''-'',1,1£©)) AS PROD_DET1_CODE
+        ,''Âá≠ËØÅÂºèÂõΩÂÄ∫'' AS PROD_MID_DESC
+        ,TO_NUMBER(SUBSTR(A.PROD_CODE,INSTRÔºàA.PROD_CODE,''-'',1,1Ôºâ+1,INSTRÔºàA.PROD_CODE,''-'',1,2Ôºâ-1-INSTRÔºàA.PROD_CODE,''-'',1,1Ôºâ)) AS PROD_DET1_CODE
         ,NULL  AS PROD_DET1_DESC
-        ,CASE  WHEN INSTR£®A.PROD_CODE,''-'',1,2£©> 0 THEN SUBSTR(A.PROD_CODE,-1,1) END  AS PROD_DET2_CODE
+        ,CASE  WHEN INSTRÔºàA.PROD_CODE,''-'',1,2Ôºâ> 0 THEN SUBSTR(A.PROD_CODE,-1,1) END  AS PROD_DET2_CODE
         ,CASE  SUBSTR(A.PROD_CODE,-1,1)
-          WHEN ''D'' THEN  ''ÃÏ''
-          WHEN ''M'' THEN  ''‘¬''
-          WHEN ''Y'' THEN  ''ƒÍ''
+          WHEN ''D'' THEN  ''Â§©''
+          WHEN ''M'' THEN  ''Êúà''
+          WHEN ''Y'' THEN  ''Âπ¥''
          END AS PROD_DET2_DESC
         ,NULL  AS PROD_IND_CODE
         ,NULL  AS PROD_IND_DESC
       FROM MMAPST.ST_PRODUCT A
       WHERE SOURCEGRP=''PDLIABI''
-      AND PROD_DESC LIKE ''%∆æ÷§%''
+      AND PROD_DESC LIKE ''%Âá≠ËØÅ%''
       UNION ALL
       SELECT
         TO_NUMBER(TO_CHAR((SYSDATE),''YYYYMMDD'')) AS ETL_DATE
@@ -172,22 +172,22 @@ COMMIT;
         ,NULL  AS PROD_START_DT
         ,NULL  AS PROD_END_DT
         ,''FIN'' AS PROD_TYPE_CODE
-        ,''¿Ì≤∆'' AS PROD_TYPE_DESC
+        ,''ÁêÜË¥¢'' AS PROD_TYPE_DESC
         ,NULL  AS PROD_MID_CODE
         ,SUBSTR(A.PROD_DESC,1,3) AS PROD_MID_DESC
-        ,TO_NUMBER(SUBSTR(A.PROD_CODE,INSTR£®A.PROD_CODE,''-'',1,1£©+1,INSTR£®A.PROD_CODE,''-'',1,2£©-1-INSTR£®A.PROD_CODE,''-'',1,1£©)) AS PROD_DET1_CODE
+        ,TO_NUMBER(SUBSTR(A.PROD_CODE,INSTRÔºàA.PROD_CODE,''-'',1,1Ôºâ+1,INSTRÔºàA.PROD_CODE,''-'',1,2Ôºâ-1-INSTRÔºàA.PROD_CODE,''-'',1,1Ôºâ)) AS PROD_DET1_CODE
         ,NULL  AS PROD_DET1_DESC
-        ,CASE  WHEN INSTR£®A.PROD_CODE,''-'',1,2£©> 0 THEN SUBSTR(A.PROD_CODE,-1,1) END  AS PROD_DET2_CODE
+        ,CASE  WHEN INSTRÔºàA.PROD_CODE,''-'',1,2Ôºâ> 0 THEN SUBSTR(A.PROD_CODE,-1,1) END  AS PROD_DET2_CODE
         ,CASE  SUBSTR(A.PROD_CODE,-1,1)
-          WHEN ''D'' THEN  ''ÃÏ''
-          WHEN ''M'' THEN  ''‘¬''
-          WHEN ''Y'' THEN  ''ƒÍ''
+          WHEN ''D'' THEN  ''Â§©''
+          WHEN ''M'' THEN  ''Êúà''
+          WHEN ''Y'' THEN  ''Âπ¥''
          END AS PROD_DET2_DESC
         ,NULL  AS PROD_IND_CODE
         ,NULL  AS PROD_IND_DESC
       FROM MMAPST.ST_PRODUCT A
       WHERE SOURCEGRP=''PDLIABI''
-      AND PROD_DESC LIKE ''%¿Ì≤∆%''
+      AND PROD_DESC LIKE ''%ÁêÜË¥¢%''
       UNION ALL
       SELECT
         TO_NUMBER(TO_CHAR((SYSDATE),''YYYYMMDD'')) AS ETL_DATE
@@ -198,28 +198,28 @@ COMMIT;
         ,NULL  AS PROD_START_DT
         ,NULL  AS PROD_END_DT
         ,''TD'' AS PROD_TYPE_CODE
-        ,''∂®∆⁄¥ÊøÓ''  AS PROD_TYPE_DESC
+        ,''ÂÆöÊúüÂ≠òÊ¨æ''  AS PROD_TYPE_DESC
         ,SUBSTR(A.PROD_CODE,1,2) AS PROD_MID_CODE
         ,A.PROD_DESC AS PROD_MID_DESC
-        ,TO_NUMBER(SUBSTR(A.PROD_CODE,INSTR£®A.PROD_CODE,''-'',1,1£©+1,INSTR£®A.PROD_CODE,''-'',1,2£©-1-INSTR£®A.PROD_CODE,''-'',1,1£©)) AS PROD_DET1_CODE
+        ,TO_NUMBER(SUBSTR(A.PROD_CODE,INSTRÔºàA.PROD_CODE,''-'',1,1Ôºâ+1,INSTRÔºàA.PROD_CODE,''-'',1,2Ôºâ-1-INSTRÔºàA.PROD_CODE,''-'',1,1Ôºâ)) AS PROD_DET1_CODE
         ,NULL  AS PROD_DET1_DESC
-        ,CASE  WHEN INSTR£®A.PROD_CODE,''-'',1,2£©> 0 THEN SUBSTR(A.PROD_CODE,-1,1) END AS PROD_DET2_CODE
+        ,CASE  WHEN INSTRÔºàA.PROD_CODE,''-'',1,2Ôºâ> 0 THEN SUBSTR(A.PROD_CODE,-1,1) END AS PROD_DET2_CODE
         ,CASE  SUBSTR(A.PROD_CODE,-1,1)
-          WHEN ''D'' THEN  ''ÃÏ''
-          WHEN ''M'' THEN  ''‘¬''
-          WHEN ''Y'' THEN  ''ƒÍ''
+          WHEN ''D'' THEN  ''Â§©''
+          WHEN ''M'' THEN  ''Êúà''
+          WHEN ''Y'' THEN  ''Âπ¥''
          END AS PROD_DET2_DESC
         ,NULL  AS PROD_IND_CODE
         ,NULL  AS PROD_IND_DESC
       FROM MMAPST.ST_PRODUCT A
       WHERE SOURCEGRP=''PDLIABI''
-      AND ( PROD_DESC  NOT  LIKE ''%¿Ì≤∆%'' AND PROD_DESC NOT  LIKE  ''%π˙’Æ%'')';
+      AND ( PROD_DESC  NOT  LIKE ''%ÁêÜË¥¢%'' AND PROD_DESC NOT  LIKE  ''%ÂõΩÂÄ∫%'')';
 BEGIN
 
 INSERT INTO MMAPDM.MMAPDM_PROC_SQL(TABLE_NAME,DMSQL,PROC_NAME) VALUES('DM_PRODUCT',DMSQL,'P_DM_PRODUCT');
 
 END;
---–Ë“™‘⁄¥À¥¶ÃÌº” /
+--ÈúÄË¶ÅÂú®Ê≠§Â§ÑÊ∑ªÂä† /
 COMMIT;
 */
 

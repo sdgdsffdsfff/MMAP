@@ -1,8 +1,8 @@
 CREATE OR REPLACE PROCEDURE P_DM_CUST_BAL_STAT_ROLLBACK (
-    TABLE_NAME IN VARCHAR2, --±íÃû
-    DM_TODAY IN NUMBER,--µ±ÈÕ
-    DM_YESTERDAY IN NUMBER, -- Êý¾ÝÈÕÆÚ"ÉÏÒ»ÈÕ"
-    FREQ IN VARCHAR2 --Æµ¶È  
+    TABLE_NAME IN VARCHAR2, --è¡¨å
+    DM_TODAY IN NUMBER,--å½“æ—¥
+    DM_YESTERDAY IN NUMBER, -- æ•°æ®æ—¥æœŸ"ä¸Šä¸€æ—¥"
+    FREQ IN VARCHAR2 --é¢‘åº¦  
    ) 
    AS
        DM_SQL VARCHAR2(20000);
@@ -14,45 +14,45 @@ CREATE OR REPLACE PROCEDURE P_DM_CUST_BAL_STAT_ROLLBACK (
     COMMIT;
     DM_SQL:= 'INSERT INTO MMAPDM.'||TABLE_NAME||'
     (
-         ETL_DATE               --ÅÜÅúÈÕÆÚ(YYYYMMDD)
-        ,TX_DATE                --Êý¾ÝÈÕÆÚ(YYYYMMDD)
-        ,PERIOD_ID              --ÈÕÆÚ(YYYYMMDD)
-        ,FREQ                   --Æµ¶È£¨D\W\M\Q\Y£©
-        ,YEAR                   --Äê·Ý(YYYY)
-        ,FREQ_VALUE             --Æµ¶ÈÖµ(1\2\3\4)
-        ,FREQ_DIFF              --Æµ¶È²î(Óë¸üÐÂÈÕÆÚµÄ¼¾¶È²îÖµ)
-        ,CUSTOMER_ID            --¿Í»§ºÅ
-        ,PROD_TYPE              --²úÆ·´óÀà£¨»îÆÚ¡¢¶¨ÆÚ¡¢»ù½ð¡¢×Ê²ú×Ü¶î£¨ÈËÃñ±Ò+Íâ±Ò£©µÈ£©
-        ,CUST_BAL_LC            --Óà¶î
-        ,CUST_BAL_CWS_LC        --Óà¶î_Í¬ÆÚ
-        ,CUST_BAL_SQT_LC        --Óà¶î_ÉÏÆÚ
-        ,CUST_BAL_MAX_LC        --Óà¶î_×î´óÖµ
-        ,CUST_BAL_MAX_DATE_LC   --Óà¶î_×î´óÖµ_ÈÕÆÚ
-        ,CUST_BAL_MIN_LC        --Óà¶î_×îÐ¡Öµ
-        ,CUST_BAL_MIN_DATE_LC   --Óà¶î_×îÐ¡Öµ_ÈÕÆÚ
-        ,CUST_BAL_AVG_LC        --ÈÕÆ½¾ùÓà¶î
-        ,CUST_BAL_AVG_CWS_LC    --ÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-        ,CUST_BAL_AVG_SQT_LC    --ÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
-        ,CUST_BAL_FC            --Íâ±ÒÓà¶î
-        ,CUST_BAL_CWS_FC        --Íâ±ÒÓà¶î_Í¬ÆÚ
-        ,CUST_BAL_SQT_FC        --Íâ±ÒÓà¶î_ÉÏÆÚ
-        ,CUST_BAL_MAX_FC        --Íâ±ÒÓà¶î_×î´óÖµ
-        ,CUST_BAL_MAX_DATE_FC   --Íâ±ÒÓà¶î_×î´óÖµ_ÈÕÆÚ
-        ,CUST_BAL_MIN_FC        --Íâ±ÒÓà¶î_×îÐ¡Öµ
-        ,CUST_BAL_MIN_DATE_FC   --Íâ±ÒÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
-        ,CUST_BAL_AVG_FC        --Íâ±ÒÈÕÆ½¾ùÓà¶î
-        ,CUST_BAL_AVG_CWS_FC    --Íâ±ÒÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-        ,CUST_BAL_AVG_SQT_FC    --Íâ±ÒÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
-        ,CUST_BAL               --ºÏ¼ÆÓà¶î
-        ,CUST_BAL_CWS           --ºÏ¼ÆÓà¶î_Í¬ÆÚ
-        ,CUST_BAL_SQT           --ºÏ¼ÆÓà¶î_ÉÏÆÚ
-        ,CUST_BAL_MAX           --ºÏ¼ÆÓà¶î_×î´óÖµ
-        ,CUST_BAL_MAX_DATE      --ºÏ¼ÆÓà¶î_×î´óÖµ_ÈÕÆÚ
-        ,CUST_BAL_MIN           --ºÏ¼ÆÓà¶î_×îÐ¡Öµ
-        ,CUST_BAL_MIN_DATE      --ºÏ¼ÆÓà¶î_×îÐ¡Öµ_ÈÕÆÚ
-        ,CUST_BAL_AVG           --ºÏ¼ÆÈÕÆ½¾ùÓà¶î
-        ,CUST_BAL_AVG_CWS       --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_Í¬ÆÚ
-        ,CUST_BAL_AVG_SQT       --ºÏ¼ÆÈÕÆ½¾ùÓà¶î_ÉÏÆÚ
+         ETL_DATE               --è·‘æ‰¹æ—¥æœŸ(YYYYMMDD)
+        ,TX_DATE                --æ•°æ®æ—¥æœŸ(YYYYMMDD)
+        ,PERIOD_ID              --æ—¥æœŸ(YYYYMMDD)
+        ,FREQ                   --é¢‘åº¦ï¼ˆD\W\M\Q\Yï¼‰
+        ,YEAR                   --å¹´ä»½(YYYY)
+        ,FREQ_VALUE             --é¢‘åº¦å€¼(1\2\3\4)
+        ,FREQ_DIFF              --é¢‘åº¦å·®(ä¸Žæ›´æ–°æ—¥æœŸçš„å­£åº¦å·®å€¼)
+        ,CUSTOMER_ID            --å®¢æˆ·å·
+        ,PROD_TYPE              --äº§å“å¤§ç±»ï¼ˆæ´»æœŸã€å®šæœŸã€åŸºé‡‘ã€èµ„äº§æ€»é¢ï¼ˆäººæ°‘å¸+å¤–å¸ï¼‰ç­‰ï¼‰
+        ,CUST_BAL_LC            --ä½™é¢
+        ,CUST_BAL_CWS_LC        --ä½™é¢_åŒæœŸ
+        ,CUST_BAL_SQT_LC        --ä½™é¢_ä¸ŠæœŸ
+        ,CUST_BAL_MAX_LC        --ä½™é¢_æœ€å¤§å€¼
+        ,CUST_BAL_MAX_DATE_LC   --ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
+        ,CUST_BAL_MIN_LC        --ä½™é¢_æœ€å°å€¼
+        ,CUST_BAL_MIN_DATE_LC   --ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
+        ,CUST_BAL_AVG_LC        --æ—¥å¹³å‡ä½™é¢
+        ,CUST_BAL_AVG_CWS_LC    --æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+        ,CUST_BAL_AVG_SQT_LC    --æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
+        ,CUST_BAL_FC            --å¤–å¸ä½™é¢
+        ,CUST_BAL_CWS_FC        --å¤–å¸ä½™é¢_åŒæœŸ
+        ,CUST_BAL_SQT_FC        --å¤–å¸ä½™é¢_ä¸ŠæœŸ
+        ,CUST_BAL_MAX_FC        --å¤–å¸ä½™é¢_æœ€å¤§å€¼
+        ,CUST_BAL_MAX_DATE_FC   --å¤–å¸ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
+        ,CUST_BAL_MIN_FC        --å¤–å¸ä½™é¢_æœ€å°å€¼
+        ,CUST_BAL_MIN_DATE_FC   --å¤–å¸ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
+        ,CUST_BAL_AVG_FC        --å¤–å¸æ—¥å¹³å‡ä½™é¢
+        ,CUST_BAL_AVG_CWS_FC    --å¤–å¸æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+        ,CUST_BAL_AVG_SQT_FC    --å¤–å¸æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
+        ,CUST_BAL               --åˆè®¡ä½™é¢
+        ,CUST_BAL_CWS           --åˆè®¡ä½™é¢_åŒæœŸ
+        ,CUST_BAL_SQT           --åˆè®¡ä½™é¢_ä¸ŠæœŸ
+        ,CUST_BAL_MAX           --åˆè®¡ä½™é¢_æœ€å¤§å€¼
+        ,CUST_BAL_MAX_DATE      --åˆè®¡ä½™é¢_æœ€å¤§å€¼_æ—¥æœŸ
+        ,CUST_BAL_MIN           --åˆè®¡ä½™é¢_æœ€å°å€¼
+        ,CUST_BAL_MIN_DATE      --åˆè®¡ä½™é¢_æœ€å°å€¼_æ—¥æœŸ
+        ,CUST_BAL_AVG           --åˆè®¡æ—¥å¹³å‡ä½™é¢
+        ,CUST_BAL_AVG_CWS       --åˆè®¡æ—¥å¹³å‡ä½™é¢_åŒæœŸ
+        ,CUST_BAL_AVG_SQT       --åˆè®¡æ—¥å¹³å‡ä½™é¢_ä¸ŠæœŸ
     )
     SELECT
          ETL_DATE

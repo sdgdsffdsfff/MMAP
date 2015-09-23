@@ -20,7 +20,7 @@ IS
 
 BEGIN
 	IO_ROW := 0;
-	IF	LENGTH(TABLE_NAME) > 22		-- ¿ØÖÆ±íÃû³¤¶È
+	IF	LENGTH(TABLE_NAME) > 22		-- æŽ§åˆ¶è¡¨åé•¿åº¦
 		THEN	tmp_name := substr(TABLE_NAME,0,20);
 		ELSE	tmp_name := TABLE_NAME;
 	END IF;
@@ -30,7 +30,7 @@ BEGIN
 	TMP_UPD :=	'TMP_' ||  tmp_name	 ||	'_UPD';
 
 
-	--ÅÐ¶ÏÁÙÊ±±íÊÇ·ñ´æÔÚ,´æÔÚÔòÉ¾³ý±í
+	--åˆ¤æ–­ä¸´æ—¶è¡¨æ˜¯å¦å­˜åœ¨,å­˜åœ¨åˆ™åˆ é™¤è¡¨
 	STRSQL := 'SELECT COUNT(1) FROM USER_TABLES WHERE TABLE_NAME = '''|| TMP_PRE || '''';
 	EXECUTE	IMMEDIATE STRSQL	INTO NUM;
 	IF NUM > 0 THEN	
@@ -59,7 +59,7 @@ BEGIN
 		EXECUTE	IMMEDIATE	STRSQL;
 	END IF;
 
-	--´´½¨ÁÙÊ±±í
+	--åˆ›å»ºä¸´æ—¶è¡¨
 	STR_PRE := 'CREATE TABLE MMAPDM.' || TMP_PRE || ' AS SELECT * FROM MMAPDM.' || TABLE_NAME || ' WHERE 1 = 2' ;
 	STR_AUR := 'CREATE TABLE MMAPDM.' || TMP_CUR || ' AS SELECT * FROM MMAPDM.' || TABLE_NAME || ' WHERE 1 = 2' ;
 	STR_INS := 'CREATE TABLE MMAPDM.' || TMP_INS || ' AS SELECT * FROM MMAPDM.' || TABLE_NAME || ' WHERE 1 = 2' ;

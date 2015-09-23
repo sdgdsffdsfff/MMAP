@@ -1,106 +1,106 @@
 CREATE OR REPLACE PROCEDURE P_DM_CUST_CARD_LVL_HIS
 (IO_STATUS OUT INTEGER,IO_SQLERR OUT VARCHAR2)
 AS
-	TABLE_NAME VARCHAR2(125) :='DM_CUST_CARD_LVL_HIS';  -- ±íÃû(ÐÞ¸Ä)
-	PROCEDURE_NAME VARCHAR2(125) :='P_'||TABLE_NAME;  -- ´æ´¢¹ý³ÌÃû(ÐÞ¸Ä)
+	TABLE_NAME VARCHAR2(125) :='DM_CUST_CARD_LVL_HIS';  -- è¡¨å(ä¿®æ”¹)
+	PROCEDURE_NAME VARCHAR2(125) :='P_'||TABLE_NAME;  -- å­˜å‚¨è¿‡ç¨‹å(ä¿®æ”¹)
 
-	IO_ROW INTEGER; --²åÈëÌõÊý
-	ST_ROW1 INTEGER;  --Ô´1Êý¾ÝÌõÊý
-	ST_ROW2 INTEGER;  --Ô´2Êý¾ÝÌõÊý
+	IO_ROW INTEGER; --æ’å…¥æ¡æ•°
+	ST_ROW1 INTEGER;  --æº1æ•°æ®æ¡æ•°
+	ST_ROW2 INTEGER;  --æº2æ•°æ®æ¡æ•°
 
-	RETURN_NUM NUMBER;                -- ·µ»Ø×´Ì¬Öµ
-	RETURN_STATUS VARCHAR2(5000);          -- ·µ»ØµÄÃèÊö
+	RETURN_NUM NUMBER;                -- è¿”å›žçŠ¶æ€å€¼
+	RETURN_STATUS VARCHAR2(5000);          -- è¿”å›žçš„æè¿°
 	
-	V_ETL_DATE NUMBER;  -- ÅÜÅúÈÕÆÚ
-	V_START_TIMESTAMP TIMESTAMP;  -- ¼ÓÔØ¿ªÊ¼Ê±¼ä
-	V_END_TIMESTAMP    TIMESTAMP;  -- ¼ÓÔØ½áÊøÊ±¼ä
+	V_ETL_DATE NUMBER;  -- è·‘æ‰¹æ—¥æœŸ
+	V_START_TIMESTAMP TIMESTAMP;  -- åŠ è½½å¼€å§‹æ—¶é—´
+	V_END_TIMESTAMP    TIMESTAMP;  -- åŠ è½½ç»“æŸæ—¶é—´
 
-	DM_SQL VARCHAR2(20000);  -- ´æ·ÅSQLÓï¾ä
+	DM_SQL VARCHAR2(20000);  -- å­˜æ”¾SQLè¯­å¥
 
-	DM_TODAY NUMBER;    -- Êý¾ÝÈÕÆÚ"µ±ÈÕ"
-	DM_MAX_DATE NUMBER := 99991231;  -- ×î´óÈÕÆÚ
+	DM_TODAY NUMBER;    -- æ•°æ®æ—¥æœŸ"å½“æ—¥"
+	DM_MAX_DATE NUMBER := 99991231;  -- æœ€å¤§æ—¥æœŸ
 
-	TMP_PRE  VARCHAR(35);  -- Ç°Ò»ÌìÊý¾ÝÁÙÊ±±í
-	TMP_CUR  VARCHAR(35);  -- µ±ÈÕÊý¾ÝÁÙÊ±±í
-	TMP_INS  VARCHAR(35);  -- ÐÂ²åÈëÊý¾ÝÁÙÊ±±í
-	TMP_UPD  VARCHAR(35);  -- ¸üÐÂÊý¾ÝÁÙÊ±±í
+	TMP_PRE  VARCHAR(35);  -- å‰ä¸€å¤©æ•°æ®ä¸´æ—¶è¡¨
+	TMP_CUR  VARCHAR(35);  -- å½“æ—¥æ•°æ®ä¸´æ—¶è¡¨
+	TMP_INS  VARCHAR(35);  -- æ–°æ’å…¥æ•°æ®ä¸´æ—¶è¡¨
+	TMP_UPD  VARCHAR(35);  -- æ›´æ–°æ•°æ®ä¸´æ—¶è¡¨
 
 BEGIN
 
-	SELECT SYSDATE INTO V_START_TIMESTAMP FROM DUAL;  -- ¼ÓÔØ³ÌÐòÔËÐÐ¿ªÊ¼Ê±¼ä
+	SELECT SYSDATE INTO V_START_TIMESTAMP FROM DUAL;  -- åŠ è½½ç¨‹åºè¿è¡Œå¼€å§‹æ—¶é—´
 	
-	SELECT TO_NUMBER(TO_CHAR((SYSDATE),'YYYYMMDD')) INTO V_ETL_DATE FROM DUAL;  -- È¡ÏµÍ³ÈÕÆÚ×÷ÎªÅÜÅúÈÕÆÚ
+	SELECT TO_NUMBER(TO_CHAR((SYSDATE),'YYYYMMDD')) INTO V_ETL_DATE FROM DUAL;  -- å–ç³»ç»Ÿæ—¥æœŸä½œä¸ºè·‘æ‰¹æ—¥æœŸ
 
-	SELECT TX_DATE INTO DM_TODAY FROM MMAPST.ST_SYSTEM_DATE;  -- È¡Êý¾ÝÈÕÆÚ
+	SELECT TX_DATE INTO DM_TODAY FROM MMAPST.ST_SYSTEM_DATE;  -- å–æ•°æ®æ—¥æœŸ
 
-	--²éÑ¯ST²ã±íÖÐÊÇ·ñÓÐ'µ±ÈÕ'Êý¾Ý
+	--æŸ¥è¯¢STå±‚è¡¨ä¸­æ˜¯å¦æœ‰'å½“æ—¥'æ•°æ®
 	SELECT COUNT(1) INTO ST_ROW1 FROM MMAPST.ST_CUST_CARD WHERE PERIOD_ID=DM_TODAY;
 	SELECT COUNT(1) INTO ST_ROW2 FROM MMAPST.ST_CUSTOMER WHERE PERIOD_ID=DM_TODAY;
 
-	--Èç¹ûST²ãÓÐ"µ±ÈÕ"Êý¾Ý£¬Ôò½øÐÐÊý¾Ý³éÈ¡£¬·ñÔò±£³ÖDM²ãÏÖÓÐÊý¾Ý²»±ä¡£
+	--å¦‚æžœSTå±‚æœ‰"å½“æ—¥"æ•°æ®ï¼Œåˆ™è¿›è¡Œæ•°æ®æŠ½å–ï¼Œå¦åˆ™ä¿æŒDMå±‚çŽ°æœ‰æ•°æ®ä¸å˜ã€‚
 	IF ST_ROW1>0 OR ST_ROW2>0
 	THEN
 		IO_ROW:=0;
-		P_MMAPDM_CREATE_TMP_TABLES(TABLE_NAME , RETURN_NUM , RETURN_STATUS,TMP_PRE,TMP_CUR,TMP_INS,TMP_UPD); -- µ÷ÓÃ´´½¨ÁÙÊ±±í´æ´¢¹ý³Ì
+		P_MMAPDM_CREATE_TMP_TABLES(TABLE_NAME , RETURN_NUM , RETURN_STATUS,TMP_PRE,TMP_CUR,TMP_INS,TMP_UPD); -- è°ƒç”¨åˆ›å»ºä¸´æ—¶è¡¨å­˜å‚¨è¿‡ç¨‹
 
-		--»Ö¸´Êý¾ÝÎªÇ°Ò»ÈÕÊý¾Ý×´Ì¬£¬Îª±ÜÃâÖØÐÂÅÜÅúÒýÆð´íÎó
-		DELETE FROM  MMAPDM.DM_CUST_CARD_LVL_HIS   WHERE DM_START_DT = DM_TODAY;  -- É¾³ý¿ªÊ¼ÈÕÆÚÎª"µ±ÈÕ"µÄÊý¾Ý
+		--æ¢å¤æ•°æ®ä¸ºå‰ä¸€æ—¥æ•°æ®çŠ¶æ€ï¼Œä¸ºé¿å…é‡æ–°è·‘æ‰¹å¼•èµ·é”™è¯¯
+		DELETE FROM  MMAPDM.DM_CUST_CARD_LVL_HIS   WHERE DM_START_DT = DM_TODAY;  -- åˆ é™¤å¼€å§‹æ—¥æœŸä¸º"å½“æ—¥"çš„æ•°æ®
 
-		UPDATE MMAPDM.DM_CUST_CARD_LVL_HIS SET DM_END_DT = DM_MAX_DATE  WHERE DM_END_DT = DM_TODAY;  -- ¸üÐÂ½áÊøÈÕÆÚÎª"µ±ÈÕ"µÄÊý¾ÝÎª×î´óÈÕÆÚ
+		UPDATE MMAPDM.DM_CUST_CARD_LVL_HIS SET DM_END_DT = DM_MAX_DATE  WHERE DM_END_DT = DM_TODAY;  -- æ›´æ–°ç»“æŸæ—¥æœŸä¸º"å½“æ—¥"çš„æ•°æ®ä¸ºæœ€å¤§æ—¥æœŸ
 
 		COMMIT;
 
-		/* È¡Ç°Ò»ÌìÊý¾Ý  */
+		/* å–å‰ä¸€å¤©æ•°æ®  */
 		DM_SQL := '  INSERT INTO  '||  TMP_PRE  || '
 		(
-		   CUSTOMER_ID      --¿Í»§ºÅ
-		  ,CIF_LVL_CODE     --¿Í»§¼¶±ð_´úÂë
-		  ,CIF_LVL          --¿Í»§¼¶±ð
-		  ,CIF_LVL_DATE     --¿Í»§¼¶±ð¶¨¼¶ÈÕÆÚ
-		  ,CARD_LVL_CODE    --¿Í»§¿¨¼¶±ð_´úÂë_½è¼Ç¿¨
-		  ,CARD_LVL         --¿Í»§¿¨¼¶±ð_½è¼Ç¿¨
-		  ,CARD_DATE        --½è¼Ç¿¨·¢¿¨ÈÕÆÚ
-		  ,ETL_DATE         --ÅÜÅúÈÕÆÚ
-		  ,DM_START_DT      --ÆðÊ¼ÈÕÆÚ
-		  ,DM_END_DT        --½áÊøÈÕÆÚ
+		   CUSTOMER_ID      --å®¢æˆ·å·
+		  ,CIF_LVL_CODE     --å®¢æˆ·çº§åˆ«_ä»£ç 
+		  ,CIF_LVL          --å®¢æˆ·çº§åˆ«
+		  ,CIF_LVL_DATE     --å®¢æˆ·çº§åˆ«å®šçº§æ—¥æœŸ
+		  ,CARD_LVL_CODE    --å®¢æˆ·å¡çº§åˆ«_ä»£ç _å€Ÿè®°å¡
+		  ,CARD_LVL         --å®¢æˆ·å¡çº§åˆ«_å€Ÿè®°å¡
+		  ,CARD_DATE        --å€Ÿè®°å¡å‘å¡æ—¥æœŸ
+		  ,ETL_DATE         --è·‘æ‰¹æ—¥æœŸ
+		  ,DM_START_DT      --èµ·å§‹æ—¥æœŸ
+		  ,DM_END_DT        --ç»“æŸæ—¥æœŸ
 		)
 		SELECT
-		   CUSTOMER_ID      --¿Í»§ºÅ
-		  ,CIF_LVL_CODE     --¿Í»§¼¶±ð_´úÂë
-		  ,CIF_LVL          --¿Í»§¼¶±ð
-		  ,CIF_LVL_DATE     --¿Í»§¼¶±ð¶¨¼¶ÈÕÆÚ
-		  ,CARD_LVL_CODE    --¿Í»§¿¨¼¶±ð_´úÂë_½è¼Ç¿¨
-		  ,CARD_LVL         --¿Í»§¿¨¼¶±ð_½è¼Ç¿¨
-		  ,CARD_DATE        --½è¼Ç¿¨·¢¿¨ÈÕÆÚ
-		  ,ETL_DATE         --ÅÜÅúÈÕÆÚ
-		  ,DM_START_DT      --ÆðÊ¼ÈÕÆÚ
-		  ,DM_END_DT        --½áÊøÈÕÆÚ
+		   CUSTOMER_ID      --å®¢æˆ·å·
+		  ,CIF_LVL_CODE     --å®¢æˆ·çº§åˆ«_ä»£ç 
+		  ,CIF_LVL          --å®¢æˆ·çº§åˆ«
+		  ,CIF_LVL_DATE     --å®¢æˆ·çº§åˆ«å®šçº§æ—¥æœŸ
+		  ,CARD_LVL_CODE    --å®¢æˆ·å¡çº§åˆ«_ä»£ç _å€Ÿè®°å¡
+		  ,CARD_LVL         --å®¢æˆ·å¡çº§åˆ«_å€Ÿè®°å¡
+		  ,CARD_DATE        --å€Ÿè®°å¡å‘å¡æ—¥æœŸ
+		  ,ETL_DATE         --è·‘æ‰¹æ—¥æœŸ
+		  ,DM_START_DT      --èµ·å§‹æ—¥æœŸ
+		  ,DM_END_DT        --ç»“æŸæ—¥æœŸ
 		FROM MMAPDM.DM_CUST_CARD_LVL_HIS
 		WHERE DM_END_DT  = ' || DM_MAX_DATE ;
 		EXECUTE IMMEDIATE DM_SQL;
 		COMMIT;
 
-		/*È¡µ±ÈÕÊý¾Ý*/
+		/*å–å½“æ—¥æ•°æ®*/
 		DM_SQL := 'INSERT INTO '|| TMP_CUR || '
 		(
-		   CUSTOMER_ID      --¿Í»§ºÅ
-		  ,CIF_LVL_CODE     --¿Í»§¼¶±ð_´úÂë
-		  ,CIF_LVL          --¿Í»§¼¶±ð
-		  ,CIF_LVL_DATE     --¿Í»§¼¶±ð¶¨¼¶ÈÕÆÚ
-		  ,CARD_LVL_CODE    --¿Í»§¿¨¼¶±ð_´úÂë_½è¼Ç¿¨
-		  ,CARD_LVL         --¿Í»§¿¨¼¶±ð_½è¼Ç¿¨
-		  ,CARD_DATE        --½è¼Ç¿¨·¢¿¨ÈÕÆÚ
-		  ,ETL_DATE         --ÅÜÅúÈÕÆÚ
-		  ,DM_START_DT      --ÆðÊ¼ÈÕÆÚ
-		  ,DM_END_DT        --½áÊøÈÕÆÚ
+		   CUSTOMER_ID      --å®¢æˆ·å·
+		  ,CIF_LVL_CODE     --å®¢æˆ·çº§åˆ«_ä»£ç 
+		  ,CIF_LVL          --å®¢æˆ·çº§åˆ«
+		  ,CIF_LVL_DATE     --å®¢æˆ·çº§åˆ«å®šçº§æ—¥æœŸ
+		  ,CARD_LVL_CODE    --å®¢æˆ·å¡çº§åˆ«_ä»£ç _å€Ÿè®°å¡
+		  ,CARD_LVL         --å®¢æˆ·å¡çº§åˆ«_å€Ÿè®°å¡
+		  ,CARD_DATE        --å€Ÿè®°å¡å‘å¡æ—¥æœŸ
+		  ,ETL_DATE         --è·‘æ‰¹æ—¥æœŸ
+		  ,DM_START_DT      --èµ·å§‹æ—¥æœŸ
+		  ,DM_END_DT        --ç»“æŸæ—¥æœŸ
 		)
 		SELECT
 		 A.CUSTOMER_ID AS CUSTOMER_ID
 		,NVL(C.VALUE_NUM,0) AS CIF_LVL_CODE
-		,NVL(C.ITEM_NM,''Î´Öª'')  AS CIF_LVL
+		,NVL(C.ITEM_NM,''æœªçŸ¥'')  AS CIF_LVL
 		,A.TX_DATE AS CIF_LVL_DATE
 		,NVL(B.VALUE_NUM,0) AS  CARD_LVL_CODE
-		,NVL(B.ITEM_NM,''Î´Öª'')  AS CARD_LVL
+		,NVL(B.ITEM_NM,''æœªçŸ¥'')  AS CARD_LVL
 		,B.ISSU_DT AS CARD_DATE
 		,'||  V_ETL_DATE  ||'
 		,'||  DM_TODAY ||  '
@@ -113,7 +113,7 @@ BEGIN
 				SELECT	ROW_NUMBER() OVER (PARTITION BY CUSTOMER_ID ORDER BY NVL(B.VALUE_NUM,0) DESC,ISSU_DT ASC) AS ROW_NUM
 					,A.CUSTOMER_ID
 					,A.CRDTYP_ID
-					,NVL(b.ITEM_NM,''Î´Öª'') AS ITEM_NM
+					,NVL(b.ITEM_NM,''æœªçŸ¥'') AS ITEM_NM
 					,NVL(B.VALUE_NUM,0) AS VALUE_NUM
 					,A.ISSU_DT
 				FROM	MMAPST.ST_CUST_CARD A
@@ -139,60 +139,60 @@ BEGIN
 		EXECUTE  IMMEDIATE DM_SQL;
 		COMMIT;
 		
-		/*cur-pre =  ÔöÁ¿Êý¾Ý£¨°üÀ¨ÐÞ¸Äºó£©*/
+		/*cur-pre =  å¢žé‡æ•°æ®ï¼ˆåŒ…æ‹¬ä¿®æ”¹åŽï¼‰*/
 		DM_SQL := 'INSERT INTO '|| TMP_INS || '
 		(
-		CUSTOMER_ID       --¿Í»§ºÅ
-		,CIF_LVL_CODE     --¿Í»§¼¶±ð_´úÂë
-		,CIF_LVL          --¿Í»§¼¶±ð
-		,CIF_LVL_DATE     --¿Í»§¼¶±ð¶¨¼¶ÈÕÆÚ
-		,CARD_LVL_CODE    --¿Í»§¿¨¼¶±ð_´úÂë_½è¼Ç¿¨
-		,CARD_LVL         --¿Í»§¿¨¼¶±ð_½è¼Ç¿¨
-		,CARD_DATE        --½è¼Ç¿¨·¢¿¨ÈÕÆÚ
-		,ETL_DATE         --ÅÜÅúÈÕÆÚ
-		,DM_START_DT      --ÆðÊ¼ÈÕÆÚ
-		,DM_END_DT        --½áÊøÈÕÆÚ
+		CUSTOMER_ID       --å®¢æˆ·å·
+		,CIF_LVL_CODE     --å®¢æˆ·çº§åˆ«_ä»£ç 
+		,CIF_LVL          --å®¢æˆ·çº§åˆ«
+		,CIF_LVL_DATE     --å®¢æˆ·çº§åˆ«å®šçº§æ—¥æœŸ
+		,CARD_LVL_CODE    --å®¢æˆ·å¡çº§åˆ«_ä»£ç _å€Ÿè®°å¡
+		,CARD_LVL         --å®¢æˆ·å¡çº§åˆ«_å€Ÿè®°å¡
+		,CARD_DATE        --å€Ÿè®°å¡å‘å¡æ—¥æœŸ
+		,ETL_DATE         --è·‘æ‰¹æ—¥æœŸ
+		,DM_START_DT      --èµ·å§‹æ—¥æœŸ
+		,DM_END_DT        --ç»“æŸæ—¥æœŸ
 		)
 		
 		SELECT
-			 A.CUSTOMER_ID      --¿Í»§ºÅ
-			,A.CIF_LVL_CODE     --¿Í»§¼¶±ð_´úÂë
-			,A.CIF_LVL          --¿Í»§¼¶±ð
+			 A.CUSTOMER_ID      --å®¢æˆ·å·
+			,A.CIF_LVL_CODE     --å®¢æˆ·çº§åˆ«_ä»£ç 
+			,A.CIF_LVL          --å®¢æˆ·çº§åˆ«
 			,CASE WHEN C.CIF_LVL_CODE=A.CIF_LVL_CODE THEN  C.CIF_LVL_DATE
 			ELSE A.CIF_LVL_DATE  
-			END AS CIF_LVL_DATE --¿Í»§¼¶±ð¶¨¼¶ÈÕÆÚ
-			,A.CARD_LVL_CODE    --¿Í»§¿¨¼¶±ð_´úÂë_½è¼Ç¿¨
-			,A.CARD_LVL         --¿Í»§¿¨¼¶±ð_½è¼Ç¿¨
-			,A.CARD_DATE        --½è¼Ç¿¨·¢¿¨ÈÕÆÚ
-			,A.ETL_DATE         --ÅÜÅúÈÕÆÚ
-			,A.DM_START_DT      --ÆðÊ¼ÈÕÆÚ
-			,A.DM_END_DT        --½áÊøÈÕÆÚ
+			END AS CIF_LVL_DATE --å®¢æˆ·çº§åˆ«å®šçº§æ—¥æœŸ
+			,A.CARD_LVL_CODE    --å®¢æˆ·å¡çº§åˆ«_ä»£ç _å€Ÿè®°å¡
+			,A.CARD_LVL         --å®¢æˆ·å¡çº§åˆ«_å€Ÿè®°å¡
+			,A.CARD_DATE        --å€Ÿè®°å¡å‘å¡æ—¥æœŸ
+			,A.ETL_DATE         --è·‘æ‰¹æ—¥æœŸ
+			,A.DM_START_DT      --èµ·å§‹æ—¥æœŸ
+			,A.DM_END_DT        --ç»“æŸæ—¥æœŸ
 		
 		FROM
 		(
 			SELECT
-				 CUSTOMER_ID      --¿Í»§ºÅ
-				,CIF_LVL_CODE     --¿Í»§¼¶±ð_´úÂë
-				,CIF_LVL          --¿Í»§¼¶±ð
-				,CIF_LVL_DATE     --¿Í»§¼¶±ð¶¨¼¶ÈÕÆÚ
-				,CARD_LVL_CODE    --¿Í»§¿¨¼¶±ð_´úÂë_½è¼Ç¿¨
-				,CARD_LVL         --¿Í»§¿¨¼¶±ð_½è¼Ç¿¨
-				,CARD_DATE        --½è¼Ç¿¨·¢¿¨ÈÕÆÚ
-				,ETL_DATE         --ÅÜÅúÈÕÆÚ
-				,DM_START_DT      --ÆðÊ¼ÈÕÆÚ
-				,DM_END_DT        --½áÊøÈÕÆÚ
+				 CUSTOMER_ID      --å®¢æˆ·å·
+				,CIF_LVL_CODE     --å®¢æˆ·çº§åˆ«_ä»£ç 
+				,CIF_LVL          --å®¢æˆ·çº§åˆ«
+				,CIF_LVL_DATE     --å®¢æˆ·çº§åˆ«å®šçº§æ—¥æœŸ
+				,CARD_LVL_CODE    --å®¢æˆ·å¡çº§åˆ«_ä»£ç _å€Ÿè®°å¡
+				,CARD_LVL         --å®¢æˆ·å¡çº§åˆ«_å€Ÿè®°å¡
+				,CARD_DATE        --å€Ÿè®°å¡å‘å¡æ—¥æœŸ
+				,ETL_DATE         --è·‘æ‰¹æ—¥æœŸ
+				,DM_START_DT      --èµ·å§‹æ—¥æœŸ
+				,DM_END_DT        --ç»“æŸæ—¥æœŸ
 			FROM '|| TMP_CUR ||  '  a
 			WHERE
 			NOT  EXISTS
 			(
 				SELECT
-					 CUSTOMER_ID      --¿Í»§ºÅ
-					,CIF_LVL_CODE     --¿Í»§¼¶±ð_´úÂë
-					,CIF_LVL          --¿Í»§¼¶±ð
-					,CIF_LVL_DATE     --¿Í»§¼¶±ð¶¨¼¶ÈÕÆÚ
-					,CARD_LVL_CODE    --¿Í»§¿¨¼¶±ð_´úÂë_½è¼Ç¿¨
-					,CARD_LVL         --¿Í»§¿¨¼¶±ð_½è¼Ç¿¨
-					,CARD_DATE        --½è¼Ç¿¨·¢¿¨ÈÕÆÚ
+					 CUSTOMER_ID      --å®¢æˆ·å·
+					,CIF_LVL_CODE     --å®¢æˆ·çº§åˆ«_ä»£ç 
+					,CIF_LVL          --å®¢æˆ·çº§åˆ«
+					,CIF_LVL_DATE     --å®¢æˆ·çº§åˆ«å®šçº§æ—¥æœŸ
+					,CARD_LVL_CODE    --å®¢æˆ·å¡çº§åˆ«_ä»£ç _å€Ÿè®°å¡
+					,CARD_LVL         --å®¢æˆ·å¡çº§åˆ«_å€Ÿè®°å¡
+					,CARD_DATE        --å€Ÿè®°å¡å‘å¡æ—¥æœŸ
 				FROM '|| TMP_PRE ||  '  b
 				WHERE	A.CUSTOMER_ID= B.CUSTOMER_ID
 				AND	NVL(A.CIF_LVL_CODE,0)= NVL(B.CIF_LVL_CODE,0)
@@ -207,46 +207,46 @@ BEGIN
 		EXECUTE  IMMEDIATE DM_SQL;
 		COMMIT;
 		
-		/*  pre-cur  = É¾Êý¾Ý£¨°üÀ¨ÐÞ¸ÄÇ°£© */
+		/*  pre-cur  = åˆ æ•°æ®ï¼ˆåŒ…æ‹¬ä¿®æ”¹å‰ï¼‰ */
 		DM_SQL := 'INSERT INTO '|| TMP_UPD || '
 		(
-		 CUSTOMER_ID      --¿Í»§ºÅ
-		,CIF_LVL_CODE     --¿Í»§¼¶±ð_´úÂë
-		,CIF_LVL          --¿Í»§¼¶±ð
-		,CIF_LVL_DATE     --¿Í»§¼¶±ð¶¨¼¶ÈÕÆÚ
-		,CARD_LVL_CODE    --¿Í»§¿¨¼¶±ð_´úÂë_½è¼Ç¿¨
-		,CARD_LVL         --¿Í»§¿¨¼¶±ð_½è¼Ç¿¨
-		,CARD_DATE        --½è¼Ç¿¨·¢¿¨ÈÕÆÚ
-		,ETL_DATE         --ÅÜÅúÈÕÆÚ
-		,DM_START_DT      --ÆðÊ¼ÈÕÆÚ
-		,DM_END_DT        --½áÊøÈÕÆÚ
+		 CUSTOMER_ID      --å®¢æˆ·å·
+		,CIF_LVL_CODE     --å®¢æˆ·çº§åˆ«_ä»£ç 
+		,CIF_LVL          --å®¢æˆ·çº§åˆ«
+		,CIF_LVL_DATE     --å®¢æˆ·çº§åˆ«å®šçº§æ—¥æœŸ
+		,CARD_LVL_CODE    --å®¢æˆ·å¡çº§åˆ«_ä»£ç _å€Ÿè®°å¡
+		,CARD_LVL         --å®¢æˆ·å¡çº§åˆ«_å€Ÿè®°å¡
+		,CARD_DATE        --å€Ÿè®°å¡å‘å¡æ—¥æœŸ
+		,ETL_DATE         --è·‘æ‰¹æ—¥æœŸ
+		,DM_START_DT      --èµ·å§‹æ—¥æœŸ
+		,DM_END_DT        --ç»“æŸæ—¥æœŸ
 		)
 		SELECT
-			 CUSTOMER_ID      --¿Í»§ºÅ
-			,CIF_LVL_CODE     --¿Í»§¼¶±ð_´úÂë
-			,CIF_LVL          --¿Í»§¼¶±ð
-			,CIF_LVL_DATE     --¿Í»§¼¶±ð¶¨¼¶ÈÕÆÚ
-			,CARD_LVL_CODE    --¿Í»§¿¨¼¶±ð_´úÂë_½è¼Ç¿¨
-			,CARD_LVL         --¿Í»§¿¨¼¶±ð_½è¼Ç¿¨
-			,CARD_DATE        --½è¼Ç¿¨·¢¿¨ÈÕÆÚ
-			,ETL_DATE         --ÅÜÅúÈÕÆÚ
-			,DM_START_DT      --ÆðÊ¼ÈÕÆÚ
-			,DM_END_DT        --½áÊøÈÕÆÚ
+			 CUSTOMER_ID      --å®¢æˆ·å·
+			,CIF_LVL_CODE     --å®¢æˆ·çº§åˆ«_ä»£ç 
+			,CIF_LVL          --å®¢æˆ·çº§åˆ«
+			,CIF_LVL_DATE     --å®¢æˆ·çº§åˆ«å®šçº§æ—¥æœŸ
+			,CARD_LVL_CODE    --å®¢æˆ·å¡çº§åˆ«_ä»£ç _å€Ÿè®°å¡
+			,CARD_LVL         --å®¢æˆ·å¡çº§åˆ«_å€Ÿè®°å¡
+			,CARD_DATE        --å€Ÿè®°å¡å‘å¡æ—¥æœŸ
+			,ETL_DATE         --è·‘æ‰¹æ—¥æœŸ
+			,DM_START_DT      --èµ·å§‹æ—¥æœŸ
+			,DM_END_DT        --ç»“æŸæ—¥æœŸ
 		FROM '|| TMP_PRE ||' A
 		WHERE
 		NOT  EXISTS
 		(
 			SELECT
-				 CUSTOMER_ID      --¿Í»§ºÅ
-				,CIF_LVL_CODE     --¿Í»§¼¶±ð_´úÂë
-				,CIF_LVL          --¿Í»§¼¶±ð
-				,CIF_LVL_DATE     --¿Í»§¼¶±ð¶¨¼¶ÈÕÆÚ
-				,CARD_LVL_CODE    --¿Í»§¿¨¼¶±ð_´úÂë_½è¼Ç¿¨
-				,CARD_LVL         --¿Í»§¿¨¼¶±ð_½è¼Ç¿¨
-				,CARD_DATE        --½è¼Ç¿¨·¢¿¨ÈÕÆÚ
-				,ETL_DATE         --ÅÜÅúÈÕÆÚ
-				,DM_START_DT      --ÆðÊ¼ÈÕÆÚ
-				,DM_END_DT        --½áÊøÈÕÆÚ
+				 CUSTOMER_ID      --å®¢æˆ·å·
+				,CIF_LVL_CODE     --å®¢æˆ·çº§åˆ«_ä»£ç 
+				,CIF_LVL          --å®¢æˆ·çº§åˆ«
+				,CIF_LVL_DATE     --å®¢æˆ·çº§åˆ«å®šçº§æ—¥æœŸ
+				,CARD_LVL_CODE    --å®¢æˆ·å¡çº§åˆ«_ä»£ç _å€Ÿè®°å¡
+				,CARD_LVL         --å®¢æˆ·å¡çº§åˆ«_å€Ÿè®°å¡
+				,CARD_DATE        --å€Ÿè®°å¡å‘å¡æ—¥æœŸ
+				,ETL_DATE         --è·‘æ‰¹æ—¥æœŸ
+				,DM_START_DT      --èµ·å§‹æ—¥æœŸ
+				,DM_END_DT        --ç»“æŸæ—¥æœŸ
 			FROM '|| TMP_CUR ||  '  B
 			WHERE	A.CUSTOMER_ID= B.CUSTOMER_ID
 			AND	NVL(A.CIF_LVL_CODE,0)= NVL(B.CIF_LVL_CODE,0)
@@ -256,21 +256,21 @@ BEGIN
 		EXECUTE  IMMEDIATE DM_SQL;
 		COMMIT;
 
-		/* ¸üÐÂÀúÊ·ÖÐÉÏÈÕÊý¾ÝµÄ½ØÖ¹Ê±¼äÎªµ±ÈÕÊ±¼ä(É¾³ý-²åÈëÌæ´ú¸üÐÂ) */
+		/* æ›´æ–°åŽ†å²ä¸­ä¸Šæ—¥æ•°æ®çš„æˆªæ­¢æ—¶é—´ä¸ºå½“æ—¥æ—¶é—´(åˆ é™¤-æ’å…¥æ›¿ä»£æ›´æ–°) */
 		DM_SQL := 'DELETE FROM MMAPDM.DM_CUST_CARD_LVL_HIS A
 		WHERE
 		EXISTS(
 			SELECT
-				CUSTOMER_ID       --¿Í»§ºÅ
-				,CIF_LVL_CODE     --¿Í»§¼¶±ð_´úÂë
-				,CIF_LVL          --¿Í»§¼¶±ð
-				,CIF_LVL_DATE     --¿Í»§¼¶±ð¶¨¼¶ÈÕÆÚ
-				,CARD_LVL_CODE    --¿Í»§¿¨¼¶±ð_´úÂë_½è¼Ç¿¨
-				,CARD_LVL         --¿Í»§¿¨¼¶±ð_½è¼Ç¿¨
-				,CARD_DATE        --½è¼Ç¿¨·¢¿¨ÈÕÆÚ
-				,ETL_DATE         --ÅÜÅúÈÕÆÚ
-				,DM_START_DT      --ÆðÊ¼ÈÕÆÚ
-				,DM_END_DT        --½áÊøÈÕÆÚ
+				CUSTOMER_ID       --å®¢æˆ·å·
+				,CIF_LVL_CODE     --å®¢æˆ·çº§åˆ«_ä»£ç 
+				,CIF_LVL          --å®¢æˆ·çº§åˆ«
+				,CIF_LVL_DATE     --å®¢æˆ·çº§åˆ«å®šçº§æ—¥æœŸ
+				,CARD_LVL_CODE    --å®¢æˆ·å¡çº§åˆ«_ä»£ç _å€Ÿè®°å¡
+				,CARD_LVL         --å®¢æˆ·å¡çº§åˆ«_å€Ÿè®°å¡
+				,CARD_DATE        --å€Ÿè®°å¡å‘å¡æ—¥æœŸ
+				,ETL_DATE         --è·‘æ‰¹æ—¥æœŸ
+				,DM_START_DT      --èµ·å§‹æ—¥æœŸ
+				,DM_END_DT        --ç»“æŸæ—¥æœŸ
 			FROM '|| TMP_UPD ||  ' B
 			WHERE	A.CUSTOMER_ID= B.CUSTOMER_ID
 			AND	NVL(A.CIF_LVL_CODE,0)= NVL(B.CIF_LVL_CODE,0)
@@ -284,57 +284,57 @@ BEGIN
 
 		DM_SQL := 'INSERT INTO MMAPDM.DM_CUST_CARD_LVL_HIS
 		(
-		CUSTOMER_ID       --¿Í»§ºÅ
-		,CIF_LVL_CODE     --¿Í»§¼¶±ð_´úÂë
-		,CIF_LVL          --¿Í»§¼¶±ð
-		,CIF_LVL_DATE     --¿Í»§¼¶±ð¶¨¼¶ÈÕÆÚ
-		,CARD_LVL_CODE    --¿Í»§¿¨¼¶±ð_´úÂë_½è¼Ç¿¨
-		,CARD_LVL         --¿Í»§¿¨¼¶±ð_½è¼Ç¿¨
-		,CARD_DATE        --½è¼Ç¿¨·¢¿¨ÈÕÆÚ
-		,ETL_DATE         --ÅÜÅúÈÕÆÚ
-		,DM_START_DT      --ÆðÊ¼ÈÕÆÚ
-		,DM_END_DT        --½áÊøÈÕÆÚ
+		CUSTOMER_ID       --å®¢æˆ·å·
+		,CIF_LVL_CODE     --å®¢æˆ·çº§åˆ«_ä»£ç 
+		,CIF_LVL          --å®¢æˆ·çº§åˆ«
+		,CIF_LVL_DATE     --å®¢æˆ·çº§åˆ«å®šçº§æ—¥æœŸ
+		,CARD_LVL_CODE    --å®¢æˆ·å¡çº§åˆ«_ä»£ç _å€Ÿè®°å¡
+		,CARD_LVL         --å®¢æˆ·å¡çº§åˆ«_å€Ÿè®°å¡
+		,CARD_DATE        --å€Ÿè®°å¡å‘å¡æ—¥æœŸ
+		,ETL_DATE         --è·‘æ‰¹æ—¥æœŸ
+		,DM_START_DT      --èµ·å§‹æ—¥æœŸ
+		,DM_END_DT        --ç»“æŸæ—¥æœŸ
 		)
 		SELECT
-			CUSTOMER_ID       --¿Í»§ºÅ
-			,CIF_LVL_CODE     --¿Í»§¼¶±ð_´úÂë
-			,CIF_LVL          --¿Í»§¼¶±ð
-			,CIF_LVL_DATE     --¿Í»§¼¶±ð¶¨¼¶ÈÕÆÚ
-			,CARD_LVL_CODE    --¿Í»§¿¨¼¶±ð_´úÂë_½è¼Ç¿¨
-			,CARD_LVL         --¿Í»§¿¨¼¶±ð_½è¼Ç¿¨
-			,CARD_DATE        --½è¼Ç¿¨·¢¿¨ÈÕÆÚ
-			,ETL_DATE         --ÅÜÅúÈÕÆÚ
-			,DM_START_DT      --ÆðÊ¼ÈÕÆÚ
+			CUSTOMER_ID       --å®¢æˆ·å·
+			,CIF_LVL_CODE     --å®¢æˆ·çº§åˆ«_ä»£ç 
+			,CIF_LVL          --å®¢æˆ·çº§åˆ«
+			,CIF_LVL_DATE     --å®¢æˆ·çº§åˆ«å®šçº§æ—¥æœŸ
+			,CARD_LVL_CODE    --å®¢æˆ·å¡çº§åˆ«_ä»£ç _å€Ÿè®°å¡
+			,CARD_LVL         --å®¢æˆ·å¡çº§åˆ«_å€Ÿè®°å¡
+			,CARD_DATE        --å€Ÿè®°å¡å‘å¡æ—¥æœŸ
+			,ETL_DATE         --è·‘æ‰¹æ—¥æœŸ
+			,DM_START_DT      --èµ·å§‹æ—¥æœŸ
 			,'|| DM_TODAY ||'
 		FROM '|| TMP_UPD ||  '';
 		EXECUTE  IMMEDIATE DM_SQL;
 		IO_ROW := IO_ROW+SQL%ROWCOUNT ;
 
-		/* ²åÈëÐÂÔöÊý¾Ý  */
+		/* æ’å…¥æ–°å¢žæ•°æ®  */
 		DM_SQL := 'INSERT INTO  MMAPDM.DM_CUST_CARD_LVL_HIS
 		(
-		  CUSTOMER_ID       --¿Í»§ºÅ
-		  ,CIF_LVL_CODE     --¿Í»§¼¶±ð_´úÂë
-		  ,CIF_LVL          --¿Í»§¼¶±ð
-		  ,CIF_LVL_DATE     --¿Í»§¼¶±ð¶¨¼¶ÈÕÆÚ
-		  ,CARD_LVL_CODE    --¿Í»§¿¨¼¶±ð_´úÂë_½è¼Ç¿¨
-		  ,CARD_LVL         --¿Í»§¿¨¼¶±ð_½è¼Ç¿¨
-		  ,CARD_DATE        --½è¼Ç¿¨·¢¿¨ÈÕÆÚ
-		  ,ETL_DATE         --ÅÜÅúÈÕÆÚ
-		  ,DM_START_DT      --ÆðÊ¼ÈÕÆÚ
-		  ,DM_END_DT        --½áÊøÈÕÆÚ
+		  CUSTOMER_ID       --å®¢æˆ·å·
+		  ,CIF_LVL_CODE     --å®¢æˆ·çº§åˆ«_ä»£ç 
+		  ,CIF_LVL          --å®¢æˆ·çº§åˆ«
+		  ,CIF_LVL_DATE     --å®¢æˆ·çº§åˆ«å®šçº§æ—¥æœŸ
+		  ,CARD_LVL_CODE    --å®¢æˆ·å¡çº§åˆ«_ä»£ç _å€Ÿè®°å¡
+		  ,CARD_LVL         --å®¢æˆ·å¡çº§åˆ«_å€Ÿè®°å¡
+		  ,CARD_DATE        --å€Ÿè®°å¡å‘å¡æ—¥æœŸ
+		  ,ETL_DATE         --è·‘æ‰¹æ—¥æœŸ
+		  ,DM_START_DT      --èµ·å§‹æ—¥æœŸ
+		  ,DM_END_DT        --ç»“æŸæ—¥æœŸ
 		)
 		SELECT
-			CUSTOMER_ID       --¿Í»§ºÅ
-			,CIF_LVL_CODE     --¿Í»§¼¶±ð_´úÂë
-			,CIF_LVL          --¿Í»§¼¶±ð
-			,CIF_LVL_DATE     --¿Í»§¼¶±ð¶¨¼¶ÈÕÆÚ
-			,CARD_LVL_CODE    --¿Í»§¿¨¼¶±ð_´úÂë_½è¼Ç¿¨
-			,CARD_LVL         --¿Í»§¿¨¼¶±ð_½è¼Ç¿¨
-			,CARD_DATE        --½è¼Ç¿¨·¢¿¨ÈÕÆÚ
-			,ETL_DATE         --ÅÜÅúÈÕÆÚ
-			,DM_START_DT      --ÆðÊ¼ÈÕÆÚ
-			,DM_END_DT        --½áÊøÈÕÆÚ
+			CUSTOMER_ID       --å®¢æˆ·å·
+			,CIF_LVL_CODE     --å®¢æˆ·çº§åˆ«_ä»£ç 
+			,CIF_LVL          --å®¢æˆ·çº§åˆ«
+			,CIF_LVL_DATE     --å®¢æˆ·çº§åˆ«å®šçº§æ—¥æœŸ
+			,CARD_LVL_CODE    --å®¢æˆ·å¡çº§åˆ«_ä»£ç _å€Ÿè®°å¡
+			,CARD_LVL         --å®¢æˆ·å¡çº§åˆ«_å€Ÿè®°å¡
+			,CARD_DATE        --å€Ÿè®°å¡å‘å¡æ—¥æœŸ
+			,ETL_DATE         --è·‘æ‰¹æ—¥æœŸ
+			,DM_START_DT      --èµ·å§‹æ—¥æœŸ
+			,DM_END_DT        --ç»“æŸæ—¥æœŸ
 		FROM '|| TMP_INS ||  '';
 		EXECUTE  IMMEDIATE DM_SQL;
 		IO_ROW := IO_ROW+SQL%ROWCOUNT ;
@@ -342,11 +342,11 @@ BEGIN
 		P_MMAPDM_DROP_TMP_TABLES(TABLE_NAME,RETURN_NUM,RETURN_STATUS);
 	END IF;
 	
-	/*Ð´ÈÕÖ¾*/
+	/*å†™æ—¥å¿—*/
 	
 	IO_STATUS := 0 ;
 	IO_SQLERR := 'SUSSCESS';
-	SELECT SYSDATE INTO  V_END_TIMESTAMP  FROM dual;  -- ¼ÓÔØ³ÌÐòÔËÐÐ½áÊøÊ±¼ä
+	SELECT SYSDATE INTO  V_END_TIMESTAMP  FROM dual;  -- åŠ è½½ç¨‹åºè¿è¡Œç»“æŸæ—¶é—´
 	P_MMAPDM_WRITE_LOGS(PROCEDURE_NAME,IO_STATUS,IO_ROW,V_START_TIMESTAMP,V_END_TIMESTAMP,IO_SQLERR);
 	COMMIT;
 
