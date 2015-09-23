@@ -1,26 +1,26 @@
 CREATE OR REPLACE PROCEDURE P_DM_FULL_BACKUP
 (
-  DM_YESTERDAY IN INTEGER, --"…œ»’"»’∆⁄
-  TABLE_NAME IN VARCHAR2, -- ±Ì√˚
-  IO_ROW OUT INTEGER  --≤Â»ÎÃı ˝
+  DM_YESTERDAY IN INTEGER, --"‰∏äÊó•"Êó•Êúü
+  TABLE_NAME IN VARCHAR2, -- Ë°®Âêç
+  IO_ROW OUT INTEGER  --ÊèíÂÖ•Êù°Êï∞
 )
 AS
 
-  DM_SQL VARCHAR2(20000); -- ¥Ê∑≈SQL”Ôæ‰
-  ST_ROW INTEGER;  --‘¥ ˝æ›Ãı ˝
+  DM_SQL VARCHAR2(20000); -- Â≠òÊîæSQLËØ≠Âè•
+  ST_ROW INTEGER;  --Ê∫êÊï∞ÊçÆÊù°Êï∞
   
 BEGIN
   IO_ROW := 0;
-  --±∏∑›"…œ»’" ˝æ›
-  --≤È—ØDM≤„±Ì÷– «∑Ò”–"…œ“ª»’" ˝æ›£¨ «∑ÒŒ™÷ÿ≈‹°£
+  --Â§á‰ªΩ"‰∏äÊó•"Êï∞ÊçÆ
+  --Êü•ËØ¢DMÂ±ÇË°®‰∏≠ÊòØÂê¶Êúâ"‰∏ä‰∏ÄÊó•"Êï∞ÊçÆÔºåÊòØÂê¶‰∏∫ÈáçË∑ë„ÄÇ
   DM_SQL := ' SELECT COUNT(1) FROM MMAPDM.'||TABLE_NAME||' WHERE PERIOD_ID='||DM_YESTERDAY;
   EXECUTE  IMMEDIATE DM_SQL  INTO ST_ROW;
   IF ST_ROW>0
   THEN
-    DM_SQL :='TRUNCATE TABLE MMAPDM.'||TABLE_NAME||'_PRE' ;   -- …æ≥˝±∏∑›±Ì÷– ˝æ›
+    DM_SQL :='TRUNCATE TABLE MMAPDM.'||TABLE_NAME||'_PRE' ;   -- Âà†Èô§Â§á‰ªΩË°®‰∏≠Êï∞ÊçÆ
     EXECUTE IMMEDIATE DM_SQL;
     COMMIT;
-    DM_SQL :='INSERT INTO MMAPDM.'||TABLE_NAME||'_PRE SELECT * FROM MMAPDM.'||TABLE_NAME;   -- ±∏∑›±Ì÷– ˝æ›
+    DM_SQL :='INSERT INTO MMAPDM.'||TABLE_NAME||'_PRE SELECT * FROM MMAPDM.'||TABLE_NAME;   -- Â§á‰ªΩË°®‰∏≠Êï∞ÊçÆ
     EXECUTE IMMEDIATE DM_SQL;
     IO_ROW := SQL%ROWCOUNT ;
     COMMIT;

@@ -4,13 +4,13 @@ AS
 truncate table MMAPDM.MID_ITEM;
 INSERT INTO MMAPDM.MID_ITEM
 
---¿Í»§·çÏÕµÈ¼¶_´úÂë
+--å®¢æˆ·é£Žé™©ç­‰çº§_ä»£ç 
 select distinct	TRIM(a.item_id)
        ,TRIM(a.item_nm)
        ,TRIM(a.item_typ)
        ,TRIM(a.item_des)
        ,TRIM(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª'	ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥'	ELSE TRIM(a.item_nm) END
        ,'RISK_LVL'
        ,TRIM(a.item_des)
        ,NULL
@@ -18,7 +18,7 @@ select distinct	TRIM(a.item_id)
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='Risk_Lvl'
 UNION ALL
---¿Í»§¼¶±ð
+--å®¢æˆ·çº§åˆ«
 select distinct	TRIM(a.item_id)
        ,TRIM(a.item_nm)
        ,TRIM(a.item_typ)
@@ -34,14 +34,14 @@ select distinct	TRIM(a.item_id)
 	 ELSE '-'
 	 END
        ,CASE trim(a.item_id)
-	     WHEN '00' THEN 'ÆÕ¿¨'
-	     WHEN '01' THEN '½ð¿¨'
-	     WHEN '50' THEN '½ð¿¨'
-	     WHEN '55' THEN '°×½ð¿¨'
-	     WHEN '60' THEN '×êÊ¯¿¨'
-	     WHEN '70' THEN '²Æ¸»¿¨'
-	     WHEN '80' THEN 'Ë½ÈËÒøÐÐ'
-	 ELSE 'Î´Öª'
+	     WHEN '00' THEN 'æ™®å¡'
+	     WHEN '01' THEN 'é‡‘å¡'
+	     WHEN '50' THEN 'é‡‘å¡'
+	     WHEN '55' THEN 'ç™½é‡‘å¡'
+	     WHEN '60' THEN 'é’»çŸ³å¡'
+	     WHEN '70' THEN 'è´¢å¯Œå¡'
+	     WHEN '80' THEN 'ç§äººé“¶è¡Œ'
+	 ELSE 'æœªçŸ¥'
 	 END
        ,'CIF_LVL'
        ,TRIM(a.item_des)
@@ -59,13 +59,13 @@ select distinct	TRIM(a.item_id)
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='CIF_Lvl'
 UNION ALL
---Ãñ×å
+--æ°‘æ—
 select distinct	TRIM(a.item_id)
        ,TRIM(a.item_nm)
        ,TRIM(a.item_typ)
        ,TRIM(a.item_des)
        ,TRIM(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª'	ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥'	ELSE TRIM(a.item_nm) END
        ,'RACE'
        ,TRIM(a.item_des)
        ,NULL
@@ -73,13 +73,13 @@ select distinct	TRIM(a.item_id)
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='RaceTyp_ID'
 UNION ALL
---¹ú¼®
+--å›½ç±
 select distinct	TRIM(a.item_id)
        ,TRIM(a.item_nm)
        ,TRIM(a.item_typ)
        ,TRIM(a.item_des)
        ,trim(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª'	ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥'	ELSE TRIM(a.item_nm) END
        ,'COUNTRY'
        ,TRIM(a.item_des)
        ,NULL
@@ -87,13 +87,13 @@ select distinct	TRIM(a.item_id)
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='Citizen_ID'
 UNION ALL
---Ö°³Æ
+--èŒç§°
 select distinct	TRIM(a.item_id)
        ,TRIM(a.item_nm)
        ,TRIM(a.item_typ)
        ,TRIM(a.item_des)
        ,trim(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª'	ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥'	ELSE TRIM(a.item_nm) END
        ,'POSITION_TITLE'
        ,TRIM(a.item_des)
        ,NULL
@@ -101,13 +101,13 @@ select distinct	TRIM(a.item_id)
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='ProfTitl_ID'
 UNION ALL
---Ö°Òµ
+--èŒä¸š
 select distinct	TRIM(a.item_id)
        ,TRIM(a.item_nm)
        ,TRIM(a.item_typ)
        ,TRIM(a.item_des)
        ,trim(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª'	ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥'	ELSE TRIM(a.item_nm) END
        ,'OCCP'
        ,TRIM(a.item_des)
        ,NULL
@@ -115,13 +115,13 @@ select distinct	TRIM(a.item_id)
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='Occp_ID'
 UNION ALL
---Ö°Î»
+--èŒä½
 select distinct	TRIM(a.item_id)
        ,TRIM(a.item_nm)
        ,TRIM(a.item_typ)
        ,TRIM(a.item_des)
        ,trim(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª'	ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥'	ELSE TRIM(a.item_nm) END
        ,'POSITION'
        ,TRIM(a.item_des)
        ,NULL
@@ -129,13 +129,13 @@ select distinct	TRIM(a.item_id)
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='JobDes_ID'
 UNION ALL
---»éÒö×´Ì¬
+--å©šå§»çŠ¶æ€
 select distinct	TRIM(a.item_id)
        ,TRIM(a.item_nm)
        ,TRIM(a.item_typ)
        ,TRIM(a.item_des)
        ,TRIM(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª'	ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥'	ELSE TRIM(a.item_nm) END
        ,'MARITALSTS'
        ,TRIM(a.item_des)
        ,NULL
@@ -143,13 +143,13 @@ select distinct	TRIM(a.item_id)
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='MaritalSts_ID'
 UNION ALL
---½ÌÓý³Ì¶È
+--æ•™è‚²ç¨‹åº¦
 select distinct	TRIM(a.item_id)
        ,TRIM(a.item_nm)
        ,TRIM(a.item_typ)
        ,TRIM(a.item_des)
        ,trim(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª'	ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥'	ELSE TRIM(a.item_nm) END
        ,'EDU'
        ,TRIM(a.item_des)
        ,NULL
@@ -157,13 +157,13 @@ select distinct	TRIM(a.item_id)
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='Edu_ID'
 UNION ALL
---ÐÔ±ð
+--æ€§åˆ«
 select distinct	TRIM(a.item_id)
        ,TRIM(a.item_nm)
        ,TRIM(a.item_typ)
        ,TRIM(a.item_des)
        ,TRIM(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª'	ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥'	ELSE TRIM(a.item_nm) END
        ,'GENDER'
        ,TRIM(a.item_des)
        ,NULL
@@ -171,14 +171,14 @@ select distinct	TRIM(a.item_id)
 from  mmapst.DMMKT_PCODEMAST a
 WHERE ITEM_TYP ='Gender_ID'
 
---×ÜÕË´úÂë
+--æ€»è´¦ä»£ç 
 UNION ALL
 select distinct	TRIM(a.item_id)
        ,TRIM(a.item_nm)
        ,TRIM(a.item_typ)
        ,TRIM(a.item_des)
        ,trim(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª'	ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥'	ELSE TRIM(a.item_nm) END
        ,'GLGRP_ID'
        ,TRIM(a.item_des)
        ,NULL
@@ -186,14 +186,14 @@ select distinct	TRIM(a.item_id)
 from  MMAPST.Dmmkt_Pcodemast A
 where item_typ='GLGrp_ID'
 and bak3='PDAsset'
---½è¼Ç¿¨Àà±ð
+--å€Ÿè®°å¡ç±»åˆ«
 UNION ALL
 select distinct	TRIM(a.item_id)
        ,TRIM(a.item_nm)
        ,TRIM(a.item_typ)
        ,TRIM(a.item_des)
        ,trim(a.item_id)
-       ,CASE WHEN trim(a.item_id)='-' THEN 'Î´Öª'	ELSE TRIM(a.item_nm) END
+       ,CASE WHEN trim(a.item_id)='-' THEN 'æœªçŸ¥'	ELSE TRIM(a.item_nm) END
        ,'CRDTYP'
        ,TRIM(a.item_des)
        ,NULL
@@ -201,115 +201,115 @@ select distinct	TRIM(a.item_id)
 from  MMAPST.Dmmkt_Pcodemast A
 where item_typ='CrdTyp_ID'
 ;
---½è¼Ç¿¨¼¶±ð
-INSERT INTO MMAPDM.MID_ITEM VALUES('-','','CrdTyp_ID','¿¨ÀàÐÍ','WZ','Î´Öª','CARD_LVL','½è¼Ç¿¨¼¶±ð','','0');
-INSERT INTO MMAPDM.MID_ITEM VALUES('EBON','Àí²Æ¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
-INSERT INTO MMAPDM.MID_ITEM VALUES('LTMC','º£ÈÚÁªÍ¨¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
-INSERT INTO MMAPDM.MID_ITEM VALUES('NORI','ÐÂÆÕÍ¨¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
-INSERT INTO MMAPDM.MID_ITEM VALUES('NORM','ÆÕÍ¨¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
-INSERT INTO MMAPDM.MID_ITEM VALUES('LQNC','ÀûÈºÆÕÍ¨¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
-INSERT INTO MMAPDM.MID_ITEM VALUES('QQCC','º£ÈÚÇà´º¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
-INSERT INTO MMAPDM.MID_ITEM VALUES('QQDC','º£ÈÚÇà´ó¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
-INSERT INTO MMAPDM.MID_ITEM VALUES('SIXE','6+E¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
-INSERT INTO MMAPDM.MID_ITEM VALUES('SOCS','Éç±£½ðÈÚ¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
-INSERT INTO MMAPDM.MID_ITEM VALUES('SSYC','ÊÀÔ°¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
-INSERT INTO MMAPDM.MID_ITEM VALUES('TSMC','TSMµç×ÓÏÖ½ð¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
-INSERT INTO MMAPDM.MID_ITEM VALUES('VCRD','ÁªÃû¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
-INSERT INTO MMAPDM.MID_ITEM VALUES('WCRD','Î¢³¾¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
-INSERT INTO MMAPDM.MID_ITEM VALUES('YKTC','º£ÈÚÆÕÍ¨¿¨','CrdTyp_ID','¿¨ÀàÐÍ','PK','ÆÕ¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','10');
-INSERT INTO MMAPDM.MID_ITEM VALUES('NOGC','½ð¿¨','CrdTyp_ID','¿¨ÀàÐÍ','JK','½ð¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','20');
-INSERT INTO MMAPDM.MID_ITEM VALUES('YKTG','º£ÈÚ½ð¿¨','CrdTyp_ID','¿¨ÀàÐÍ','JK','½ð¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','20');
-INSERT INTO MMAPDM.MID_ITEM VALUES('LQGC','ÀûÈº½ð¿¨','CrdTyp_ID','¿¨ÀàÐÍ','JK','½ð¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','20');
-INSERT INTO MMAPDM.MID_ITEM VALUES('YKTP','º£ÈÚ°×½ð¿¨','CrdTyp_ID','¿¨ÀàÐÍ','BJK','°×½ð¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','30');
-INSERT INTO MMAPDM.MID_ITEM VALUES('LQPC','ÀûÈº°×½ð¿¨','CrdTyp_ID','¿¨ÀàÐÍ','BJK','°×½ð¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','30');
-INSERT INTO MMAPDM.MID_ITEM VALUES('NOPC','°×½ð¿¨','CrdTyp_ID','¿¨ÀàÐÍ','BJK','°×½ð¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','30');
-INSERT INTO MMAPDM.MID_ITEM VALUES('DCRD','º£ÈÚ×êÊ¯¿¨','CrdTyp_ID','¿¨ÀàÐÍ','ZSK','×êÊ¯¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','40');
-INSERT INTO MMAPDM.MID_ITEM VALUES('CCRD','º£ÈÚ²Æ¸»¿¨','CrdTyp_ID','¿¨ÀàÐÍ','CFK','²Æ¸»¿¨','CARD_LVL','½è¼Ç¿¨¼¶±ð','','50');
-INSERT INTO MMAPDM.MID_ITEM VALUES('PVBC','º£ÈÚË½ÈËÒøÐÐ¿¨','CrdTyp_ID','¿¨ÀàÐÍ','SRYH','Ë½ÈËÒøÐÐ','CARD_LVL','½è¼Ç¿¨¼¶±ð','','60');
+--å€Ÿè®°å¡çº§åˆ«
+INSERT INTO MMAPDM.MID_ITEM VALUES('-','','CrdTyp_ID','å¡ç±»åž‹','WZ','æœªçŸ¥','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','0');
+INSERT INTO MMAPDM.MID_ITEM VALUES('EBON','ç†è´¢å¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
+INSERT INTO MMAPDM.MID_ITEM VALUES('LTMC','æµ·èžè”é€šå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
+INSERT INTO MMAPDM.MID_ITEM VALUES('NORI','æ–°æ™®é€šå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
+INSERT INTO MMAPDM.MID_ITEM VALUES('NORM','æ™®é€šå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
+INSERT INTO MMAPDM.MID_ITEM VALUES('LQNC','åˆ©ç¾¤æ™®é€šå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
+INSERT INTO MMAPDM.MID_ITEM VALUES('QQCC','æµ·èžé’æ˜¥å¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
+INSERT INTO MMAPDM.MID_ITEM VALUES('QQDC','æµ·èžé’å¤§å¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
+INSERT INTO MMAPDM.MID_ITEM VALUES('SIXE','6+Eå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
+INSERT INTO MMAPDM.MID_ITEM VALUES('SOCS','ç¤¾ä¿é‡‘èžå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
+INSERT INTO MMAPDM.MID_ITEM VALUES('SSYC','ä¸–å›­å¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
+INSERT INTO MMAPDM.MID_ITEM VALUES('TSMC','TSMç”µå­çŽ°é‡‘å¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
+INSERT INTO MMAPDM.MID_ITEM VALUES('VCRD','è”åå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
+INSERT INTO MMAPDM.MID_ITEM VALUES('WCRD','å¾®å°˜å¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
+INSERT INTO MMAPDM.MID_ITEM VALUES('YKTC','æµ·èžæ™®é€šå¡','CrdTyp_ID','å¡ç±»åž‹','PK','æ™®å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','10');
+INSERT INTO MMAPDM.MID_ITEM VALUES('NOGC','é‡‘å¡','CrdTyp_ID','å¡ç±»åž‹','JK','é‡‘å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','20');
+INSERT INTO MMAPDM.MID_ITEM VALUES('YKTG','æµ·èžé‡‘å¡','CrdTyp_ID','å¡ç±»åž‹','JK','é‡‘å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','20');
+INSERT INTO MMAPDM.MID_ITEM VALUES('LQGC','åˆ©ç¾¤é‡‘å¡','CrdTyp_ID','å¡ç±»åž‹','JK','é‡‘å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','20');
+INSERT INTO MMAPDM.MID_ITEM VALUES('YKTP','æµ·èžç™½é‡‘å¡','CrdTyp_ID','å¡ç±»åž‹','BJK','ç™½é‡‘å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','30');
+INSERT INTO MMAPDM.MID_ITEM VALUES('LQPC','åˆ©ç¾¤ç™½é‡‘å¡','CrdTyp_ID','å¡ç±»åž‹','BJK','ç™½é‡‘å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','30');
+INSERT INTO MMAPDM.MID_ITEM VALUES('NOPC','ç™½é‡‘å¡','CrdTyp_ID','å¡ç±»åž‹','BJK','ç™½é‡‘å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','30');
+INSERT INTO MMAPDM.MID_ITEM VALUES('DCRD','æµ·èžé’»çŸ³å¡','CrdTyp_ID','å¡ç±»åž‹','ZSK','é’»çŸ³å¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','40');
+INSERT INTO MMAPDM.MID_ITEM VALUES('CCRD','æµ·èžè´¢å¯Œå¡','CrdTyp_ID','å¡ç±»åž‹','CFK','è´¢å¯Œå¡','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','50');
+INSERT INTO MMAPDM.MID_ITEM VALUES('PVBC','æµ·èžç§äººé“¶è¡Œå¡','CrdTyp_ID','å¡ç±»åž‹','SRYH','ç§äººé“¶è¡Œ','CARD_LVL','å€Ÿè®°å¡çº§åˆ«','','60');
 
 
---¿Í»§·´À¡´úÂë
-INSERT INTO MMAPDM.MID_ITEM VALUES('10001','Íê³ÉÓªÏú/ÈÎÎñ(¹Ø»³,ÂúÒâ¶Èµ÷²é..),²»Ðè×ª½é','RESPONSE','¿Í»§·´À¡´úÂë','10001','Ô¸Òâ¹ºÂò','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','ÒâÔ¸Ã÷È·£¬Ô¸Òâ¹ºÂò','10000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('10002','','RESPONSE','¿Í»§·´À¡´úÂë','10002','','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','Íê³ÉÓªÏú,Ðè×ª½é£¨ÅúÁ¿£©','10000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('10003','','RESPONSE','¿Í»§·´À¡´úÂë','10003','','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','Íê³ÉÓªÏú,Ðè×ª½é£¨ÊµÊ±£©','10000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('10004','Í¬ÇþµÀÒ³ÃæÌø×ª»òµã»÷³¬Á´½Ó','RESPONSE','¿Í»§·´À¡´úÂë','10004','¿Í»§ÓÐÒâÔ¸£¬Ö±½ÓÍ¨¹ýÓªÏúÒ³ÃæÌø×ªÖÁ½»Ò×Ò³Ãæ¡£','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','ÓÐÒâÔ¸£¬µç×ÓÇþµÀÒ³ÃæÌø×ª','10000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('10005','ÓÐÒâÔ¸¹ºÂò£¬Ô¸ÒâÔÙÉîÈë¡¢ÏêÏ¸ÁË½â','RESPONSE','¿Í»§·´À¡´úÂë','10005','ÓÐÒâÔ¸¹ºÂò£¬Ô¸ÒâÔÙÉîÈë¡¢ÏêÏ¸ÁË½â','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','ÓÐÒâÔ¸¹ºÂò£¬Ô¸ÒâÔÙÉîÈë¡¢ÏêÏ¸ÁË½â','10000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('10006','ÓÐ¹ºÂòÒâÔ¸£¬µ«Ä¿Ç°×Ê½ð²»µ½Î»','RESPONSE','¿Í»§·´À¡´úÂë','20001','ÓÐ¹ºÂòÒâÔ¸£¬µ«Ä¿Ç°×Ê½ð²»µ½Î»','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','ÓÐ¹ºÂòÒâÔ¸£¬µ«Ä¿Ç°×Ê½ð²»µ½Î»','20000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('10999','ÆäËû','RESPONSE','¿Í»§·´À¡´úÂë','20002','ÆäËû','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','ÓÐÒâÔ¸-ÆäËû','20000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('20001','²úÆ·²»·ûºÏ¿Í»§ÐèÇó--²úÆ·Æðµã¹ý¸ß','RESPONSE','¿Í»§·´À¡´úÂë','20003','²úÆ·²»·ûºÏ¿Í»§ÐèÇó--²úÆ·Æðµã¹ý¸ß','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','²úÆ·²»·ûºÏ(¿Í»§)ÐèÇó--²úÆ·Æðµã¹ý¸ß','20000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('20002','²úÆ·²»·ûºÏ¿Í»§ÐèÇó--¿Í»§Æ«ºÃ¶¨ÆÚÀàÎÈ½¡²úÆ·','RESPONSE','¿Í»§·´À¡´úÂë','20004','²úÆ·²»·ûºÏ¿Í»§ÐèÇó--¿Í»§Æ«ºÃ¶¨ÆÚÀàÎÈ½¡²úÆ·','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','²úÆ·²»·ûºÏ¿Í»§ÐèÇó--¿Í»§Æ«ºÃ¶¨ÆÚÀàÎÈ½¡²úÆ·','20000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('20003','²úÆ·²»·ûºÏ¿Í»§ÐèÇó--¿Í»§Æ«ºÃ¹ÉÊÐ¡¢»ù½ðµÈ·çÏÕÍ¶×Ê','RESPONSE','¿Í»§·´À¡´úÂë','20005','²úÆ·²»·ûºÏ¿Í»§ÐèÇó--¿Í»§Æ«ºÃ¹ÉÊÐ¡¢»ù½ðµÈ·çÏÕÍ¶×Ê','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','²úÆ·²»·ûºÏ¿Í»§ÐèÇó--¿Í»§Æ«ºÃ¹ÉÊÐ¡¢»ù½ðµÈ·çÏÕÍ¶×Ê','20000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('20004','²úÆ·²»·ûºÏ¿Í»§ÐèÇó--ÆäËû','RESPONSE','¿Í»§·´À¡´úÂë','20006','²úÆ·²»·ûºÏ¿Í»§ÐèÇó--ÆäËû','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','²úÆ·²»·ûºÏ¿Í»§ÐèÇó--ÆäËû','20000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('20005','²úÆ·²»·ûºÏ(¿Í»§)ÐèÇó','RESPONSE','¿Í»§·´À¡´úÂë','20007','¸Ã²úÆ·²»ÄÜÂú×ã¿Í»§¾ßÌåµÄÄ³Ò»ÏîÐèÇó','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','ÎÞÒâÔ¸£¬²úÆ·²»ÄÜÂú×ãÐèÇó','20000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('20006','ÐèÉîÈëÓªÏú','RESPONSE','¿Í»§·´À¡´úÂë','20999','ÐèÉîÈëÓªÏú','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','ÐèÉîÈëÓªÏú','20000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('20007','¿Í»§±íÊ¾Ã»ÐËÈ¤','RESPONSE','¿Í»§·´À¡´úÂë','30001','¿Í»§¸ù±¾²»ÐèÒª¸ÃÀà²úÆ·','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','ÎÞÒâÔ¸£¬¶Ô²úÆ·²»¸ÐÐËÈ¤','30000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('20999','ÆäËû(ÇëËµÃ÷)','RESPONSE','¿Í»§·´À¡´úÂë','60001','¿Í»§Î´Ó¦´ð£¬¾Ü¾ø¸æÖªÔ­Òò','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','ÎÞÒâÔ¸£¬¾Ü¾ø¸æÖªÔ­Òò','60000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('30001','¾Ü¾øÓªÏú','RESPONSE','¿Í»§·´À¡´úÂë','60002','¡°²»Òª¸øÎÒ´òµç»°¡±','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','¾Ü¾øÓªÏú£¬²»Ï£ÍûÔÙ±»É§ÈÅ','60000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('60001','µç»°´íÎó/¿ÕºÅ','RESPONSE','¿Í»§·´À¡´úÂë','60003','Äú²¦µÄºÅÂëÓÐÎó»ò¸Ãµç»°ÊÇ¿ÕºÅ','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','ÎÞÐ§ºÅÂë»ò¿ÕºÅ','60000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('60002','¸ü»»µç»°/ÎÞ´ËÈË','RESPONSE','¿Í»§·´À¡´úÂë','60004','½Óµç»°·Ç¿Í»§±¾ÈË£¬²¢ÇÒÓë¿Í»§²»ÔøÏàÊ¶','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','´íÎóºÅÂë£¬·Ç¿Í»§±¾ÈË','60000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('60003','ÎÞÈË½ÓÌý(´ïÒ»¶¨´ÎÊýÒÔÉÏ)','RESPONSE','¿Í»§·´À¡´úÂë','60999','µç»°½ÓÍ¨£¬µ«ÎÞÈË½ÓÌý','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','¶à´ÎÎÞÈË½ÓÌý','60000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('60005','E-mail´íÎó(¼ÄËÍÊ§°Ü£©','RESPONSE','¿Í»§·´À¡´úÂë','99999','E-mail±»ÍËÐÅ£¬ÎÞ·¨ËÍ´ïÄ¿±êµØÖ·','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','´íÎóµçÓÊµØÖ·','60000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('60999','ÆäËû','RESPONSE','¿Í»§·´À¡´úÂë','80001','ÆäËû','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','ÆäËû','80000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('99999','ÎÞÈÎºÎ·´Ó¦','RESPONSE','¿Í»§·´À¡´úÂë','80002','·Çµç»°ÇþµÀ£¬±ÈÈç¶ÌÐÅ¡¢ÍøÒø£¬¿Í»§ÎÞÊÓÓªÏúÐÅÏ¢£¬Ã»ÓÐÈÎºÎ·´À¡¡£','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','¿Í»§ÎÞÈÎºÎ·´À¡','80000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('80001','¿¼ÂÇÖÐ£¬´ý×·×Ù','RESPONSE','¿Í»§·´À¡´úÂë','80003','¿Í»§¶Ô²úÆ·±íÊ¾¹ØÐÄ£¬Ã»ÓÐÃ÷È·ÒâÔ¸£¬ÐèÒªÔÙ´Î»Ø²¦µç»°³ÖÐø¹µÍ¨','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','¿¼ÂÇÖÐ£¬´ý×·×Ù','80000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('80002','²»·½±ã½ÓÌý','RESPONSE','¿Í»§·´À¡´úÂë','80004','ÎÞ¹ØÓÚ²úÆ·µÄÏúÊÛ¶Ô»°£¬ÓÉÓÚ»áÒéÖÐ»òÆäËüÌØÊâÇé¿ö£¬¿Í»§²»·½±ã½ÓÌý','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','²»·½±ã½ÓÌý','80000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('80003','²»ÔÚ(·Ç±¾ÈË½ÓÌý)','RESPONSE','¿Í»§·´À¡´úÂë','80999','¿Í»§µç»°ÎÞÎó£¬µ«²¢·Ç±¾ÈË½ÓÌý£¬ÐèÒªÔñÊ±ÔÙ»Ø²¦ÁªÏµ±¾ÈË¡£','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','²»ÔÚ(·Ç±¾ÈË½ÓÌý)','80000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('80004','·Ç¾ö²ßÕß,ÐèÁªÏµËûÈË','RESPONSE','¿Í»§·´À¡´úÂë','90000','¿Í»§±¾ÈË²»ÄÜµ¥¶À×ö¾ö¶¨£¬ÐèÒªÓëÆäËûÈËÉÌÒéÔÙ×ö¹ºÂò¾ö¶¨','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','·Ç¾ö²ßÕß,ÐèÁªÏµËûÈË','90000');
-INSERT INTO MMAPDM.MID_ITEM VALUES('80999','ÆäËû','RESPONSE','¿Í»§·´À¡´úÂë','91000','ÆäËû','RESPONSE','¿Í»§·´À¡ÐÅÏ¢','ÆäËû','91000');
---½Ó´¥¹æÔò
-INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_ATM','½ÓÊÜATMÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','ACPT_ATM','½ÓÊÜATMÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_DM','½ÓÊÜÓÊ¼þÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','ACPT_DM','½ÓÊÜÓÊ¼þÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_EDM','½ÓÊÜµç×ÓÓÊ¼þÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','ACPT_EDM','½ÓÊÜµç×ÓÓÊ¼þÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_MB','½ÓÊÜÊÖ»úÒøÐÐÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','ACPT_MB','½ÓÊÜÊÖ»úÒøÐÐÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_NB','½ÓÊÜÍøÂçÒøÐÐÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','ACPT_NB','½ÓÊÜÍøÂçÒøÐÐÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_PERSON','½ÓÊÜÈËÔ±Ö±½ÓÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','ACPT_PERSON','½ÓÊÜÈËÔ±Ö±½ÓÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_SMS','½ÓÊÜ¶ÌÐÅÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','ACPT_SMS','½ÓÊÜ¶ÌÐÅÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_WEBATM','½ÓÊÜWEBATMÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','ACPT_WEBATM','½ÓÊÜWEBATMÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_WECHAT','½ÓÊÜÎ¢ÐÅÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','ACPT_WECHAT','½ÓÊÜÎ¢ÐÅÓªÏú','ACPT_TYPE','½Ó´¥¹æÔò','','');
---ºÏÔ¼ÀàÐÍ
-INSERT INTO MMAPDM.MID_ITEM VALUES('GAS','´ú½ÉÈ¼Æø·Ñ»§','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','GAS','´ú½ÉÈ¼Æø·Ñ»§','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('WATER','´ú½ÉË®·Ñ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','WATER','´ú½ÉË®·Ñ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('POWER','´ú½Éµç·Ñ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','POWER','´ú½Éµç·Ñ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('TELE_COMM','´ú½ÉµçÐÅ·Ñ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','TELE_COMM','´ú½ÉµçÐÅ·Ñ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('ALIPAY','Ö§¸¶±¦»§','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','ALIPAY','Ö§¸¶±¦»§','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('BP','ÇàÒøÖ±Í¨³µ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','BP','ÇàÒøÖ±Í¨³µ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('PAYROLL','´ú·¢¹¤×Ê','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','PAYROLL','´ú·¢¹¤×Ê','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('ENTRUST','Î¯ÍÐ´ú¿Û','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','ENTRUST','Î¯ÍÐ´ú¿Û','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('MB','ÊÖ»úÒøÐÐ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','MB','ÊÖ»úÒøÐÐ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('SMS','¿ªÍ¨¶ÌÐÅ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','SMS','¿ªÍ¨¶ÌÐÅ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('TELE','µç»°ÒøÐÐ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','TELE','µç»°ÒøÐÐ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('WECHAT','Î¢ÐÅÒøÐÐ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','WECHAT','Î¢ÐÅÒøÐÐ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('NB','ÍøÂçÒøÐÐ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','NB','ÍøÂçÒøÐÐ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('NB_ENT','ÍøÂçÒøÐÐÆóÒµ°æ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','NB_ENT','ÍøÂçÒøÐÐÆóÒµ°æ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('NB_LIFE','ÍøÂçÒøÐÐÉú»î°æ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','NB_LIFE','ÍøÂçÒøÐÐÉú»î°æ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('NB_WM','ÍøÂçÒøÐÐ²Æ¸»°æ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','NB_WM','ÍøÂçÒøÐÐ²Æ¸»°æ','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('IC_CARD','Ð¾Æ¬½ðÈÚ¿¨','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','IC_CARD','Ð¾Æ¬½ðÈÚ¿¨','AGMT_TYPE','ºÏÔ¼ÀàÐÍ','','');
---²úÆ·´óÀà
-INSERT INTO MMAPDM.MID_ITEM VALUES('CD','»îÆÚ´æ¿î','PROD_TYPE','²úÆ·´óÀà','CD','»îÆÚ´æ¿î','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('CD_FC','Íâ±Ò»îÆÚ´æ¿î','PROD_TYPE','²úÆ·´óÀà','CD_FC','Íâ±Ò»îÆÚ´æ¿î','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('TD','¶¨ÆÚ´æ¿î»§','PROD_TYPE','²úÆ·´óÀà','TD','¶¨ÆÚ´æ¿î»§','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('TD_FC','Íâ±Ò¶¨ÆÚ´æ¿î»§','PROD_TYPE','²úÆ·´óÀà','TD_FC','Íâ±Ò¶¨ÆÚ´æ¿î»§','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('FST','¿ìÒ×´û','PROD_TYPE','²úÆ·´óÀà','FST','¿ìÒ×´û','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('FST_FC','Íâ±Ò¿ìÒ×´û','PROD_TYPE','²úÆ·´óÀà','FST_FC','Íâ±Ò¿ìÒ×´û','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('HLN','·¿Ò×´û','PROD_TYPE','²úÆ·´óÀà','HLN','·¿Ò×´û','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('HLN_FC','Íâ±Ò·¿Ò×´û','PROD_TYPE','²úÆ·´óÀà','HLN_FC','Íâ±Ò·¿Ò×´û','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('CLN','³µÒ×´û','PROD_TYPE','²úÆ·´óÀà','CLN','³µÒ×´û','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('CLN_FC','Íâ±Ò³µÒ×´û','PROD_TYPE','²úÆ·´óÀà','CLN_FC','Íâ±Ò³µÒ×´û','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('PLN','ÐÅÒ×´û','PROD_TYPE','²úÆ·´óÀà','PLN','ÐÅÒ×´û','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('PLN_FC','Íâ±ÒÐÅÒ×´û','PROD_TYPE','²úÆ·´óÀà','PLN_FC','Íâ±ÒÐÅÒ×´û','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('FARM','Å©Ò×´û','PROD_TYPE','²úÆ·´óÀà','FARM','Å©Ò×´û','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('FARM_FC','Íâ±ÒÅ©Ò×´û','PROD_TYPE','²úÆ·´óÀà','FARM_FC','Íâ±ÒÅ©Ò×´û','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('NDEBT','¹úÕ®','PROD_TYPE','²úÆ·´óÀà','NDEBT','¹úÕ®','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('NDEBT_FC','Íâ±Ò¹úÕ®','PROD_TYPE','²úÆ·´óÀà','NDEBT_FC','Íâ±Ò¹úÕ®','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('FOUND','»ù½ð','PROD_TYPE','²úÆ·´óÀà','FOUND','»ù½ð','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('FOUND_FC','Íâ±Ò»ù½ð','PROD_TYPE','²úÆ·´óÀà','FOUND_FC','Íâ±Ò»ù½ð','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('FIN','Àí²Æ','PROD_TYPE','²úÆ·´óÀà','FIN','Àí²Æ','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('FIN_FC','Íâ±ÒÀí²Æ','PROD_TYPE','²úÆ·´óÀà','FIN_FC','Íâ±ÒÀí²Æ','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('INSURE','±£ÏÕ','PROD_TYPE','²úÆ·´óÀà','INSURE','±£ÏÕ','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('INSURE_FC','Íâ±Ò±£ÏÕ','PROD_TYPE','²úÆ·´óÀà','INSURE_FC','Íâ±Ò±£ÏÕ','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('NOBLE','¹ó½ðÊô','PROD_TYPE','²úÆ·´óÀà','NOBLE','¹ó½ðÊô','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('NOBLE_FC','Íâ±Ò¹ó½ðÊô','PROD_TYPE','²úÆ·´óÀà','NOBLE_FC','Íâ±Ò¹ó½ðÊô','PROD_TYPE','²úÆ·´óÀà','','');
-INSERT INTO MMAPDM.MID_ITEM VALUES('CREDIT','ÐÅÓÃ¿¨','PROD_TYPE','²úÆ·´óÀà','CREDIT','ÐÅÓÃ¿¨','PROD_TYPE','²úÆ·´óÀà','','');
+--å®¢æˆ·åé¦ˆä»£ç 
+INSERT INTO MMAPDM.MID_ITEM VALUES('10001','å®Œæˆè¥é”€/ä»»åŠ¡(å…³æ€€,æ»¡æ„åº¦è°ƒæŸ¥..),ä¸éœ€è½¬ä»‹','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','10001','æ„¿æ„è´­ä¹°','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','æ„æ„¿æ˜Žç¡®ï¼Œæ„¿æ„è´­ä¹°','10000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('10002','','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','10002','','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','å®Œæˆè¥é”€,éœ€è½¬ä»‹ï¼ˆæ‰¹é‡ï¼‰','10000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('10003','','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','10003','','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','å®Œæˆè¥é”€,éœ€è½¬ä»‹ï¼ˆå®žæ—¶ï¼‰','10000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('10004','åŒæ¸ é“é¡µé¢è·³è½¬æˆ–ç‚¹å‡»è¶…é“¾æŽ¥','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','10004','å®¢æˆ·æœ‰æ„æ„¿ï¼Œç›´æŽ¥é€šè¿‡è¥é”€é¡µé¢è·³è½¬è‡³äº¤æ˜“é¡µé¢ã€‚','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','æœ‰æ„æ„¿ï¼Œç”µå­æ¸ é“é¡µé¢è·³è½¬','10000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('10005','æœ‰æ„æ„¿è´­ä¹°ï¼Œæ„¿æ„å†æ·±å…¥ã€è¯¦ç»†äº†è§£','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','10005','æœ‰æ„æ„¿è´­ä¹°ï¼Œæ„¿æ„å†æ·±å…¥ã€è¯¦ç»†äº†è§£','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','æœ‰æ„æ„¿è´­ä¹°ï¼Œæ„¿æ„å†æ·±å…¥ã€è¯¦ç»†äº†è§£','10000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('10006','æœ‰è´­ä¹°æ„æ„¿ï¼Œä½†ç›®å‰èµ„é‡‘ä¸åˆ°ä½','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','20001','æœ‰è´­ä¹°æ„æ„¿ï¼Œä½†ç›®å‰èµ„é‡‘ä¸åˆ°ä½','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','æœ‰è´­ä¹°æ„æ„¿ï¼Œä½†ç›®å‰èµ„é‡‘ä¸åˆ°ä½','20000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('10999','å…¶ä»–','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','20002','å…¶ä»–','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','æœ‰æ„æ„¿-å…¶ä»–','20000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('20001','äº§å“ä¸ç¬¦åˆå®¢æˆ·éœ€æ±‚--äº§å“èµ·ç‚¹è¿‡é«˜','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','20003','äº§å“ä¸ç¬¦åˆå®¢æˆ·éœ€æ±‚--äº§å“èµ·ç‚¹è¿‡é«˜','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','äº§å“ä¸ç¬¦åˆ(å®¢æˆ·)éœ€æ±‚--äº§å“èµ·ç‚¹è¿‡é«˜','20000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('20002','äº§å“ä¸ç¬¦åˆå®¢æˆ·éœ€æ±‚--å®¢æˆ·åå¥½å®šæœŸç±»ç¨³å¥äº§å“','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','20004','äº§å“ä¸ç¬¦åˆå®¢æˆ·éœ€æ±‚--å®¢æˆ·åå¥½å®šæœŸç±»ç¨³å¥äº§å“','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','äº§å“ä¸ç¬¦åˆå®¢æˆ·éœ€æ±‚--å®¢æˆ·åå¥½å®šæœŸç±»ç¨³å¥äº§å“','20000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('20003','äº§å“ä¸ç¬¦åˆå®¢æˆ·éœ€æ±‚--å®¢æˆ·åå¥½è‚¡å¸‚ã€åŸºé‡‘ç­‰é£Žé™©æŠ•èµ„','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','20005','äº§å“ä¸ç¬¦åˆå®¢æˆ·éœ€æ±‚--å®¢æˆ·åå¥½è‚¡å¸‚ã€åŸºé‡‘ç­‰é£Žé™©æŠ•èµ„','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','äº§å“ä¸ç¬¦åˆå®¢æˆ·éœ€æ±‚--å®¢æˆ·åå¥½è‚¡å¸‚ã€åŸºé‡‘ç­‰é£Žé™©æŠ•èµ„','20000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('20004','äº§å“ä¸ç¬¦åˆå®¢æˆ·éœ€æ±‚--å…¶ä»–','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','20006','äº§å“ä¸ç¬¦åˆå®¢æˆ·éœ€æ±‚--å…¶ä»–','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','äº§å“ä¸ç¬¦åˆå®¢æˆ·éœ€æ±‚--å…¶ä»–','20000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('20005','äº§å“ä¸ç¬¦åˆ(å®¢æˆ·)éœ€æ±‚','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','20007','è¯¥äº§å“ä¸èƒ½æ»¡è¶³å®¢æˆ·å…·ä½“çš„æŸä¸€é¡¹éœ€æ±‚','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','æ— æ„æ„¿ï¼Œäº§å“ä¸èƒ½æ»¡è¶³éœ€æ±‚','20000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('20006','éœ€æ·±å…¥è¥é”€','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','20999','éœ€æ·±å…¥è¥é”€','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','éœ€æ·±å…¥è¥é”€','20000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('20007','å®¢æˆ·è¡¨ç¤ºæ²¡å…´è¶£','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','30001','å®¢æˆ·æ ¹æœ¬ä¸éœ€è¦è¯¥ç±»äº§å“','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','æ— æ„æ„¿ï¼Œå¯¹äº§å“ä¸æ„Ÿå…´è¶£','30000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('20999','å…¶ä»–(è¯·è¯´æ˜Ž)','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','60001','å®¢æˆ·æœªåº”ç­”ï¼Œæ‹’ç»å‘ŠçŸ¥åŽŸå› ','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','æ— æ„æ„¿ï¼Œæ‹’ç»å‘ŠçŸ¥åŽŸå› ','60000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('30001','æ‹’ç»è¥é”€','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','60002','â€œä¸è¦ç»™æˆ‘æ‰“ç”µè¯â€','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','æ‹’ç»è¥é”€ï¼Œä¸å¸Œæœ›å†è¢«éªšæ‰°','60000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('60001','ç”µè¯é”™è¯¯/ç©ºå·','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','60003','æ‚¨æ‹¨çš„å·ç æœ‰è¯¯æˆ–è¯¥ç”µè¯æ˜¯ç©ºå·','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','æ— æ•ˆå·ç æˆ–ç©ºå·','60000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('60002','æ›´æ¢ç”µè¯/æ— æ­¤äºº','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','60004','æŽ¥ç”µè¯éžå®¢æˆ·æœ¬äººï¼Œå¹¶ä¸”ä¸Žå®¢æˆ·ä¸æ›¾ç›¸è¯†','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','é”™è¯¯å·ç ï¼Œéžå®¢æˆ·æœ¬äºº','60000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('60003','æ— äººæŽ¥å¬(è¾¾ä¸€å®šæ¬¡æ•°ä»¥ä¸Š)','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','60999','ç”µè¯æŽ¥é€šï¼Œä½†æ— äººæŽ¥å¬','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','å¤šæ¬¡æ— äººæŽ¥å¬','60000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('60005','E-mailé”™è¯¯(å¯„é€å¤±è´¥ï¼‰','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','99999','E-mailè¢«é€€ä¿¡ï¼Œæ— æ³•é€è¾¾ç›®æ ‡åœ°å€','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','é”™è¯¯ç”µé‚®åœ°å€','60000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('60999','å…¶ä»–','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','80001','å…¶ä»–','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','å…¶ä»–','80000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('99999','æ— ä»»ä½•ååº”','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','80002','éžç”µè¯æ¸ é“ï¼Œæ¯”å¦‚çŸ­ä¿¡ã€ç½‘é“¶ï¼Œå®¢æˆ·æ— è§†è¥é”€ä¿¡æ¯ï¼Œæ²¡æœ‰ä»»ä½•åé¦ˆã€‚','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','å®¢æˆ·æ— ä»»ä½•åé¦ˆ','80000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('80001','è€ƒè™‘ä¸­ï¼Œå¾…è¿½è¸ª','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','80003','å®¢æˆ·å¯¹äº§å“è¡¨ç¤ºå…³å¿ƒï¼Œæ²¡æœ‰æ˜Žç¡®æ„æ„¿ï¼Œéœ€è¦å†æ¬¡å›žæ‹¨ç”µè¯æŒç»­æ²Ÿé€š','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','è€ƒè™‘ä¸­ï¼Œå¾…è¿½è¸ª','80000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('80002','ä¸æ–¹ä¾¿æŽ¥å¬','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','80004','æ— å…³äºŽäº§å“çš„é”€å”®å¯¹è¯ï¼Œç”±äºŽä¼šè®®ä¸­æˆ–å…¶å®ƒç‰¹æ®Šæƒ…å†µï¼Œå®¢æˆ·ä¸æ–¹ä¾¿æŽ¥å¬','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','ä¸æ–¹ä¾¿æŽ¥å¬','80000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('80003','ä¸åœ¨(éžæœ¬äººæŽ¥å¬)','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','80999','å®¢æˆ·ç”µè¯æ— è¯¯ï¼Œä½†å¹¶éžæœ¬äººæŽ¥å¬ï¼Œéœ€è¦æ‹©æ—¶å†å›žæ‹¨è”ç³»æœ¬äººã€‚','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','ä¸åœ¨(éžæœ¬äººæŽ¥å¬)','80000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('80004','éžå†³ç­–è€…,éœ€è”ç³»ä»–äºº','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','90000','å®¢æˆ·æœ¬äººä¸èƒ½å•ç‹¬åšå†³å®šï¼Œéœ€è¦ä¸Žå…¶ä»–äººå•†è®®å†åšè´­ä¹°å†³å®š','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','éžå†³ç­–è€…,éœ€è”ç³»ä»–äºº','90000');
+INSERT INTO MMAPDM.MID_ITEM VALUES('80999','å…¶ä»–','RESPONSE','å®¢æˆ·åé¦ˆä»£ç ','91000','å…¶ä»–','RESPONSE','å®¢æˆ·åé¦ˆä¿¡æ¯','å…¶ä»–','91000');
+--æŽ¥è§¦è§„åˆ™
+INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_ATM','æŽ¥å—ATMè¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','ACPT_ATM','æŽ¥å—ATMè¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_DM','æŽ¥å—é‚®ä»¶è¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','ACPT_DM','æŽ¥å—é‚®ä»¶è¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_EDM','æŽ¥å—ç”µå­é‚®ä»¶è¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','ACPT_EDM','æŽ¥å—ç”µå­é‚®ä»¶è¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_MB','æŽ¥å—æ‰‹æœºé“¶è¡Œè¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','ACPT_MB','æŽ¥å—æ‰‹æœºé“¶è¡Œè¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_NB','æŽ¥å—ç½‘ç»œé“¶è¡Œè¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','ACPT_NB','æŽ¥å—ç½‘ç»œé“¶è¡Œè¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_PERSON','æŽ¥å—äººå‘˜ç›´æŽ¥è¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','ACPT_PERSON','æŽ¥å—äººå‘˜ç›´æŽ¥è¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_SMS','æŽ¥å—çŸ­ä¿¡è¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','ACPT_SMS','æŽ¥å—çŸ­ä¿¡è¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_WEBATM','æŽ¥å—WEBATMè¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','ACPT_WEBATM','æŽ¥å—WEBATMè¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('ACPT_WECHAT','æŽ¥å—å¾®ä¿¡è¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','ACPT_WECHAT','æŽ¥å—å¾®ä¿¡è¥é”€','ACPT_TYPE','æŽ¥è§¦è§„åˆ™','','');
+--åˆçº¦ç±»åž‹
+INSERT INTO MMAPDM.MID_ITEM VALUES('GAS','ä»£ç¼´ç‡ƒæ°”è´¹æˆ·','AGMT_TYPE','åˆçº¦ç±»åž‹','GAS','ä»£ç¼´ç‡ƒæ°”è´¹æˆ·','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('WATER','ä»£ç¼´æ°´è´¹','AGMT_TYPE','åˆçº¦ç±»åž‹','WATER','ä»£ç¼´æ°´è´¹','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('POWER','ä»£ç¼´ç”µè´¹','AGMT_TYPE','åˆçº¦ç±»åž‹','POWER','ä»£ç¼´ç”µè´¹','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('TELE_COMM','ä»£ç¼´ç”µä¿¡è´¹','AGMT_TYPE','åˆçº¦ç±»åž‹','TELE_COMM','ä»£ç¼´ç”µä¿¡è´¹','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('ALIPAY','æ”¯ä»˜å®æˆ·','AGMT_TYPE','åˆçº¦ç±»åž‹','ALIPAY','æ”¯ä»˜å®æˆ·','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('BP','é’é“¶ç›´é€šè½¦','AGMT_TYPE','åˆçº¦ç±»åž‹','BP','é’é“¶ç›´é€šè½¦','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('PAYROLL','ä»£å‘å·¥èµ„','AGMT_TYPE','åˆçº¦ç±»åž‹','PAYROLL','ä»£å‘å·¥èµ„','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('ENTRUST','å§”æ‰˜ä»£æ‰£','AGMT_TYPE','åˆçº¦ç±»åž‹','ENTRUST','å§”æ‰˜ä»£æ‰£','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('MB','æ‰‹æœºé“¶è¡Œ','AGMT_TYPE','åˆçº¦ç±»åž‹','MB','æ‰‹æœºé“¶è¡Œ','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('SMS','å¼€é€šçŸ­ä¿¡','AGMT_TYPE','åˆçº¦ç±»åž‹','SMS','å¼€é€šçŸ­ä¿¡','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('TELE','ç”µè¯é“¶è¡Œ','AGMT_TYPE','åˆçº¦ç±»åž‹','TELE','ç”µè¯é“¶è¡Œ','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('WECHAT','å¾®ä¿¡é“¶è¡Œ','AGMT_TYPE','åˆçº¦ç±»åž‹','WECHAT','å¾®ä¿¡é“¶è¡Œ','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('NB','ç½‘ç»œé“¶è¡Œ','AGMT_TYPE','åˆçº¦ç±»åž‹','NB','ç½‘ç»œé“¶è¡Œ','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('NB_ENT','ç½‘ç»œé“¶è¡Œä¼ä¸šç‰ˆ','AGMT_TYPE','åˆçº¦ç±»åž‹','NB_ENT','ç½‘ç»œé“¶è¡Œä¼ä¸šç‰ˆ','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('NB_LIFE','ç½‘ç»œé“¶è¡Œç”Ÿæ´»ç‰ˆ','AGMT_TYPE','åˆçº¦ç±»åž‹','NB_LIFE','ç½‘ç»œé“¶è¡Œç”Ÿæ´»ç‰ˆ','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('NB_WM','ç½‘ç»œé“¶è¡Œè´¢å¯Œç‰ˆ','AGMT_TYPE','åˆçº¦ç±»åž‹','NB_WM','ç½‘ç»œé“¶è¡Œè´¢å¯Œç‰ˆ','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('IC_CARD','èŠ¯ç‰‡é‡‘èžå¡','AGMT_TYPE','åˆçº¦ç±»åž‹','IC_CARD','èŠ¯ç‰‡é‡‘èžå¡','AGMT_TYPE','åˆçº¦ç±»åž‹','','');
+--äº§å“å¤§ç±»
+INSERT INTO MMAPDM.MID_ITEM VALUES('CD','æ´»æœŸå­˜æ¬¾','PROD_TYPE','äº§å“å¤§ç±»','CD','æ´»æœŸå­˜æ¬¾','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('CD_FC','å¤–å¸æ´»æœŸå­˜æ¬¾','PROD_TYPE','äº§å“å¤§ç±»','CD_FC','å¤–å¸æ´»æœŸå­˜æ¬¾','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('TD','å®šæœŸå­˜æ¬¾æˆ·','PROD_TYPE','äº§å“å¤§ç±»','TD','å®šæœŸå­˜æ¬¾æˆ·','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('TD_FC','å¤–å¸å®šæœŸå­˜æ¬¾æˆ·','PROD_TYPE','äº§å“å¤§ç±»','TD_FC','å¤–å¸å®šæœŸå­˜æ¬¾æˆ·','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('FST','å¿«æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','FST','å¿«æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('FST_FC','å¤–å¸å¿«æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','FST_FC','å¤–å¸å¿«æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('HLN','æˆ¿æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','HLN','æˆ¿æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('HLN_FC','å¤–å¸æˆ¿æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','HLN_FC','å¤–å¸æˆ¿æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('CLN','è½¦æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','CLN','è½¦æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('CLN_FC','å¤–å¸è½¦æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','CLN_FC','å¤–å¸è½¦æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('PLN','ä¿¡æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','PLN','ä¿¡æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('PLN_FC','å¤–å¸ä¿¡æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','PLN_FC','å¤–å¸ä¿¡æ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('FARM','å†œæ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','FARM','å†œæ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('FARM_FC','å¤–å¸å†œæ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','FARM_FC','å¤–å¸å†œæ˜“è´·','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('NDEBT','å›½å€º','PROD_TYPE','äº§å“å¤§ç±»','NDEBT','å›½å€º','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('NDEBT_FC','å¤–å¸å›½å€º','PROD_TYPE','äº§å“å¤§ç±»','NDEBT_FC','å¤–å¸å›½å€º','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('FOUND','åŸºé‡‘','PROD_TYPE','äº§å“å¤§ç±»','FOUND','åŸºé‡‘','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('FOUND_FC','å¤–å¸åŸºé‡‘','PROD_TYPE','äº§å“å¤§ç±»','FOUND_FC','å¤–å¸åŸºé‡‘','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('FIN','ç†è´¢','PROD_TYPE','äº§å“å¤§ç±»','FIN','ç†è´¢','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('FIN_FC','å¤–å¸ç†è´¢','PROD_TYPE','äº§å“å¤§ç±»','FIN_FC','å¤–å¸ç†è´¢','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('INSURE','ä¿é™©','PROD_TYPE','äº§å“å¤§ç±»','INSURE','ä¿é™©','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('INSURE_FC','å¤–å¸ä¿é™©','PROD_TYPE','äº§å“å¤§ç±»','INSURE_FC','å¤–å¸ä¿é™©','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('NOBLE','è´µé‡‘å±ž','PROD_TYPE','äº§å“å¤§ç±»','NOBLE','è´µé‡‘å±ž','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('NOBLE_FC','å¤–å¸è´µé‡‘å±ž','PROD_TYPE','äº§å“å¤§ç±»','NOBLE_FC','å¤–å¸è´µé‡‘å±ž','PROD_TYPE','äº§å“å¤§ç±»','','');
+INSERT INTO MMAPDM.MID_ITEM VALUES('CREDIT','ä¿¡ç”¨å¡','PROD_TYPE','äº§å“å¤§ç±»','CREDIT','ä¿¡ç”¨å¡','PROD_TYPE','äº§å“å¤§ç±»','','');
 
 
 commit;
