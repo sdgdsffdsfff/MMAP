@@ -5,7 +5,7 @@ AS
 
   PROCEDURE_NAME VARCHAR2(125) :='P_DM_CUST_TRANS_STAT';  -- 大存储过程名
 
-  DM_SQL VARCHAR2(20000); -- the variable to loading the SQL statment 
+  DM_SQL VARCHAR2(20000); -- the variable to loading the SQL statment
   IO_ROW_ALL INTEGER;
   IO_ROW INTEGER;
   ST_ROW INTEGER;  --源数据条数
@@ -18,16 +18,16 @@ AS
   V_END_TIMESTAMP   TIMESTAMP;    --the end time of procedures
 
   DM_TODAY NUMBER;
-  DM_YESTERDAY NUMBER;  -- 数据日期"上一日"        -- 
+  DM_YESTERDAY NUMBER;  -- 数据日期"上一日"        --
   TX_DATE NUMBER;
- 
+
 
 BEGIN
 
   SELECT SYSDATE INTO V_START_TIMESTAMP FROM DUAL;    -- 加载程序运行开始时间
-  
+
   SELECT TO_NUMBER(TO_CHAR((SYSDATE),'YYYYMMDD')) INTO V_ETL_DATE FROM dual;  -- 取系统日期作为跑批日期
-  
+
   SELECT TX_DATE INTO DM_TODAY FROM MMAPST.ST_SYSTEM_DATE;  -- 取数据日期
   SELECT PRE_DATE INTO DM_YESTERDAY FROM MMAPST.ST_SYSTEM_DATE;  -- 取数据日期"上一日"
 
@@ -47,7 +47,7 @@ BEGIN
     END IF;
 
     DM_SQL:='CREATE TABLE MMAPDM.TMP_CUST_TRANS_STAT AS
-    SELECT   
+    SELECT
       A.TX_DATE,
       A.PERIOD_ID,
       A.CUSTOMER_ID,
@@ -68,12 +68,12 @@ BEGIN
       A.CUST_TRANS_CNT_LC,
       0 as CUST_TRANS_AMT_FC,
       0 as CUST_TRANS_CNT_FC,
-      0 as CUST_TRANS_AMT,
-      0 as CUST_TRANS_CNT
-  
+      A.CUST_TRANS_AMT_LC as CUST_TRANS_AMT, 
+      A.CUST_TRANS_CNT_LC as CUST_TRANS_CNT
+
       FROM
       (
-        SELECT   
+        SELECT
           A.TX_DATE,
           A.PERIOD_ID,
           CUSTOMER_ID,
@@ -85,19 +85,19 @@ BEGIN
           COUNT(1) AS CUST_TRANS_CNT_LC,
           TRANSDIR_FG
         FROM  (
-                SELECT 
+                SELECT
                   TX_DATE
                   ,PERIOD_ID
                   ,CUSTOMER_ID
                   ,TRANSCDE_ID
                   ,NVL(CHN_ID,''*'') AS CHN_ID
                   ,TRANSBR_ID
-                  ,PRODTYP_ID  
+                  ,PRODTYP_ID
                   ,TRANS_AMT
-                  ,TRANSDIR_FG             
-                FROM MMAPDM.DM_DEP_TRANS_FLOW_HIS 
-                UNION ALL 
-                SELECT 
+                  ,TRANSDIR_FG
+                FROM MMAPDM.DM_DEP_TRANS_FLOW_HIS
+                UNION ALL
+                SELECT
                   TX_DATE
                   ,PERIOD_ID
                   ,CUSTOMER_ID
@@ -108,11 +108,11 @@ BEGIN
                   ,TRANS_AMT
                   ,NULL AS TRANSDIR_FG
                 FROM MMAPDM.DM_LOAN_TRANS_FLOW_HIS
-               ) A 
-  
+               ) A
+
         GROUP BY A.TX_DATE,A.PERIOD_ID,A.CUSTOMER_ID,A.TRANSCDE_ID,A.CHN_ID,A.TRANSBR_ID,A.PRODTYP_ID,A.TRANSDIR_FG
-      ) A 
-      LEFT JOIN MMAPDM.MID_CALENDAR C 
+      ) A
+      LEFT JOIN MMAPDM.MID_CALENDAR C
       ON  A.PERIOD_ID=C.PERIOD_ID
       ';
   EXECUTE  IMMEDIATE DM_SQL;
@@ -139,7 +139,7 @@ BEGIN
 /*
     写入日志
 */
-    IF IO_STATUS=0 
+    IF IO_STATUS=0
       THEN IO_SQLERR := 'SUSSCESS';
     ELSE IO_STATUS := 9 ;
          IO_SQLERR := 'P_DM_CUST_TRANS_STAT_FREQ ERROR';
