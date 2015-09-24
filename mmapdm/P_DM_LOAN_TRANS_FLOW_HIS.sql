@@ -16,6 +16,16 @@ AS
   DM_TODAY NUMBER;        -- 数据日期"当日"
   TX_DATE NUMBER;
 
+  V_COUNT NUMBER;  --计数变量
+  V_COMMITNUM CONSTANT NUMBER :=500000;--一次提交记录数（默认一百万）
+
+  --定义一个游标数据类型
+  TYPE emp_cursor_type IS REF CURSOR;
+  --声明一个游标变量
+  c1 EMP_CURSOR_TYPE;
+  --声明记录变量
+  V_DM_LOAN_TRANS_FLOW_HIS DM_LOAN_TRANS_FLOW_HIS%ROWTYPE;
+
 BEGIN
   SELECT SYSDATE INTO V_START_TIMESTAMP FROM dual;    -- 加载程序运行开始时间
 
@@ -32,68 +42,9 @@ BEGIN
     DELETE FROM MMAPDM.DM_LOAN_TRANS_FLOW_HIS WHERE PERIOD_ID = DM_TODAY;    -- 删除"当日"数据
     COMMIT;
 
-    /*插入当日交易数据*/
-    DM_SQL := 'INSERT INTO DM_LOAN_TRANS_FLOW_HIS
-      (
-        ETL_DATE
-        ,TX_DATE
-        ,PERIOD_ID
-        ,TRANS_DT
-        ,TRANS_TM
-        ,SER_NO
-        ,OPER_ORG
-        ,CUSTOMER_ID
-        ,ACCOUNT_ID
-        ,TRANSCDE_ID
-        ,TREATMENT_CODE
-        ,TRANSST_ID
-        ,TRANSBR_ID
-        ,CHN_ID
-        ,PRODCDE_ID
-        ,PRODTYP_ID
-        ,BUSSTYP_ID
-        ,TRANSCURR_ID
-        ,TRANS_AMT
-        ,FEECURR_ID
-        ,TRANS_FEE
-        ,OACCTCURR_ID
-        ,REMARK
-        ,PURPDESC
-        ,PUTOUT_DT
-        ,EXPIRE_DT
-        ,BASE_INT
-        ,DEFAULT_INT
-        ,PAYMTHD_ID
-        ,VOUCHTYPE_ID
-        ,DEPOSITCURR_ID
-        ,R_DEPOSITCURR
-        ,EXPOSURE_AMT
-        ,PAYHOLD_ID
-        ,GUARTYPE_ID
-        ,RESEACCT_ORG
-        ,LOANACCT_ORG
-        ,CLIENTACCT_ORG
-        ,DEPOSITACCT_ORG
-        ,FEEACC_ORG
-        ,REVBRANCH_ID
-        ,REVBRANCH_NM
-        ,DEALSTART_TM
-        ,DEALEND_TM
-        ,DEAL_FG
-        ,REGBRANCH_ID
-        ,REVCIF_NM
-        ,LOANTYPE_ID
-        ,PROMISSORY_NO
-        ,MNCONTRACT_NO
-        ,CRAGREE_NO
-        ,CONTRACT_AMT
-        ,GUARN_NO
-        ,BILL_AMT
-        ,SUBJECT_NO
-        ,SUBJECT2_NO
-        ,SOURCEGRP
-      )
-      SELECT
+  /*插入当日交易数据*/
+  BEGIN
+    DM_SQL := 'SELECT
         '|| V_ETL_DATE ||'
         ,A.TX_DATE
         ,A.PERIOD_ID
@@ -154,9 +105,26 @@ BEGIN
       FROM  MMAPST.ST_LOAN_TRANS_FLOW A
       LEFT  JOIN MMAPDM.DM_PRODUCT B
       ON  A.PRODCDE_ID=B.PROD_CODE';
-    EXECUTE IMMEDIATE DM_SQL;
-    IO_ROW := SQL%ROWCOUNT ;
-    COMMIT;
+      -- 计数器初始化
+      V_COUNT  := 0;
+      --批量插入当日数据
+      OPEN C1 FOR DM_SQL;
+      LOOP
+          FETCH C1 INTO V_DM_LOAN_TRANS_FLOW_HIS;
+          EXIT WHEN C1%NOTFOUND;
+          INSERT INTO DM_LOAN_TRANS_FLOW_HIS VALUES V_DM_LOAN_TRANS_FLOW_HIS;
+          IO_ROW := IO_ROW+SQL%ROWCOUNT;
+          V_COUNT := V_COUNT + 1;
+          IF MOD(V_COUNT, V_COMMITNUM) = 0 THEN
+            COMMIT;
+          END IF;
+          END LOOP;
+      COMMIT;
+      CLOSE C1;
+    END;
+
+
+
   END IF;
 
 
@@ -174,4 +142,3 @@ BEGIN
   SELECT SYSDATE INTO V_END_TIMESTAMP FROM dual;
   P_MMAPDM_WRITE_LOGS(PROCEDURE_NAME,IO_STATUS,IO_ROW,V_START_TIMESTAMP,V_END_TIMESTAMP,IO_SQLERR);
 END P_DM_LOAN_TRANS_FLOW_HIS;
-/
