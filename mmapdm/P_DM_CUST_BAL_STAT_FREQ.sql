@@ -1,4 +1,4 @@
-﻿CREATE OR REPLACE PROCEDURE P_DM_CUST_BAL_STAT_FREQ
+CREATE OR REPLACE PROCEDURE P_DM_CUST_BAL_STAT_FREQ
 (TABLE_NAME IN VARCHAR2, --表名
   FREQ IN VARCHAR2, --频度
   FREQ_VALUE IN VARCHAR2, --频度值
@@ -13,12 +13,11 @@
 AS
 
   PROCEDURE_NAME VARCHAR2(125) :='P_'||TABLE_NAME;  -- 存储过程名(修改)
-
+  DM_TABLE_NAME VARCHAR2(125) := TABLE_NAME;  -- 表名(修改)
   
   IO_SQLERR VARCHAR2(2000);
 
   DM_SQL VARCHAR2(30000); -- the variable to loading the SQL statment
-
 
   ST_ROW INTEGER;  --源数据条数
 
@@ -26,7 +25,18 @@ AS
   V_START_TIMESTAMP TIMESTAMP;    --the start time of procedures
   V_END_TIMESTAMP   TIMESTAMP;    --the end time of procedures
 
-
+  V_COUNT NUMBER;  --计数变量
+  V_COMMITNUM CONSTANT NUMBER :=500000;--一次提交记录数（默认一百万）
+  
+  --定义一个游标数据类型  
+  TYPE emp_cursor_type IS REF CURSOR;  
+  --声明一个游标变量  
+  c1 EMP_CURSOR_TYPE;  
+  --声明记录变量  
+  V_DM_CUST_BAL_W_STAT DM_CUST_BAL_W_STAT%ROWTYPE;
+  V_DM_CUST_BAL_M_STAT DM_CUST_BAL_M_STAT%ROWTYPE;
+  V_DM_CUST_BAL_Q_STAT DM_CUST_BAL_Q_STAT%ROWTYPE;
+  V_DM_CUST_BAL_Y_STAT DM_CUST_BAL_Y_STAT%ROWTYPE;
 
 BEGIN
 
@@ -48,7 +58,7 @@ BEGIN
     COMMIT;
     --2.恢复频度差
     DM_SQL :='UPDATE MMAPDM.'||TABLE_NAME||' SET FREQ_DIFF = FREQ_DIFF - 1
-        WHERE (SELECT '||DAY_OF_FREQ||' FROM MMAPST.MID_CALENDAR WHERE PERIOD_ID='||DM_TODAY||')=1
+        WHERE (SELECT '||DAY_OF_FREQ||' FROM MMAPDM.MID_CALENDAR WHERE PERIOD_ID='||DM_TODAY||')=1
       ';
     EXECUTE IMMEDIATE DM_SQL;
     IO_ROW := IO_ROW+SQL%ROWCOUNT ;
@@ -162,7 +172,7 @@ BEGIN
 
     --1.更新频度差
     DM_SQL :='UPDATE MMAPDM.'||TABLE_NAME||' SET FREQ_DIFF = FREQ_DIFF + 1
-        WHERE (SELECT '||DAY_OF_FREQ||' FROM MMAPST.MID_CALENDAR WHERE PERIOD_ID='||DM_TODAY||')=1
+        WHERE (SELECT '||DAY_OF_FREQ||' FROM MMAPDM.MID_CALENDAR WHERE PERIOD_ID='||DM_TODAY||')=1
       ';
     EXECUTE IMMEDIATE DM_SQL;
     IO_ROW := IO_ROW+SQL%ROWCOUNT ;
@@ -259,7 +269,7 @@ BEGIN
         ,0       AS CUST_BAL_AVG_CWS
         ,D.CUST_BAL_AVG       AS CUST_BAL_AVG_SQT     --合计日平均余额_上期
       FROM MMAPDM.TMP_CUST_BAL_T A
-      LEFT JOIN  MMAPST.MID_CALENDAR B
+      LEFT JOIN  MMAPDM.MID_CALENDAR B
       ON A.PERIOD_ID = B.PERIOD_ID
       /*
       --同期c，暂不计算同期数据
@@ -290,93 +300,96 @@ BEGIN
     IO_ROW := IO_ROW+SQL%ROWCOUNT ;
     COMMIT;
     --插入当天数据
+    BEGIN
+      DM_SQL:='
+      SELECT
+           ETL_DATE
+          ,TX_DATE
+          ,PERIOD_ID
+          ,CUSTOMER_ID
+          ,FREQ
+          ,YEAR
+          ,FREQ_VALUE
+          ,0 AS FREQ_DIFF
+          ,PROD_TYPE
+          ,CUST_BAL_LC
+          ,CUST_BAL_CWS_LC
+          ,CUST_BAL_SQT_LC
+          ,CUST_BAL_MAX_LC
+          ,CUST_BAL_MAX_DATE_LC
+          ,CUST_BAL_MIN_LC
+          ,CUST_BAL_MIN_DATE_LC
+          ,CUST_BAL_AVG_LC
+          ,CUST_BAL_AVG_CWS_LC
+          ,CUST_BAL_AVG_SQT_LC
+          ,CUST_BAL_FC
+          ,CUST_BAL_CWS_FC
+          ,CUST_BAL_SQT_FC
+          ,CUST_BAL_MAX_FC
+          ,CUST_BAL_MAX_DATE_FC
+          ,CUST_BAL_MIN_FC
+          ,CUST_BAL_MIN_DATE_FC
+          ,CUST_BAL_AVG_FC
+          ,CUST_BAL_AVG_CWS_FC
+          ,CUST_BAL_AVG_SQT_FC
+          ,CUST_BAL
+          ,CUST_BAL_CWS
+          ,CUST_BAL_SQT
+          ,CUST_BAL_MAX
+          ,CUST_BAL_MAX_DATE
+          ,CUST_BAL_MIN
+          ,CUST_BAL_MIN_DATE
+          ,CUST_BAL_AVG
+          ,CUST_BAL_AVG_CWS
+          ,CUST_BAL_AVG_SQT
+          ,0 AS NEW_FLAG
+      FROM  MMAPDM.TMP_CUST_BAL_CAL
+      ';
+    --计数器初始化 
+    V_COUNT  := 0;  
 
-    DM_SQL:= 'INSERT INTO MMAPDM.'||TABLE_NAME||'
-    (
-         ETL_DATE
-        ,TX_DATE
-        ,PERIOD_ID
-        ,FREQ
-        ,YEAR
-        ,FREQ_VALUE
-        ,FREQ_DIFF
-        ,CUSTOMER_ID
-        ,PROD_TYPE
-        ,CUST_BAL_LC
-        ,CUST_BAL_CWS_LC
-        ,CUST_BAL_SQT_LC
-        ,CUST_BAL_MAX_LC
-        ,CUST_BAL_MAX_DATE_LC
-        ,CUST_BAL_MIN_LC
-        ,CUST_BAL_MIN_DATE_LC
-        ,CUST_BAL_AVG_LC
-        ,CUST_BAL_AVG_CWS_LC
-        ,CUST_BAL_AVG_SQT_LC
-        ,CUST_BAL_FC
-        ,CUST_BAL_CWS_FC
-        ,CUST_BAL_SQT_FC
-        ,CUST_BAL_MAX_FC
-        ,CUST_BAL_MAX_DATE_FC
-        ,CUST_BAL_MIN_FC
-        ,CUST_BAL_MIN_DATE_FC
-        ,CUST_BAL_AVG_FC
-        ,CUST_BAL_AVG_CWS_FC
-        ,CUST_BAL_AVG_SQT_FC
-        ,CUST_BAL
-        ,CUST_BAL_CWS
-        ,CUST_BAL_SQT
-        ,CUST_BAL_MAX
-        ,CUST_BAL_MAX_DATE
-        ,CUST_BAL_MIN
-        ,CUST_BAL_MIN_DATE
-        ,CUST_BAL_AVG
-        ,CUST_BAL_AVG_CWS
-        ,CUST_BAL_AVG_SQT
-    )
-    SELECT
-         ETL_DATE
-        ,TX_DATE
-        ,PERIOD_ID
-        ,FREQ
-        ,YEAR
-        ,FREQ_VALUE
-        ,0 AS FREQ_DIFF
-        ,CUSTOMER_ID
-        ,PROD_TYPE
-        ,CUST_BAL_LC
-        ,CUST_BAL_CWS_LC
-        ,CUST_BAL_SQT_LC
-        ,CUST_BAL_MAX_LC
-        ,CUST_BAL_MAX_DATE_LC
-        ,CUST_BAL_MIN_LC
-        ,CUST_BAL_MIN_DATE_LC
-        ,CUST_BAL_AVG_LC
-        ,CUST_BAL_AVG_CWS_LC
-        ,CUST_BAL_AVG_SQT_LC
-        ,CUST_BAL_FC
-        ,CUST_BAL_CWS_FC
-        ,CUST_BAL_SQT_FC
-        ,CUST_BAL_MAX_FC
-        ,CUST_BAL_MAX_DATE_FC
-        ,CUST_BAL_MIN_FC
-        ,CUST_BAL_MIN_DATE_FC
-        ,CUST_BAL_AVG_FC
-        ,CUST_BAL_AVG_CWS_FC
-        ,CUST_BAL_AVG_SQT_FC
-        ,CUST_BAL
-        ,CUST_BAL_CWS
-        ,CUST_BAL_SQT
-        ,CUST_BAL_MAX
-        ,CUST_BAL_MAX_DATE
-        ,CUST_BAL_MIN
-        ,CUST_BAL_MIN_DATE
-        ,CUST_BAL_AVG
-        ,CUST_BAL_AVG_CWS
-        ,CUST_BAL_AVG_SQT
-    FROM  MMAPDM.TMP_CUST_BAL_CAL
-    ';
-    EXECUTE  IMMEDIATE DM_SQL;
-    IO_ROW := IO_ROW+SQL%ROWCOUNT ;
+    --批量插入当日数据
+    OPEN C1 FOR DM_SQL;
+      LOOP
+        IF DM_TABLE_NAME='DM_CUST_BAL_W_STAT'
+        THEN
+          FETCH C1 INTO V_DM_CUST_BAL_W_STAT;
+          EXIT WHEN C1%NOTFOUND;
+          INSERT INTO DM_CUST_BAL_W_STAT VALUES V_DM_CUST_BAL_W_STAT;
+          IO_ROW := IO_ROW+SQL%ROWCOUNT ;
+
+        ELSIF DM_TABLE_NAME='DM_CUST_BAL_M_STAT'
+        THEN
+          FETCH C1 INTO V_DM_CUST_BAL_M_STAT;
+          EXIT WHEN C1%NOTFOUND;
+          INSERT INTO DM_CUST_BAL_M_STAT VALUES V_DM_CUST_BAL_M_STAT;
+          IO_ROW := IO_ROW+SQL%ROWCOUNT ;
+
+        ELSIF DM_TABLE_NAME='DM_CUST_BAL_Q_STAT'
+        THEN
+          FETCH C1 INTO V_DM_CUST_BAL_Q_STAT;
+          EXIT WHEN C1%NOTFOUND;
+          INSERT INTO DM_CUST_BAL_Q_STAT VALUES V_DM_CUST_BAL_Q_STAT;
+          IO_ROW := IO_ROW+SQL%ROWCOUNT ;
+
+        ELSIF DM_TABLE_NAME='DM_CUST_BAL_Y_STAT'
+        THEN
+          FETCH C1 INTO V_DM_CUST_BAL_Y_STAT;
+          EXIT WHEN C1%NOTFOUND;
+          INSERT INTO DM_CUST_BAL_Y_STAT VALUES V_DM_CUST_BAL_Y_STAT;
+          IO_ROW := IO_ROW+SQL%ROWCOUNT ;          
+
+        ELSE EXIT;
+        END IF;
+        V_COUNT := V_COUNT + 1;
+        IF (V_COMMITNUM>0 AND (MOD(V_COUNT, V_COMMITNUM)) = 0) THEN        
+          COMMIT; 
+        END IF;      
+        
+    END LOOP;
+    COMMIT;
+    CLOSE C1;
+  END;   
 
     /*
         写入日志
@@ -397,4 +410,3 @@ BEGIN
     SELECT SYSDATE INTO  V_END_TIMESTAMP  FROM dual;
     P_MMAPDM_WRITE_LOGS(PROCEDURE_NAME,IO_STATUS,IO_ROW,V_START_TIMESTAMP,V_END_TIMESTAMP,IO_SQLERR);
 END P_DM_CUST_BAL_STAT_FREQ;
-/
