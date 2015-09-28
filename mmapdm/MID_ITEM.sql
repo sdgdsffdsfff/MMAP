@@ -200,6 +200,20 @@ select distinct	TRIM(a.item_id)
        ,NULL
 from  MMAPST.Dmmkt_Pcodemast A
 where item_typ='CrdTyp_ID'
+--帐户状态
+UNION ALL
+select distinct	TRIM(a.item_id)
+       ,TRIM(a.item_nm)
+       ,TRIM(a.item_typ)
+       ,TRIM(a.item_des)
+       ,trim(a.item_id)
+       ,CASE WHEN trim(a.item_id)='-' THEN '未知'	ELSE TRIM(a.item_nm) END
+       ,'ACCT_STATUS'
+       ,TRIM(a.item_des)
+       ,NULL
+       ,NULL
+from  MMAPST.Dmmkt_Pcodemast A
+where item_typ='AccSts_ID'
 ;
 --借记卡级别
 INSERT INTO MMAPDM.MID_ITEM VALUES('-','','CrdTyp_ID','卡类型','WZ','未知','CARD_LVL','借记卡级别','','0');
