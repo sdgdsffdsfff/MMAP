@@ -10,4 +10,4 @@ to_number(to_char(TX_DT,'YYYYMMDD'))
 ,to_number(to_char(TX_DT-1,'YYYYMMDD'))
 ,to_number(to_char(SYSDATE,'YYYYMMDD'))
 ,to_number(to_char(SYSDATE-1,'YYYYMMDD'))
-from mmapst.DMMKT_V_zSystem 
+from mmapdmmkt.DMMKT_V_zSystem 

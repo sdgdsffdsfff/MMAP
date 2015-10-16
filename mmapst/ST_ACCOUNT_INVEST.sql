@@ -6,6 +6,7 @@
         SELECT COUNT(*) FROM MMAPST.ST_ACCOUNT_INVEST
         DELETE FROM MMAPST.ST_ACCOUNT_INVEST
 */
+TRUNCATE TABLE MMAPST.ST_ACCOUNT_INVEST;
 INSERT INTO MMAPST.ST_ACCOUNT_INVEST (
         ETL_DATE,	                --跑批日期
         TX_DATE,                    --数据日期
@@ -36,7 +37,7 @@ select
     TRIM(b.ProdTyp_ID),
     TRIM(b.Face_Amt)
  from
-    MMAPST.DMMKT_ACEBond a INNER JOIN MMAPST.DMMKT_ACEBondAmt b
+    MMAPDMMKT.DMMKT_ACEBond a INNER JOIN MMAPDMMKT.DMMKT_ACEBondAmt b
     ON a.THIRDPART_ORG=b.THIRDPART_ORG
     AND a.TX_DT=b.TX_DT
 union all
@@ -55,13 +56,10 @@ union all
     TRIM(c.ProdTyp_ID),
     TRIM(c.Vol_Amt)
  from
-    MMAPST.DMMKT_ACFSShare c INNER JOIN MMAPST.DMMKT_ACFS d
+    MMAPDMMKT.DMMKT_ACFSShare c INNER JOIN MMAPDMMKT.DMMKT_ACFS d
     ON c.ThirdPart_Org=D.ThirdPart_Org
     AND c.CIF_Org=d.CIF_Org
     AND c.TX_DT=d.TX_DT
 
-
-
-select * from MMAPDM.DM_ACCOUNT_INVEST
-
-
+;
+COMMIT;
