@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE P_DM_CUST_BAL_STAT_FREQ
+CREATE OR REPLACE PROCEDURE "MMAPDM"."P_DM_CUST_BAL_STAT_FREQ"
 (TABLE_NAME IN VARCHAR2, --表名
   FREQ IN VARCHAR2, --频度
   FREQ_VALUE IN VARCHAR2, --频度值
@@ -14,7 +14,7 @@ AS
 
   PROCEDURE_NAME VARCHAR2(125) :='P_'||TABLE_NAME;  -- 存储过程名(修改)
   DM_TABLE_NAME VARCHAR2(125) := TABLE_NAME;  -- 表名(修改)
-  
+
   IO_SQLERR VARCHAR2(2000);
 
   DM_SQL VARCHAR2(30000); -- the variable to loading the SQL statment
@@ -27,12 +27,12 @@ AS
 
   V_COUNT NUMBER;  --计数变量
   V_COMMITNUM CONSTANT NUMBER :=500000;--一次提交记录数（默认一百万）
-  
-  --定义一个游标数据类型  
-  TYPE emp_cursor_type IS REF CURSOR;  
-  --声明一个游标变量  
-  c1 EMP_CURSOR_TYPE;  
-  --声明记录变量  
+
+  --定义一个游标数据类型
+  TYPE emp_cursor_type IS REF CURSOR;
+  --声明一个游标变量
+  c1 EMP_CURSOR_TYPE;
+  --声明记录变量
   V_DM_CUST_BAL_W_STAT DM_CUST_BAL_W_STAT%ROWTYPE;
   V_DM_CUST_BAL_M_STAT DM_CUST_BAL_M_STAT%ROWTYPE;
   V_DM_CUST_BAL_Q_STAT DM_CUST_BAL_Q_STAT%ROWTYPE;
@@ -306,11 +306,11 @@ BEGIN
            ETL_DATE
           ,TX_DATE
           ,PERIOD_ID
-          ,CUSTOMER_ID
           ,FREQ
           ,YEAR
           ,FREQ_VALUE
           ,0 AS FREQ_DIFF
+          ,CUSTOMER_ID
           ,PROD_TYPE
           ,CUST_BAL_LC
           ,CUST_BAL_CWS_LC
@@ -345,8 +345,8 @@ BEGIN
           ,0 AS NEW_FLAG
       FROM  MMAPDM.TMP_CUST_BAL_CAL
       ';
-    --计数器初始化 
-    V_COUNT  := 0;  
+    --计数器初始化
+    V_COUNT  := 0;
 
     --批量插入当日数据
     OPEN C1 FOR DM_SQL;
@@ -377,19 +377,19 @@ BEGIN
           FETCH C1 INTO V_DM_CUST_BAL_Y_STAT;
           EXIT WHEN C1%NOTFOUND;
           INSERT INTO DM_CUST_BAL_Y_STAT VALUES V_DM_CUST_BAL_Y_STAT;
-          IO_ROW := IO_ROW+SQL%ROWCOUNT ;          
+          IO_ROW := IO_ROW+SQL%ROWCOUNT ;
 
         ELSE EXIT;
         END IF;
         V_COUNT := V_COUNT + 1;
-        IF (V_COMMITNUM>0 AND (MOD(V_COUNT, V_COMMITNUM)) = 0) THEN        
-          COMMIT; 
-        END IF;      
-        
+        IF (V_COMMITNUM>0 AND (MOD(V_COUNT, V_COMMITNUM)) = 0) THEN
+          COMMIT;
+        END IF;
+
     END LOOP;
     COMMIT;
     CLOSE C1;
-  END;   
+  END;
 
     /*
         写入日志

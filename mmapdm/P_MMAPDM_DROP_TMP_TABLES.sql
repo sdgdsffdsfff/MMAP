@@ -1,9 +1,9 @@
-create or replace procedure P_MMAPDM_DROP_TMP_TABLES(
+CREATE OR REPLACE PROCEDURE "MMAPDM"."P_MMAPDM_DROP_TMP_TABLES"(
        TABLE_NAME IN VARCHAR2,
        IO_STATUS OUT INTEGER ,
        VO_SQLERR OUT VARCHAR2
-) 
-IS     
+)
+IS
        STR VARCHAR2(300);
        STR_PRE VARCHAR2(300);
        STR_AUR VARCHAR2(300);
@@ -17,13 +17,13 @@ BEGIN
        ELSE
           tmp_name := TABLE_NAME;
        END IF;
-       
+
        STR_PRE := 'DROP TABLE MMAPDM.TMP_' ||  trim(tmp_name)  || '_PRE' ;
        STR_AUR := 'DROP TABLE MMAPDM.TMP_' ||  trim(tmp_name)  || '_CUR' ;
        STR_INS := 'DROP TABLE MMAPDM.TMP_' ||  trim(tmp_name)  || '_INS' ;
        STR_UPD := 'DROP TABLE MMAPDM.TMP_' ||  trim(tmp_name)  || '_UPD' ;
-       
-       
+
+
        STR := STR_PRE;
        EXECUTE IMMEDIATE STR_PRE;
        STR := STR_AUR;
@@ -38,9 +38,8 @@ BEGIN
 
        COMMIT;
     EXCEPTION WHEN OTHERS THEN
-        ROLLBACK ; 
+        ROLLBACK ;
         IO_STATUS := 9 ;
         VO_SQLERR := STR || SQLCODE || SQLERRM ;
         P_MMAPDM_WRITE_LOGS(TABLE_NAME,IO_STATUS,IO_ROW,SYSDATE,SYSDATE,VO_SQLERR);
 end P_MMAPDM_DROP_TMP_TABLES;
-/
