@@ -1,13 +1,4 @@
-/*
-目标表：MID_CALENDAR
-源表：
-开发人:	郭盼盼
-开日期:	20150731
-特殊说明:
-	1.调度该存储过程方式，以加载2010年至2025年数据为例: CALL P_MID_CALENDAR('20100101','20251231')
-变更记录:
-*/
-CREATE OR REPLACE PROCEDURE P_MID_CALENDAR(
+CREATE OR REPLACE PROCEDURE "MMAPDM"."P_MID_CALENDAR"(
 start_date IN CHAR,
 end_date IN CHAR
 ) AS
@@ -20,13 +11,13 @@ v_date DATE;
 
 BEGIN
 
-	EXECUTE	IMMEDIATE 'TRUNCATE TABLE MID_CALENDAR';
+	EXECUTE	IMMEDIATE 'TRUNCATE TABLE MMAPDM.MID_CALENDAR';
 
 	v_max	:= to_number(TO_DATE(end_date, 'yyyy-mm-dd')-TO_DATE(start_date, 'yyyy-mm-dd'));
 
 	LOOP
 		v_date := TO_DATE(start_date, 'yyyy-mm-dd')+v_counter;
-		INSERT INTO MMAPST.MID_CALENDAR
+		INSERT INTO MMAPDM.MID_CALENDAR
 		(
 			PERIOD_ID		--日期ID
 			,PERIOD			--日期

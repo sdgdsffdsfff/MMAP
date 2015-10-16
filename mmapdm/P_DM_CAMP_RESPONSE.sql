@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE P_DM_CAMP_RESPONSE
+CREATE OR REPLACE PROCEDURE "MMAPDM"."P_DM_CAMP_RESPONSE"
 (IO_STATUS OUT INTEGER,IO_SQLERR OUT VARCHAR2)
 	AS
 	TABLE_NAME VARCHAR2(125) :='DM_CAMP_RESPONSE';  -- 表名(修改)
@@ -133,12 +133,13 @@ BEGIN
 			CAMPAIGN_CODE,
 			CELL_CODE,
 			OFFER_CODE,
-		  ,'||  V_ETL_DATE  ||'
-		  ,'||  DM_TODAY ||  '
-		  ,'||  DM_MAX_DATE  ||'
-		FROM MMAPST.ST_CAMP_RESPONSE a Left join MMAPST.ST_ITEM b
+		  '||  V_ETL_DATE  ||',
+		  '||  DM_TODAY ||  ',
+		  '||  DM_MAX_DATE  ||'
+		FROM MMAPST.ST_CAMP_RESPONSE a Left join MMAPDM.MID_ITEM b
 on a.RESPONSE_CODE=b.Source_Item_ID and b.Item_Typ=''RESPONSE'' ';
-		EXECUTE  IMMEDIATE DM_SQL;
+
+    EXECUTE  IMMEDIATE DM_SQL;
 		COMMIT;
 		
 		/*cur-pre =  增量数据（包括修改后）*/
@@ -199,24 +200,25 @@ on a.RESPONSE_CODE=b.Source_Item_ID and b.Item_Typ=''RESPONSE'' ';
 			CONTACT_WAVE,	  --接触波段
 			CAMPAIGN_CODE,	  --营销活动编号
 			CELL_CODE,	      --客群编号
-			OFFER_CODE,	      --Offer编号
+			OFFER_CODE	      --Offer编号
 
 		  FROM '|| TMP_PRE ||  '  b
 		  WHERE
-		    a.CUSTOMER_ID=b.CUSTOMER_ID AND
+		    a.CUSTOMER_ID=b.CUSTOMER_ID 
 		  AND  NVL(a.OPT_NO,''*'')= NVL(b.OPT_NO,''*'')
 		  AND  NVL(a.TAC_ID,''*'')= NVL(b.TAC_ID,''*'')
 		  AND  NVL(a.PRICING_CODE,''*'')= NVL(b.PRICING_CODE,''*'')
 		  AND  NVL(a.TREATMENT_CODE,''*'')= NVL(b.TREATMENT_CODE,''*'')
 		  AND  NVL(a.RESPONSE_CODE,''*'')= NVL(b.RESPONSE_CODE,''*'')
 		  AND  NVL(a.RESPONSE_DEC,''*'')= NVL(b.RESPONSE_DEC,''*'')
-		  AND  NVL(a.RESPONSE_TM,''*'')= NVL(b.RESPONSE_TM,''*'')
-		  AND  NVL(a.UPDATE_TM,''*'')= NVL(b.UPDATE_TM,''*'')
+		  AND  NVL(a.RESPONSE_TM,to_date(''99991231'',''yyyy-mm-dd''))= NVL(b.RESPONSE_TM,to_date(''99991231'',''yyyy-mm-dd''))
+		  AND  NVL(a.UPDATE_TM,to_date(''99991231'',''yyyy-mm-dd''))= NVL(b.UPDATE_TM,to_date(''99991231'',''yyyy-mm-dd''))
 		  AND  NVL(a.CONTACT_WAVE,''*'')= NVL(b.CONTACT_WAVE,''*'')
 		  AND  NVL(a.CAMPAIGN_CODE,''*'')= NVL(b.CAMPAIGN_CODE,''*'')
 		  AND  NVL(a.CELL_CODE,''*'')= NVL(b.CELL_CODE,''*'')
 		  AND  NVL(a.OFFER_CODE,''*'')= NVL(b.OFFER_CODE,''*'')
 		)';
+
 		EXECUTE  IMMEDIATE DM_SQL;
 		COMMIT;
 		
@@ -286,20 +288,21 @@ on a.RESPONSE_CODE=b.Source_Item_ID and b.Item_Typ=''RESPONSE'' ';
 			DM_END_DT	      --结束日期
 		  FROM '|| TMP_CUR ||  '  b
 		  WHERE
-		      a.CUSTOMER_ID=b.CUSTOMER_ID AND
+		      a.CUSTOMER_ID=b.CUSTOMER_ID
 			  AND  NVL(a.OPT_NO,''*'')= NVL(b.OPT_NO,''*'')
 			  AND  NVL(a.TAC_ID,''*'')= NVL(b.TAC_ID,''*'')
 			  AND  NVL(a.PRICING_CODE,''*'')= NVL(b.PRICING_CODE,''*'')
 			  AND  NVL(a.TREATMENT_CODE,''*'')= NVL(b.TREATMENT_CODE,''*'')
 			  AND  NVL(a.RESPONSE_CODE,''*'')= NVL(b.RESPONSE_CODE,''*'')
 			  AND  NVL(a.RESPONSE_DEC,''*'')= NVL(b.RESPONSE_DEC,''*'')
-			  AND  NVL(a.RESPONSE_TM,''*'')= NVL(b.RESPONSE_TM,''*'')
-			  AND  NVL(a.UPDATE_TM,''*'')= NVL(b.UPDATE_TM,''*'')
+			  AND  NVL(a.RESPONSE_TM,to_date(''99991231'',''yyyy-mm-dd''))= NVL(b.RESPONSE_TM,to_date(''99991231'',''yyyy-mm-dd''))
+			  AND  NVL(a.UPDATE_TM,to_date(''99991231'',''yyyy-mm-dd''))= NVL(b.UPDATE_TM,to_date(''99991231'',''yyyy-mm-dd''))
 			  AND  NVL(a.CONTACT_WAVE,''*'')= NVL(b.CONTACT_WAVE,''*'')
 			  AND  NVL(a.CAMPAIGN_CODE,''*'')= NVL(b.CAMPAIGN_CODE,''*'')
 			  AND  NVL(a.CELL_CODE,''*'')= NVL(b.CELL_CODE,''*'')
 			  AND  NVL(a.OFFER_CODE,''*'')= NVL(b.OFFER_CODE,''*'')
 		)';
+
 		EXECUTE  IMMEDIATE DM_SQL;
 		COMMIT;
 		
@@ -328,15 +331,15 @@ on a.RESPONSE_CODE=b.Source_Item_ID and b.Item_Typ=''RESPONSE'' ';
 			DM_END_DT	      --结束日期
 		FROM '|| TMP_UPD ||  ' b
 		WHERE
-		   a.CUSTOMER_ID=b.CUSTOMER_ID AND
+		   a.CUSTOMER_ID=b.CUSTOMER_ID
 			  AND  NVL(a.OPT_NO,''*'')= NVL(b.OPT_NO,''*'')
 			  AND  NVL(a.TAC_ID,''*'')= NVL(b.TAC_ID,''*'')
 			  AND  NVL(a.PRICING_CODE,''*'')= NVL(b.PRICING_CODE,''*'')
 			  AND  NVL(a.TREATMENT_CODE,''*'')= NVL(b.TREATMENT_CODE,''*'')
 			  AND  NVL(a.RESPONSE_CODE,''*'')= NVL(b.RESPONSE_CODE,''*'')
 			  AND  NVL(a.RESPONSE_DEC,''*'')= NVL(b.RESPONSE_DEC,''*'')
-			  AND  NVL(a.RESPONSE_TM,''*'')= NVL(b.RESPONSE_TM,''*'')
-			  AND  NVL(a.UPDATE_TM,''*'')= NVL(b.UPDATE_TM,''*'')
+			  AND  NVL(a.RESPONSE_TM,to_date(''99991231'',''yyyy-mm-dd''))= NVL(b.RESPONSE_TM,to_date(''99991231'',''yyyy-mm-dd''))
+			  AND  NVL(a.UPDATE_TM,to_date(''99991231'',''yyyy-mm-dd''))= NVL(b.UPDATE_TM,to_date(''99991231'',''yyyy-mm-dd''))
 			  AND  NVL(a.CONTACT_WAVE,''*'')= NVL(b.CONTACT_WAVE,''*'')
 			  AND  NVL(a.CAMPAIGN_CODE,''*'')= NVL(b.CAMPAIGN_CODE,''*'')
 			  AND  NVL(a.CELL_CODE,''*'')= NVL(b.CELL_CODE,''*'')
@@ -385,7 +388,7 @@ on a.RESPONSE_CODE=b.Source_Item_ID and b.Item_Typ=''RESPONSE'' ';
 			OFFER_CODE,	      --Offer编号
 			ETL_DATE,	      --跑批日期
 			DM_START_DT,	  --开始日期
-		  ,'|| DM_TODAY ||'
+		  '|| DM_TODAY ||'
 		FROM '|| TMP_UPD ||  '';
 		EXECUTE  IMMEDIATE DM_SQL;
 		IO_ROW := IO_ROW+SQL%ROWCOUNT ;
@@ -396,61 +399,61 @@ on a.RESPONSE_CODE=b.Source_Item_ID and b.Item_Typ=''RESPONSE'' ';
 		    TX_DT,            --数据日期
 			PERIOD_ID,		  --日期
 			CUSTOMER_ID,      --客户号
-			OPT_NO,			  --
-			TAC_ID,		      --策略编号
-			PRICING_CODE,     --优惠配套代码
-			TREATMENT_CODE,	  --对待内容编号
-			RESPONSE_CODE,	  --响应代码
-			RESPONSE_DEC,	  --响应描述
-			RESPONSE_TM,	  --响应时间
-			UPDATE_TM,	      --更新时间
-			CONTACT_WAVE,	  --接触波段
-			CAMPAIGN_CODE,	  --营销活动编号
-			CELL_CODE,	      --客群编号
-			OFFER_CODE,	      --Offer编号
-			ETL_DATE,	      --跑批日期
-			DM_START_DT,	  --开始日期
-			DM_END_DT	      --结束日期
-		)
-		SELECT
-		    TX_DT,            --数据日期
-			PERIOD_ID,		  --日期
-			CUSTOMER_ID,      --客户号
-			OPT_NO,			  --
-			TAC_ID,		      --策略编号
-			PRICING_CODE,     --优惠配套代码
-			TREATMENT_CODE,	  --对待内容编号
-			RESPONSE_CODE,	  --响应代码
-			RESPONSE_DEC,	  --响应描述
-			RESPONSE_TM,	  --响应时间
-			UPDATE_TM,	      --更新时间
-			CONTACT_WAVE,	  --接触波段
-			CAMPAIGN_CODE,	  --营销活动编号
-			CELL_CODE,	      --客群编号
-			OFFER_CODE,	      --Offer编号
-			ETL_DATE,	      --跑批日期
-			DM_START_DT,	  --开始日期
-			DM_END_DT	      --结束日期
-		FROM '|| TMP_INS ||  '';
-		EXECUTE  IMMEDIATE DM_SQL;
+			OPT_NO,        --
+      TAC_ID,          --策略编号
+      PRICING_CODE,     --优惠配套代码
+      TREATMENT_CODE,    --对待内容编号
+      RESPONSE_CODE,    --响应代码
+      RESPONSE_DEC,    --响应描述
+      RESPONSE_TM,    --响应时间
+      UPDATE_TM,        --更新时间
+      CONTACT_WAVE,    --接触波段
+      CAMPAIGN_CODE,    --营销活动编号
+      CELL_CODE,        --客群编号
+      OFFER_CODE,        --Offer编号
+      ETL_DATE,        --跑批日期
+      DM_START_DT,    --开始日期
+      DM_END_DT        --结束日期
+    )
+    SELECT
+        TX_DT,            --数据日期
+      PERIOD_ID,      --日期
+      CUSTOMER_ID,      --客户号
+      OPT_NO,        --
+      TAC_ID,          --策略编号
+      PRICING_CODE,     --优惠配套代码
+      TREATMENT_CODE,    --对待内容编号
+      RESPONSE_CODE,    --响应代码
+      RESPONSE_DEC,    --响应描述
+      RESPONSE_TM,    --响应时间
+      UPDATE_TM,        --更新时间
+      CONTACT_WAVE,    --接触波段
+      CAMPAIGN_CODE,    --营销活动编号
+      CELL_CODE,        --客群编号
+      OFFER_CODE,        --Offer编号
+      ETL_DATE,        --跑批日期
+      DM_START_DT,    --开始日期
+      DM_END_DT        --结束日期
+    FROM '|| TMP_INS ||  '';
+    EXECUTE  IMMEDIATE DM_SQL;
 
-		IO_ROW := IO_ROW+SQL%ROWCOUNT ;
+    IO_ROW := IO_ROW+SQL%ROWCOUNT ;
 
-		P_MMAPDM_DROP_TMP_TABLES(TABLE_NAME,RETURN_NUM,RETURN_STATUS);
-	END IF;
+    P_MMAPDM_DROP_TMP_TABLES(TABLE_NAME,RETURN_NUM,RETURN_STATUS);
+  END IF;
 
-	SELECT SYSDATE INTO  V_END_TIMESTAMP  FROM dual;  -- 加载程序运行结束时间
+  SELECT SYSDATE INTO  V_END_TIMESTAMP  FROM dual;  -- 加载程序运行结束时间
 
-	/*写日志*/
-	IO_STATUS := 0 ;
-	IO_SQLERR := 'SUSSCESS';
-	P_MMAPDM_WRITE_LOGS(PROCEDURE_NAME,IO_STATUS,IO_ROW,V_START_TIMESTAMP,V_END_TIMESTAMP,IO_SQLERR);
-	COMMIT;
-	EXCEPTION
-	  WHEN OTHERS THEN
-	ROLLBACK ;
-	IO_STATUS := 9 ;
-	IO_SQLERR := SQLCODE ||  SQLERRM  ;
-	SELECT SYSDATE INTO  V_END_TIMESTAMP  FROM dual;
-	P_MMAPDM_WRITE_LOGS(PROCEDURE_NAME,IO_STATUS,IO_ROW,V_START_TIMESTAMP,V_END_TIMESTAMP,IO_SQLERR);
+  /*写日志*/
+  IO_STATUS := 0 ;
+  IO_SQLERR := 'SUSSCESS';
+  P_MMAPDM_WRITE_LOGS(PROCEDURE_NAME,IO_STATUS,IO_ROW,V_START_TIMESTAMP,V_END_TIMESTAMP,IO_SQLERR);
+  COMMIT;
+  EXCEPTION
+    WHEN OTHERS THEN
+  ROLLBACK ;
+  IO_STATUS := 9 ;
+  IO_SQLERR := SQLCODE ||  SQLERRM  ;
+  SELECT SYSDATE INTO  V_END_TIMESTAMP  FROM dual;
+  P_MMAPDM_WRITE_LOGS(PROCEDURE_NAME,IO_STATUS,IO_ROW,V_START_TIMESTAMP,V_END_TIMESTAMP,IO_SQLERR);
 END  P_DM_CAMP_RESPONSE;
